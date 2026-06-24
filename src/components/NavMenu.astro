@@ -1,0 +1,176 @@
+---
+import type { NavItem } from "../config/schema";
+
+export interface Props {
+  items: NavItem[];
+  level?: number;
+}
+
+const { items, level = 0 } = Astro.props;
+---
+
+{
+  items.map((item) => {
+    const hasChildren = item.children && item.children.length > 0;
+
+    if (hasChildren) {
+      return (
+        <div class="nav-group">
+          <a
+            href={item.url || "#"}
+            class="nav-link cursor-pointer flex items-center gap-1"
+            aria-haspopup="true"
+          >
+            {item.label}
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="6 9 12 15 18 9" />
+            </svg>
+          </a>
+
+          <div class={`nav-submenu ${level + 1 >= 2 ? "nav-submenu-nested" : ""}`}>
+            <Astro.self items={item.children} level={level + 1} />
+          </div>
+        </div>
+      );
+    }
+
+    return (
+      <a
+        href={item.url || "#"}
+        class="nav-link"
+      >
+        {item.label}
+      </a>
+    );
+  })
+}
+
+<style is:global>
+  /* ── Desktop nav (unchanged) ── */
+  #desktop-nav .nav-group {
+    position: relative;
+  }
+  #desktop-nav .nav-group::after {
+    content: "";
+    position: absolute;
+    bottom: -16px;
+    left: 0;
+    right: 0;
+    height: 16px;
+  }
+  #desktop-nav .nav-submenu .nav-group::after {
+    bottom: 0;
+    top: 0;
+    left: auto;
+    right: -16px;
+    width: 16px;
+    height: auto;
+  }
+  #desktop-nav .nav-submenu {
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%) translateY(8px);
+    min-width: 160px;
+    background: var(--color-surface, #fff);
+    border: 1px solid var(--color-primary);
+    border-radius: 12px;
+    padding: 8px 0;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 0.2s ease, visibility 0s 0.2s;
+    z-index: 100;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.15);
+  }
+  .dark #desktop-nav .nav-submenu {
+    background: var(--color-surface, #111);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+  }
+  #desktop-nav .nav-group:hover > .nav-submenu {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transition: opacity 0.2s ease, visibility 0s;
+    transform: translateX(-50%) translateY(4px);
+  }
+  #desktop-nav .nav-submenu .nav-link {
+    display: block;
+    padding: 8px 20px;
+    white-space: nowrap;
+    font-size: 0.875rem;
+    color: var(--color-text);
+    opacity: 0.6;
+    text-decoration: none;
+    transition: all 0.15s ease;
+  }
+  #desktop-nav .nav-submenu .nav-link:hover {
+    opacity: 1;
+    color: var(--color-secondary);
+    background: color-mix(in srgb, var(--color-secondary) 8%, transparent);
+  }
+  #desktop-nav .nav-submenu .nav-group > .nav-link {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  #desktop-nav .nav-submenu-nested {
+    position: absolute;
+    top: 0;
+    left: 100%;
+    transform: translateX(4px) translateY(-8px);
+    margin-left: 4px;
+  }
+  #desktop-nav .nav-group:hover > .nav-submenu-nested {
+    transform: translateX(0) translateY(-8px);
+    transition: opacity 0.2s ease, visibility 0s, transform 0.2s ease;
+  }
+
+  /* ── Mobile drawer nav ── */
+  #mobile-drawer .nav-link {
+    display: block;
+    padding: 14px 0;
+    font-size: 1.05rem;
+    color: var(--color-text);
+    text-decoration: none;
+    border-bottom: 1px solid var(--color-border);
+    transition: color 0.15s;
+  }
+  #mobile-drawer .nav-link:hover {
+    color: var(--color-secondary);
+  }
+  #mobile-drawer .nav-group > .nav-link {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  #mobile-drawer .nav-submenu {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+    padding-left: 16px;
+    border-left: 2px solid var(--color-primary);
+    margin-left: 4px;
+  }
+  #mobile-drawer .nav-open > .nav-submenu {
+    max-height: 600px;
+  }
+  #mobile-drawer .nav-submenu .nav-link {
+    font-size: 0.95rem;
+    padding: 10px 0;
+    opacity: 0.7;
+  }
+  #mobile-drawer .nav-submenu .nav-link:hover {
+    opacity: 1;
+  }
+  #mobile-drawer .nav-group > .nav-link svg {
+    transition: transform 0.25s ease;
+  }
+  #mobile-drawer .nav-open > .nav-link svg {
+    transform: rotate(180deg);
+  }
+
+  /* ── Shared ── */
+  nav .nav-submenu .nav-link svg { opacity: 0.4; }
+  nav .nav-submenu .nav-link:hover svg { opacity: 0.8; }
+</style>

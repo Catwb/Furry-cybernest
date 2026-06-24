@@ -1,0 +1,34 @@
+---
+import config from "virtual:site-config";
+const { artalk } = config.comments;
+const artalkCDN = config.cdnOverrides?.artalk || "https://cdn.jsdelivr.net/npm/artalk@2/dist/Artalk.js";
+const artalkCSS = config.cdnOverrides?.artalkCSS || "https://cdn.jsdelivr.net/npm/artalk@2/dist/Artalk.css";
+---
+
+{
+  artalk && (
+    <>
+      <div id="ArtalkComments" class="min-h-[200px]"></div>
+      <script>
+        const link = document.createElement("link");
+        link.rel = "stylesheet";
+        link.href = "{artalkCSS}";
+        document.head.appendChild(link);
+
+        const s = document.createElement("script");
+        s.src = "{artalkCDN}";
+        s.onload = () => {
+          // @ts-ignore
+          new Artalk({
+            el: "#ArtalkComments",
+            server: "{artalk.server}",
+            site: "{artalk.site}",
+            pageKey: window.location.pathname,
+            pageTitle: document.title,
+          });
+        };
+        document.head.appendChild(s);
+      </script>
+    </>
+  )
+}

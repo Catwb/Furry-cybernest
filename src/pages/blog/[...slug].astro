@@ -1,0 +1,59 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { getCollection, getEntry } from "astro:content";
+import Comments from "../../components/comments/Comments.astro";
+
+export async function getStaticPaths() {
+  const posts = await getCollection("blog");
+  return posts.map((post) => ({
+    params: { slug: post.data.abbrlink || post.slug },
+    props: { post },
+  }));
+}
+
+const { post } = Astro.props;
+const { Content } = await post.render();
+---
+
+<BaseLayout title={post.data.title}>
+  <article class="max-w-3xl mx-auto px-6 py-8">
+    <header class="mb-10">
+      {
+        post.data.cover && (
+          <div class="w-full aspect-video rounded-xl overflow-hidden mb-6 neon-border">
+            <img src={post.data.cover} alt={post.data.title}
+                 class="w-full h-full object-cover" />
+          </div>
+        )
+      }
+      <div class="flex flex-wrap gap-2 mb-4">
+        {
+          post.data.tags.map((tag) => (
+            <span class="px-2 py-0.5 rounded-full text-[10px] neon-border
+                        text-[var(--color-primary)] bg-[var(--color-primary)]/10">
+              {tag}
+            </span>
+          ))
+        }
+      </div>
+      <h1 class="font-heading text-3xl md:text-4xl neon-text-primary mt-2 mb-4">
+        {post.data.title}
+      </h1>
+      <div class="flex items-center gap-4 text-xs text-[var(--color-text)]/40">
+        <time>{post.data.pubDate.toLocaleDateString("zh-CN")}</time>
+        {post.data.updatedDate && (
+          <>
+            <span class="w-1 h-1 rounded-full bg-[var(--color-text)]/20"></span>
+            <span>更新于 {post.data.updatedDate.toLocaleDateString("zh-CN")}</span>
+          </>
+        )}
+      </div>
+    </header>
+
+    <div class="prose-neon">
+      <Content />
+    </div>
+  </article>
+
+  <Comments />
+</BaseLayout>

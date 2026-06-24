@@ -1,0 +1,115 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { getCollection } from "astro:content";
+
+function postUrl(post: { data: { abbrlink?: string }; slug: string }) {
+  return post.data.abbrlink || post.slug;
+}
+
+const posts = (await getCollection("blog"))
+  .filter((p) => !p.data.draft)
+  .sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime());
+
+type YearGroup = { year: number; months: { month: number; posts: typeof posts }[] };
+const byYear: YearGroup[] = [];
+
+for (const post of posts) {
+  const d = post.data.pubDate;
+  const year = d.getFullYear();
+  const month = d.getMonth() + 1;
+
+  let yg = byYear.find((g) => g.year === year);
+  if (!yg) {
+    yg = { year, months: [] };
+    byYear.push(yg);
+  }
+
+  let mg = yg.months.find((m) => m.month === month);
+  if (!mg) {
+    mg = { month, posts: [] };
+    yg.months.push(mg);
+  }
+
+  mg.posts.push(post);
+}
+---
+
+<BaseLayout title="归档">
+  <div class="max-w-3xl mx-auto px-6 py-8">
+    <h1 class="font-heading text-3xl neon-text-primary mb-2">归档</h1>
+    <p class="text-sm text-[var(--color-text)]/50 mb-10">
+      共 {posts.length} 篇故事
+    </p>
+
+    {
+      byYear.length === 0 && (
+        <div class="text-center py-20 text-sm text-[var(--color-text)]/30">
+          还没有故事发布，很快就来
+        </div>
+      )
+    }
+
+    <div class="relative">
+      <!-- timeline line -->
+      <div class="absolute left-0 top-0 bottom-0 w-px bg-[var(--color-primary)]/20" />
+
+      {
+        byYear.map((yg) => (
+          <div class="ml-6 mb-10 relative">
+            <!-- year dot -->
+            <div class="absolute -left-[29px] top-1 w-3 h-3 rounded-full
+                        bg-[var(--color-primary)] neon-glow-primary" />
+
+            <h2 class="font-heading text-xl neon-text-primary mb-4">
+              {yg.year}
+            </h2>
+
+            {
+              yg.months.map((mg) => (
+                <div class="mb-6">
+                  <h3 class="text-sm font-heading text-[var(--color-secondary)] mb-3 ml-1">
+                    {yg.year} 年 {mg.month} 月
+                  </h3>
+
+                  <div class="space-y-3">
+                    {
+                      mg.posts.map((post) => (
+                        <a
+                          href={`/blog/${postUrl(post)}`}
+                          class="flex items-center gap-4 px-4 py-3 rounded-xl
+                                 hover:bg-[var(--color-primary)]/5
+                                 border border-transparent hover:border-[var(--color-primary)]/20
+                                 transition-all duration-300 no-underline group"
+                        >
+                          <time class="text-xs text-[var(--color-text)]/30 w-12 shrink-0 font-mono">
+                            {String(mg.month).padStart(2, "0")}-{String(post.data.pubDate.getDate()).padStart(2, "0")}
+                          </time>
+
+                          <span class="flex-1 text-sm text-[var(--color-text)]/80
+                                       group-hover:neon-text-primary transition-all duration-300 truncate">
+                            {post.data.title}
+                          </span>
+
+                          <div class="flex gap-1.5">
+                            {
+                              post.data.tags.slice(0, 2).map((tag) => (
+                                <span class="text-[10px] px-1.5 py-0.5 rounded
+                                            text-[var(--color-primary)] bg-[var(--color-primary)]/10">
+                                  {tag}
+                                </span>
+                              ))
+                            }
+                          </div>
+                        </a>
+                      ))
+                    }
+                  </div>
+                </div>
+              ))
+            }
+          </div>
+        ))
+      }
+    </div>
+  </div>
+</BaseLayout>

@@ -1,0 +1,99 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { getCollection } from "astro:content";
+
+export async function getStaticPaths() {
+  const novels = await getCollection("novels");
+  return novels.map((n) => ({ params: { slug: n.slug } }));
+}
+
+const { slug } = Astro.params;
+const novel = (await getCollection("novels")).find((n) => n.slug === slug);
+if (!novel) return Astro.redirect("/404");
+
+const chapters = (await getCollection("chapters"))
+  .filter((c) => c.data.novel === slug && !c.data.draft)
+  .sort((a, b) => a.data.chapter - b.data.chapter);
+
+const statusMap = { ongoing: "连载中", completed: "已完结", hiatus: "暂停" };
+const wordCount = chapters.reduce((sum, c) => sum + c.body.length, 0);
+---
+
+<BaseLayout title={novel.data.title}>
+  <div class="max-w-3xl mx-auto px-6 py-8">
+    <!-- Novel header -->
+    <div class="text-center mb-12">
+      <div class="w-24 h-24 mx-auto rounded-full neon-border mb-4
+                  bg-gradient-to-br from-[var(--color-primary)]/20 to-[var(--color-accent)]/10
+                  flex items-center justify-center text-2xl">
+        🦊
+      </div>
+      <h1 class="font-heading text-3xl neon-text-primary mb-2">{novel.data.title}</h1>
+      <p class="text-sm text-[var(--color-text)]/40 mb-2">{novel.data.author}</p>
+      <div class="flex items-center justify-center gap-2 mb-4">
+        <span class="text-xs px-2 py-0.5 rounded text-[var(--color-accent)] bg-[var(--color-accent)]/10">
+          {statusMap[novel.data.status]}
+        </span>
+        {
+          novel.data.tags.map((tag) => (
+            <span class="text-xs px-2 py-0.5 rounded text-[var(--color-primary)] bg-[var(--color-primary)]/10">
+              {tag}
+            </span>
+          ))
+        }
+      </div>
+      <p class="text-sm text-[var(--color-text)]/60 leading-relaxed max-w-xl mx-auto">
+        {novel.data.description}
+      </p>
+      <p class="text-xs text-[var(--color-text)]/30 mt-3">
+        共 {chapters.length} 章 · 约 {Math.round(wordCount / 100) * 100} 字
+      </p>
+    </div>
+
+    <!-- Chapter list -->
+    <div class="space-y-2">
+      {
+        chapters.map((ch, i) => (
+          <a
+            href={`/novels/${slug}/${ch.data.chapter}`}
+            class="flex items-center gap-4 px-5 py-4 rounded-xl
+                   hover:bg-[var(--color-primary)]/5
+                   border border-transparent hover:border-[var(--color-primary)]/20
+                   transition-all duration-300 no-underline group"
+          >
+            <span class="w-8 h-8 rounded-full flex items-center justify-center text-xs
+                         bg-[var(--color-primary)]/10 text-[var(--color-primary)]
+                         group-hover:bg-[var(--color-primary)] group-hover:text-white
+                         transition-all duration-300 shrink-0">
+              {ch.data.chapter}
+            </span>
+            <div class="flex-1 min-w-0">
+              <p class="text-sm text-[var(--color-text)]/80 group-hover:neon-text-primary
+                        transition-all duration-300 truncate">
+                {ch.data.title}
+              </p>
+              {ch.data.pubDate && (
+                <p class="text-xs text-[var(--color-text)]/30 mt-0.5">
+                  {ch.data.pubDate.toLocaleDateString("zh-CN")}
+                </p>
+              )}
+            </div>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                 stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                 class="text-[var(--color-text)]/20 group-hover:text-[var(--color-secondary)] transition-colors duration-300">
+              <polyline points="9 18 15 12 9 6" />
+            </svg>
+          </a>
+        ))
+      }
+    </div>
+
+    {
+      chapters.length === 0 && (
+        <div class="text-center py-20 text-sm text-[var(--color-text)]/30">
+          还没有章节发布
+        </div>
+      )
+    }
+  </div>
+</BaseLayout>

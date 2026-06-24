@@ -1,0 +1,181 @@
+---
+import config from "virtual:site-config";
+import NavMenu from "../components/NavMenu.astro";
+import { marked } from "marked";
+import "../styles/stellar.css";
+
+export interface Props {
+  title?: string;
+  description?: string;
+}
+
+const { title, description } = Astro.props;
+const pageTitle = title ? `${title} | ${config.site.title}` : config.site.title;
+const pageDesc = description || config.site.description;
+
+const { light, dark, mode } = config.theme;
+
+function styleObj(set: Record<string, string>) {
+  return Object.fromEntries(Object.entries(set).map(([k, v]) => [`--color-${k}`, v]));
+}
+const lightStyle = styleObj(light);
+const darkStyle = styleObj(dark);
+const isDark = mode === "dark";
+---
+
+<!doctype html>
+<html lang={config.site.language} class={isDark ? "dark" : ""}
+      style={isDark ? darkStyle : lightStyle}
+      data-theme={JSON.stringify({ light: lightStyle, dark: darkStyle, mode })}>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content={pageDesc} />
+    <meta name="author" content={config.site.author} />
+    <title>{pageTitle}</title>
+
+    {config.fonts.cdn.filter(l => l.head).map(l => <link rel="stylesheet" href={l.href} />)}
+    {config.cdn.css.filter(l => l.head).map(l => <link rel="stylesheet" href={l.href} />)}
+
+    <link rel="stylesheet" href="/src/styles/globals.css" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="alternate" type="application/rss+xml" title={config.site.title} href="/rss.xml" />
+  </head>
+  <body class={config.theme.effects.scanlines ? "scanlines" : ""}>
+    {config.cdn.js.map(l => <script src={l.href}></script>)}
+    {config.fonts.cdn.filter(l => !l.head).map(l => <link rel="stylesheet" href={l.href} />)}
+    {config.cdn.css.filter(l => !l.head).map(l => <link rel="stylesheet" href={l.href} />)}
+
+    <nav class="fixed top-4 left-1/2 -translate-x-1/2 z-50 max-w-3xl
+                bg-[var(--color-surface)]/80 backdrop-blur-md
+                neon-border rounded-2xl px-4 md:px-6 py-3
+                flex items-center justify-between"
+         style="width: calc(100vw - 2rem)">
+      <a href="/" class="font-heading text-lg neon-text-primary no-underline
+                        hover:opacity-80 transition-all duration-300 shrink-0">
+        {config.site.title}
+      </a>
+
+      <!-- Desktop nav -->
+      <div id="desktop-nav" class="hidden md:flex items-center gap-6">
+        <NavMenu items={config.nav} />
+        <button id="theme-toggle" class="theme-toggle shrink-0" aria-label="切换主题">
+          <svg id="theme-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="5"/>
+            <line x1="12" y1="1" x2="12" y2="3"/>
+            <line x1="12" y1="21" x2="12" y2="23"/>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+            <line x1="1" y1="12" x2="3" y2="12"/>
+            <line x1="21" y1="12" x2="23" y2="12"/>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+          </svg>
+        </button>
+      </div>
+
+      <!-- Mobile: theme toggle + hamburger -->
+      <div class="flex md:hidden items-center gap-2">
+        <button id="theme-toggle-mobile" class="theme-toggle" aria-label="切换主题">
+          <svg id="theme-icon-mobile" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="5"/>
+            <line x1="12" y1="1" x2="12" y2="3"/>
+            <line x1="12" y1="21" x2="12" y2="23"/>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+            <line x1="1" y1="12" x2="3" y2="12"/>
+            <line x1="21" y1="12" x2="23" y2="12"/>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+          </svg>
+        </button>
+        <button id="hamburger" class="relative w-9 h-9 flex items-center justify-center
+                                      text-[var(--color-text)]/60 hover:text-[var(--color-secondary)]
+                                      transition-colors duration-200" aria-label="菜单">
+          <svg id="hamburger-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="3" y1="6" x2="21" y2="6"/>
+            <line x1="3" y1="12" x2="21" y2="12"/>
+            <line x1="3" y1="18" x2="21" y2="18"/>
+          </svg>
+          <svg id="close-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="hidden">
+            <line x1="18" y1="6" x2="6" y2="18"/>
+            <line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+        </button>
+      </div>
+    </nav>
+
+    <!-- Mobile drawer -->
+    <div id="mobile-drawer"
+         class="fixed inset-0 z-40 bg-[var(--color-bg)]/95 backdrop-blur-lg
+                translate-x-full transition-transform duration-300 md:hidden">
+      <div class="flex flex-col pt-20 px-6 overflow-y-auto h-full">
+        <NavMenu items={config.nav} />
+      </div>
+    </div>
+
+    <main class="min-h-screen pt-24">
+      <slot />
+    </main>
+
+    <footer class="neon-border border-x-0 border-b-0 mt-24 py-12">
+      <div class="max-w-5xl mx-auto px-6">
+        <div class="prose-footer max-w-lg mx-auto text-center">
+          <Fragment set:html={marked.parse(config.footer.content || "")} />
+        </div>
+      </div>
+    </footer>
+
+    <script is:inline>
+      const html = document.documentElement;
+      const themeData = JSON.parse(html.dataset.theme);
+
+      function applyVars(obj) { for (const [k, v] of Object.entries(obj)) html.style.setProperty(k, v); }
+
+      function setTheme(dark) {
+        html.classList.toggle("dark", dark);
+        document.querySelectorAll("#theme-icon, #theme-icon-mobile").forEach(function(el) {
+          el.innerHTML = dark
+            ? '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>'
+            : '<circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>';
+        });
+        applyVars(dark ? themeData.dark : themeData.light);
+        try { localStorage.setItem("theme", dark ? "dark" : "light"); } catch {}
+      }
+
+      var saved = null; try { saved = localStorage.getItem("theme"); } catch {}
+      var prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+      if (saved) setTheme(saved === "dark");
+      else if (themeData.mode === "auto") setTheme(prefersDark);
+
+      document.querySelectorAll("#theme-toggle, #theme-toggle-mobile").forEach(function(btn) {
+        if (btn) btn.addEventListener("click", function() { setTheme(!html.classList.contains("dark")); });
+      });
+
+      /* Mobile hamburger */
+      var hamburger = document.getElementById("hamburger");
+      var drawer = document.getElementById("mobile-drawer");
+      var hamIcon = document.getElementById("hamburger-icon");
+      var closeIcon = document.getElementById("close-icon");
+      if (hamburger && drawer) {
+        hamburger.addEventListener("click", function() {
+          var open = drawer.classList.toggle("translate-x-full");
+          hamIcon.classList.toggle("hidden");
+          closeIcon.classList.toggle("hidden");
+          html.classList.toggle("overflow-hidden", !open);
+        });
+      }
+
+      /* Mobile: tap submenu parent toggles, child links navigate normally */
+      drawer && drawer.addEventListener("click", function(e) {
+        var link = e.target.closest(".nav-group > .nav-link");
+        if (!link) return;
+        var group = link.parentElement;
+        if (!group) return;
+        if (!group.querySelector(":scope > .nav-submenu")) return;
+        e.preventDefault();
+        group.classList.toggle("nav-open");
+      });
+    </script>
+  </body>
+</html>

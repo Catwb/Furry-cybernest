@@ -1,0 +1,64 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { getCollection } from "astro:content";
+
+const novels = (await getCollection("novels"))
+  .filter((n) => !n.data.draft);
+---
+
+<BaseLayout title="小说">
+  <div class="max-w-5xl mx-auto px-6 py-8">
+    <h1 class="font-heading text-3xl neon-text-primary mb-2">小说</h1>
+    <p class="text-sm text-[var(--color-text)]/50 mb-10">星海之间的故事</p>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      {
+        novels.map((novel) => {
+          const statusMap = { ongoing: "连载中", completed: "已完结", hiatus: "暂停" };
+          return (
+            <a href={`/novels/${novel.slug}`}
+               class="group relative rounded-xl neon-border p-6
+                      bg-[var(--color-bg)]/40 hover:neon-glow-primary
+                      transition-all duration-500 hover:-translate-y-1 no-underline">
+              <div class="w-full aspect-video rounded-lg mb-4
+                          bg-gradient-to-br from-[var(--color-primary)]/15 to-[var(--color-accent)]/10
+                          flex items-center justify-center text-[var(--color-text)]/20 text-xs">
+                小说封面
+              </div>
+              <div class="flex items-center gap-2 mb-2">
+                <span class="text-[10px] px-1.5 py-0.5 rounded
+                            text-[var(--color-accent)] bg-[var(--color-accent)]/10">
+                  {statusMap[novel.data.status]}
+                </span>
+                {
+                  novel.data.tags.slice(0, 2).map((tag) => (
+                    <span class="text-[10px] px-1.5 py-0.5 rounded
+                                text-[var(--color-primary)] bg-[var(--color-primary)]/10">
+                      {tag}
+                    </span>
+                  ))
+                }
+              </div>
+              <h2 class="font-heading text-lg text-[var(--color-text)] group-hover:neon-text-primary
+                        transition-all duration-300 mb-1">
+                {novel.data.title}
+              </h2>
+              <p class="text-xs text-[var(--color-text)]/40 mb-2">{novel.data.author}</p>
+              <p class="text-xs text-[var(--color-text)]/50 line-clamp-2">
+                {novel.data.description}
+              </p>
+            </a>
+          );
+        })
+      }
+    </div>
+
+    {
+      novels.length === 0 && (
+        <div class="text-center py-20 text-sm text-[var(--color-text)]/30">
+          还没有小说发布，很快就来
+        </div>
+      )
+    }
+  </div>
+</BaseLayout>

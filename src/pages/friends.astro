@@ -1,0 +1,136 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { getEntry } from "astro:content";
+import config from "virtual:site-config";
+import Comments from "../components/comments/Comments.astro";
+
+// Group friend links by their group field
+const groups = new Map<string, typeof config.friendLinks>();
+for (const link of config.friendLinks) {
+  const g = link.group || "默认";
+  if (!groups.has(g)) groups.set(g, []);
+  groups.get(g)!.push(link);
+}
+
+// Load optional page markdown content
+const pageEntry = await getEntry("page", "friends");
+const { Content } = pageEntry ? await pageEntry.render() : { Content: undefined };
+---
+
+<BaseLayout title="友情链接">
+  <div class="max-w-4xl mx-auto px-6 py-8">
+    <h1 class="font-heading text-3xl neon-text-primary mb-2">友情链接</h1>
+    <p class="text-sm text-[var(--color-text)]/50 mb-10">赛博森林的邻居们</p>
+
+    <!-- Friend Link Groups (collapsible, default open) -->
+    {
+      [...groups.entries()].map(([groupName, links]) => (
+        <section class="friend-group mb-6" data-open="true">
+          <button class="friend-group-toggle w-full flex items-center gap-2 mb-4 text-left cursor-pointer
+                         bg-transparent border-none p-0 font-inherit"
+                  aria-expanded="true">
+            <svg class="friend-group-arrow w-4 h-4 text-[var(--color-text)]/40 shrink-0
+                        transition-transform duration-200" width="16" height="16"
+                 viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                 stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="6 9 12 15 18 9" />
+            </svg>
+            <h2 class="font-heading text-lg neon-text-secondary flex items-center gap-2 m-0">
+              <span class="w-1.5 h-1.5 rounded-full bg-[var(--color-secondary)]"></span>
+              {groupName}
+              <span class="text-xs text-[var(--color-text)]/30 font-normal">({links.length})</span>
+            </h2>
+          </button>
+          <div class="friend-group-body grid grid-cols-1 md:grid-cols-2 gap-4">
+            {
+              links.map((link) => (
+                <a
+                  href={link.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="group flex items-center gap-4 p-5 rounded-xl neon-border
+                         bg-[var(--color-surface)]/50
+                         hover:neon-glow-primary transition-all duration-300
+                         hover:-translate-y-0.5 no-underline"
+                >
+                  <div class="w-12 h-12 rounded-full flex-shrink-0 overflow-hidden
+                              neon-border bg-gradient-to-br from-[var(--color-primary)]/15 to-[var(--color-secondary)]/10
+                              flex items-center justify-center
+                              text-sm font-heading text-[var(--color-text)]/40
+                              group-hover:neon-glow-accent transition-all duration-300"
+                       style={link.color ? `border-color:${link.color}` : ""}>
+                    {link.avatar
+                      ? <img src={link.avatar} alt={link.name} class="w-full h-full object-cover" loading="lazy" />
+                      : <span>{link.name.charAt(0)}</span>
+                    }
+                  </div>
+                  <div class="min-w-0 flex-1">
+                    <div class="font-heading text-sm text-[var(--color-text)]
+                                group-hover:text-[var(--color-secondary)] transition-colors duration-200"
+                         style={link.color ? `color:${link.color}` : ""}>
+                      {link.name}
+                    </div>
+                    {link.description && (
+                      <div class="text-xs text-[var(--color-text)]/50 mt-0.5 line-clamp-2">
+                        {link.description}
+                      </div>
+                    )}
+                  </div>
+                  <svg class="w-4 h-4 text-[var(--color-text)]/30 group-hover:text-[var(--color-secondary)]
+                              transition-colors duration-200 flex-shrink-0" width="16" height="16"
+                       viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M7 17l9.2-9.2M17 17V7H7"/>
+                  </svg>
+                </a>
+              ))
+            }
+          </div>
+        </section>
+      ))
+    }
+
+    <style is:global>
+      .friend-group[data-open="false"] .friend-group-body {
+        display: none;
+      }
+      .friend-group[data-open="false"] .friend-group-arrow {
+        transform: rotate(-90deg);
+      }
+    </style>
+
+    <script>
+      document.querySelectorAll(".friend-group-toggle").forEach(function(btn) {
+        btn.addEventListener("click", function() {
+          var group = btn.closest(".friend-group");
+          if (!group) return;
+          var open = group.getAttribute("data-open") === "true";
+          group.setAttribute("data-open", open ? "false" : "true");
+          btn.setAttribute("aria-expanded", !open);
+        });
+      });
+    </script>
+
+    {
+      config.friendLinks.length === 0 && (
+        <div class="text-center py-20 text-sm text-[var(--color-text)]/30
+                    neon-border rounded-xl bg-[var(--color-surface)]/30 mb-12">
+          还没有添加友链，在 <code class="text-[var(--color-secondary)]">site.config.ts</code> 中配置
+        </div>
+      )
+    }
+
+    <!-- Markdown Content -->
+    {
+      Content && (
+        <section class="neon-border rounded-xl p-6 md:p-8 bg-[var(--color-surface)]/30 mb-12">
+          <div class="prose-neon">
+            <Content />
+          </div>
+        </section>
+      )
+    }
+  </div>
+
+  <!-- Comments -->
+  <Comments />
+</BaseLayout>

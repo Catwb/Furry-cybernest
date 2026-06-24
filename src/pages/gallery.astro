@@ -1,0 +1,35 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import config from "virtual:site-config";
+---
+
+<BaseLayout title="画廊">
+  <div class="max-w-6xl mx-auto px-6 py-8">
+    <h1 class="font-heading text-3xl neon-text-primary mb-2">画廊</h1>
+    <p class="text-sm text-[var(--color-text)]/50 mb-10">插画与角色设计展示</p>
+
+    <div class="columns-1 md:columns-2 lg:columns-3 gap-4 space-y-4"
+         style={`columns: ${config.gallery.columns}`}>
+      {
+        Array.from({ length: 9 }).map((_, i) => (
+          <div
+            class="group relative break-inside-avoid rounded-xl neon-border overflow-hidden
+                   bg-gradient-to-br from-[var(--color-primary)]/10 to-[var(--color-secondary)]/5
+                   hover:neon-glow-primary transition-all duration-500 cursor-pointer"
+            style={`aspect-ratio: ${[3/4, 4/3, 1, 16/9, 4/3, 3/4, 16/9, 1, 4/3][i]}`}
+          >
+            <div class="w-full h-full flex items-center justify-center
+                        text-[var(--color-text)]/15 text-xs">
+              插图 {i + 1}
+            </div>
+            <div class="absolute inset-x-0 bottom-0 p-4
+                        bg-gradient-to-t from-[var(--color-bg)]/90 to-transparent
+                        opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+              <p class="text-xs text-[var(--color-text)]/70">角色插画 #{i + 1}</p>
+            </div>
+          </div>
+        ))
+      }
+    </div>
+  </div>
+</BaseLayout>

@@ -1,0 +1,48 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import config from "virtual:site-config";
+---
+
+<BaseLayout title="关于">
+  <div class="max-w-3xl mx-auto px-6 py-8">
+    <h1 class="font-heading text-3xl neon-text-primary mb-2">关于</h1>
+    <p class="text-sm text-[var(--color-text)]/50 mb-10">关于这个赛博世界</p>
+
+    <div class="space-y-8">
+      <section class="neon-border rounded-xl p-6 bg-[var(--color-bg)]/40">
+        <h2 class="font-heading text-xl neon-text-secondary mb-4">世界观</h2>
+        <p class="text-sm text-[var(--color-text)]/70 leading-relaxed">
+          Furry CyberNest 是一个赛博朋克风格的兽设故事站。
+          在这里，代码与兽魂交织，数据流化作星河，服务器森林中蕴藏着无数故事。
+        </p>
+      </section>
+
+      <section class="neon-border rounded-xl p-6 bg-[var(--color-bg)]/40">
+        <h2 class="font-heading text-xl neon-text-secondary mb-4">作者</h2>
+        <div class="flex items-center gap-4 mb-4">
+          <div class="w-16 h-16 rounded-full neon-glow-accent
+                      bg-gradient-to-br from-[var(--color-accent)]/20 to-[var(--color-primary)]/10
+                      flex items-center justify-center text-xs text-[var(--color-text)]/30">
+            头像
+          </div>
+          <div>
+            <p class="font-heading text-base neon-text-primary">{config.site.author || "作者"}</p>
+            <p class="text-xs text-[var(--color-text)]/50">{config.site.description}</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="neon-border rounded-xl p-6 bg-[var(--color-bg)]/40">
+        <h2 class="font-heading text-xl neon-text-secondary mb-4">技术栈</h2>
+        <div class="flex flex-wrap gap-2">
+          {["Astro", "Tailwind CSS", "TypeScript", "LXGW WenKai"].map((tech) => (
+            <span class="px-3 py-1 rounded-full text-xs neon-border
+                        text-[var(--color-primary)] bg-[var(--color-primary)]/10">
+              {tech}
+            </span>
+          ))}
+        </div>
+      </section>
+    </div>
+  </div>
+</BaseLayout>

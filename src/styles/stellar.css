@@ -1,0 +1,449 @@
+/* Stellar Tag Plugin Styles */
+.tag-plugin {
+  margin: 1.5em 0;
+}
+
+/* ── Note / Box ── */
+.tag-plugin.note {
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  padding: 1em 1.25em;
+  background: color-mix(in srgb, var(--color-bg) 50%, transparent);
+}
+.tag-plugin.note .title,
+.tag-plugin.note > :first-child {
+  margin-bottom: 0.5em;
+  font-family: var(--font-heading);
+  font-size: 1.05em;
+}
+
+/* ── Folding ── */
+.tag-plugin.folding {
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  padding: 0.75em 1em;
+  background: color-mix(in srgb, var(--color-bg) 40%, transparent);
+}
+.tag-plugin.folding > :first-child {
+  cursor: pointer;
+  font-weight: bold;
+  font-family: var(--font-heading);
+  color: var(--color-secondary);
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 0.4em;
+}
+.tag-plugin.folding > :first-child::before {
+  content: "▶";
+  font-size: 0.75em;
+  transition: transform 0.2s;
+}
+.tag-plugin.folding[open] > :first-child::before {
+  transform: rotate(90deg);
+}
+.tag-plugin.folding > :first-child::-webkit-details-marker {
+  display: none;
+}
+.tag-plugin.folding > *:nth-child(n+2) {
+  padding-top: 0.75em;
+  line-height: 1.8;
+}
+
+/* ── Quot ── */
+.tag-plugin.quot {
+  border-left: 3px solid var(--color-primary);
+  padding: 0.5em 1em;
+  margin: 1.5em 0;
+}
+.tag-plugin.quot .content {
+  font-style: italic;
+  opacity: 0.85;
+  line-height: 1.8;
+  margin: 0;
+}
+.tag-plugin.quot .text {
+  display: inline;
+}
+
+/* ── Poetry ── */
+.tag-plugin.poetry {
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  padding: 1.5em;
+  text-align: center;
+  background: color-mix(in srgb, var(--color-bg) 40%, transparent);
+}
+.tag-plugin.poetry .title {
+  font-family: var(--font-heading);
+  font-size: 1.2em;
+  font-weight: 600;
+  color: var(--color-primary);
+  margin-bottom: 0.5em;
+}
+.tag-plugin.poetry .meta {
+  font-size: 0.85em;
+  opacity: 0.6;
+  margin-bottom: 1em;
+  display: flex;
+  gap: 1em;
+  justify-content: center;
+}
+.tag-plugin.poetry .body {
+  line-height: 2;
+  font-style: italic;
+}
+.tag-plugin.poetry .footer {
+  margin-top: 1em;
+  font-size: 0.85em;
+  opacity: 0.6;
+}
+
+/* ── Timeline ── */
+.tag-plugin.timeline {
+  position: relative;
+  padding-left: 1.5em;
+  border-left: 2px solid var(--color-border);
+}
+.tag-plugin.timeline .timenode {
+  position: relative;
+  padding: 0.5em 0 0.5em 1em;
+}
+.tag-plugin.timeline .timenode::before {
+  content: "";
+  position: absolute;
+  left: -1.65em;
+  top: 0.9em;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--color-primary);
+  border: 2px solid var(--color-bg);
+}
+.tag-plugin.timeline .timenode .header {
+  font-size: 0.85em;
+  opacity: 0.65;
+  margin-bottom: 0.3em;
+}
+.tag-plugin.timeline .timenode .body p:first-child {
+  margin-top: 0;
+}
+
+/* ── Blockquote ── */
+.tag-plugin.blockquote {
+  border-left: 3px solid var(--color-primary);
+  padding: 0.5em 1em;
+  margin: 1.5em 0;
+  opacity: 0.85;
+  line-height: 1.8;
+}
+
+/* ── Grid ── */
+.tag-plugin.grid {
+  display: grid;
+  margin: 1.5em 0;
+}
+.tag-plugin.grid .cell {
+  background: color-mix(in srgb, var(--color-bg) 40%, transparent);
+  border: 1px solid var(--color-border);
+  padding: 1em;
+}
+
+/* ── Button ── */
+.tag-plugin.button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4em;
+  padding: 0.5em 1.2em;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 500;
+  transition: all 0.2s;
+  border: 1px solid var(--color-primary);
+  color: var(--color-text);
+  background: color-mix(in srgb, var(--color-primary) 10%, transparent);
+}
+.tag-plugin.button:hover {
+  background: color-mix(in srgb, var(--color-primary) 25%, transparent);
+  transform: translateY(-1px);
+}
+.tag-plugin.button.xs {
+  font-size: 0.8em;
+  padding: 0.3em 0.8em;
+}
+
+/* ── Mark ── */
+.tag-plugin.mark {
+  padding: 0.15em 0.4em;
+  border-radius: 3px;
+  background: color-mix(in srgb, var(--color-primary) 20%, transparent);
+  color: var(--color-text);
+}
+
+/* ── Hashtag ── */
+.tag-plugin.hashtag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3em;
+  padding: 0.15em 0.6em;
+  border-radius: 4px;
+  text-decoration: none;
+  font-size: 0.9em;
+  background: color-mix(in srgb, var(--color-primary) 10%, transparent);
+  color: var(--color-primary);
+  transition: background 0.2s;
+}
+.tag-plugin.hashtag:hover {
+  background: color-mix(in srgb, var(--color-primary) 25%, transparent);
+}
+
+/* ── Sup / Sub ── */
+.tag-plugin.sup {
+  font-size: 0.75em;
+  vertical-align: super;
+  line-height: 1;
+}
+.tag-plugin.sub {
+  font-size: 0.75em;
+  vertical-align: sub;
+  line-height: 1;
+}
+
+/* ── Link Card ── */
+.tag-plugin.link {
+  margin: 1em 0;
+}
+.tag-plugin.link .link-card {
+  display: flex;
+  text-decoration: none;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  overflow: hidden;
+  transition: all 0.2s;
+  color: var(--color-text);
+  background: color-mix(in srgb, var(--color-bg) 50%, transparent);
+}
+.tag-plugin.link .link-card:hover {
+  border-color: var(--color-primary);
+  box-shadow: 0 2px 12px var(--color-glow);
+  transform: translateY(-1px);
+}
+.tag-plugin.link .link-card.rich {
+  flex-direction: column;
+}
+.tag-plugin.link .link-card.rich .top {
+  display: flex;
+  align-items: center;
+  gap: 0.75em;
+  padding: 0.75em;
+}
+.tag-plugin.link .link-card.rich .top .img {
+  width: 32px;
+  height: 32px;
+  border-radius: 4px;
+  background-size: cover;
+  background-position: center;
+}
+.tag-plugin.link .link-card.rich .bottom {
+  padding: 0 0.75em 0.75em;
+}
+.tag-plugin.link .link-card.rich .bottom .title {
+  font-weight: 600;
+  font-size: 1em;
+}
+.tag-plugin.link .link-card.plain {
+  flex-direction: row;
+  align-items: center;
+  padding: 0.75em;
+}
+.tag-plugin.link .link-card.plain .left {
+  flex: 1;
+}
+.tag-plugin.link .link-card.plain .left .title {
+  font-weight: 600;
+  font-size: 1em;
+  display: block;
+}
+.tag-plugin.link .link-card.plain .right .img {
+  width: 48px;
+  height: 48px;
+  border-radius: 6px;
+  background-size: cover;
+  background-position: center;
+}
+.tag-plugin.link .footnote {
+  font-size: 0.8em;
+  opacity: 0.5;
+  display: block;
+  margin-top: 0.2em;
+}
+
+/* ── Image ── */
+.tag-plugin.image {
+  margin: 1.5em 0;
+}
+.tag-plugin.image .image-bg {
+  border-radius: 8px;
+  overflow: hidden;
+  position: relative;
+  background: color-mix(in srgb, var(--color-bg) 60%, black);
+}
+.tag-plugin.image .image-bg img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.tag-plugin.image .image-meta {
+  text-align: center;
+  font-size: 0.85em;
+  opacity: 0.6;
+  margin-top: 0.4em;
+}
+
+/* ── Video ── */
+.tag-plugin.video-player {
+  position: relative;
+  width: 100%;
+  margin: 1.5em 0;
+  border-radius: 8px;
+  overflow: hidden;
+  background: black;
+}
+.tag-plugin.video-player video {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+.tag-plugin.video-player iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+/* ── Audio ── */
+.tag-plugin.audio {
+  margin: 1.5em 0;
+  display: flex;
+  justify-content: center;
+}
+.tag-plugin.audio audio {
+  width: 100%;
+  max-width: 400px;
+  border-radius: 8px;
+}
+
+/* ── Copy ── */
+.tag-plugin.copy {
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+  padding: 0.5em 0.75em;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--color-bg) 40%, transparent);
+}
+.tag-plugin.copy .copy-area {
+  flex: 1;
+  border: none;
+  background: transparent;
+  color: var(--color-text);
+  font-family: monospace;
+  font-size: 0.9em;
+  outline: none;
+}
+.tag-plugin.copy .copy-btn {
+  padding: 0.3em 0.8em;
+  border: 1px solid var(--color-border);
+  border-radius: 4px;
+  cursor: pointer;
+  background: color-mix(in srgb, var(--color-primary) 10%, transparent);
+  color: var(--color-text);
+  font-size: 0.85em;
+  transition: all 0.2s;
+}
+.tag-plugin.copy .copy-btn:hover {
+  background: color-mix(in srgb, var(--color-primary) 25%, transparent);
+}
+
+/* ── Checkbox / Radio ── */
+.tag-plugin.checkbox {
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+  margin: 0.5em 0;
+}
+.tag-plugin.checkbox input[type="checkbox"],
+.tag-plugin.checkbox input[type="radio"] {
+  accent-color: var(--color-primary);
+}
+
+/* ── Emoji ── */
+.tag-plugin.emoji {
+  display: inline;
+}
+.tag-plugin.emoji img {
+  display: inline;
+  vertical-align: middle;
+}
+
+/* ── Icon ── */
+.tag-plugin.icon {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3em;
+}
+.tag-plugin.icon .text {
+  font-size: 0.9em;
+}
+
+/* ── Ghcard ── */
+.tag-plugin.ghcard {
+  margin: 1.5em 0;
+  text-align: center;
+}
+.tag-plugin.ghcard img {
+  max-width: 100%;
+  border-radius: 8px;
+  border: 1px solid var(--color-border);
+}
+
+/* ── Navbar ── */
+.tag-plugin.navbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5em 1em;
+  padding: 0.5em 0;
+}
+.tag-plugin.navbar .link {
+  text-decoration: none;
+  font-size: 0.9em;
+  opacity: 0.7;
+  transition: opacity 0.2s;
+}
+.tag-plugin.navbar .link:hover,
+.tag-plugin.navbar .link.active {
+  opacity: 1;
+  color: var(--color-primary);
+}
+
+/* ── Inline labels ── */
+psw, blur {
+  filter: blur(4px);
+  cursor: pointer;
+  transition: filter 0.3s;
+}
+psw:hover, blur:hover {
+  filter: none;
+}
+wavy {
+  text-decoration-style: wavy;
+  text-decoration-line: underline;
+  text-underline-offset: 3px;
+}
+emp {
+  color: var(--color-accent);
+  font-style: normal;
+}

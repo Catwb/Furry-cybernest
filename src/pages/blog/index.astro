@@ -1,0 +1,72 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { getCollection } from "astro:content";
+import config from "virtual:site-config";
+
+function postUrl(post: { data: { abbrlink?: string }; slug: string }) {
+  return post.data.abbrlink || post.slug;
+}
+
+const allPosts = await getCollection("blog");
+const posts = allPosts
+  .filter((p) => !p.data.draft)
+  .slice(0, config.blog.postsPerPage);
+---
+
+<BaseLayout title="博客">
+  <div class="max-w-5xl mx-auto px-6 py-8">
+    <h1 class="font-heading text-3xl neon-text-primary mb-2">博客</h1>
+    <p class="text-sm text-[var(--color-text)]/50 mb-10">赛博森林的故事集</p>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      {
+        posts.map((post) => (
+          <a href={`/blog/${postUrl(post)}`}
+             class="group relative rounded-xl neon-border p-6
+                    bg-[var(--color-bg)]/40 hover:neon-glow-primary
+                    transition-all duration-500 hover:-translate-y-1 no-underline">
+             {
+               post.data.cover && (
+                 <div class="w-full aspect-video rounded-lg mb-4 overflow-hidden">
+                   <img src={post.data.cover} alt={post.data.title}
+                        class="w-full h-full object-cover" />
+                 </div>
+               )
+             }
+            <div class="flex flex-wrap gap-1.5 mb-2">
+              {
+                post.data.tags.slice(0, 3).map((tag) => (
+                  <span class="text-[10px] px-1.5 py-0.5 rounded
+                              text-[var(--color-primary)] bg-[var(--color-primary)]/10">
+                    {tag}
+                  </span>
+                ))
+              }
+            </div>
+            <h2 class="font-heading text-lg text-[var(--color-text)] group-hover:neon-text-primary
+                      transition-all duration-300 mb-2">
+              {post.data.title}
+            </h2>
+            <p class="text-xs text-[var(--color-text)]/50 line-clamp-2 mb-4">
+              {post.data.description}
+            </p>
+            <div class="flex items-center justify-between text-[10px] text-[var(--color-text)]/40">
+              <time>{post.data.pubDate.toLocaleDateString("zh-CN")}</time>
+              <span class="neon-text-accent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                阅读 →
+              </span>
+            </div>
+          </a>
+        ))
+      }
+    </div>
+
+    {
+      posts.length === 0 && (
+        <div class="text-center py-20 text-sm text-[var(--color-text)]/30">
+          还没有故事发布，很快就来
+        </div>
+      )
+    }
+  </div>
+</BaseLayout>
