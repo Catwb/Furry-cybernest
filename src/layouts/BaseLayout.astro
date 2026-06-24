@@ -2,7 +2,7 @@
 import config from "virtual:site-config";
 import NavMenu from "../components/NavMenu.astro";
 import { marked } from "marked";
-import "../styles/stellar.css";
+import "../styles/globals.css";
 
 export interface Props {
   title?: string;
@@ -37,7 +37,6 @@ const isDark = mode === "dark";
     {config.fonts.cdn.filter(l => l.head).map(l => <link rel="stylesheet" href={l.href} />)}
     {config.cdn.css.filter(l => l.head).map(l => <link rel="stylesheet" href={l.href} />)}
 
-    <link rel="stylesheet" href="/src/styles/globals.css" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="alternate" type="application/rss+xml" title={config.site.title} href="/rss.xml" />
   </head>
