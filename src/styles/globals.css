@@ -94,36 +94,6 @@ code, pre, kbd, samp {
   border: 1px solid var(--color-secondary);
 }
 
-/* ── Scanlines Overlay ── */
-.scanlines::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  z-index: 9999;
-  background: repeating-linear-gradient(
-    0deg,
-    transparent,
-    transparent 2px,
-    rgba(0, 0, 0, 0.04) 2px,
-    rgba(0, 0, 0, 0.04) 4px
-  );
-}
-.dark .scanlines::before {
-  background: repeating-linear-gradient(
-    0deg,
-    transparent,
-    transparent 2px,
-    rgba(0, 0, 0, 0.08) 2px,
-    rgba(0, 0, 0, 0.08) 4px
-  );
-}
-@media (prefers-reduced-motion: reduce) {
-  .scanlines::before {
-    display: none;
-  }
-}
-
 /* ── Glow Pulse Animation ── */
 @keyframes glow-pulse {
   0%, 100% { opacity: 0.6; }

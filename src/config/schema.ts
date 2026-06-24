@@ -17,7 +17,6 @@ export const ColorSetSchema = z.object({
 });
 
 export const ThemeEffectsSchema = z.object({
-  scanlines: z.boolean().default(true),
   glitch: z.boolean().default(false),
   glowIntensity: z.enum(["low", "medium", "high"]).default("medium"),
 });

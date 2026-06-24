@@ -40,7 +40,7 @@ const isDark = mode === "dark";
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="alternate" type="application/rss+xml" title={config.site.title} href="/rss.xml" />
   </head>
-  <body class={config.theme.effects.scanlines ? "scanlines" : ""}>
+  <body>
     {config.cdn.js.map(l => <script src={l.href}></script>)}
     {config.fonts.cdn.filter(l => !l.head).map(l => <link rel="stylesheet" href={l.href} />)}
     {config.cdn.css.filter(l => !l.head).map(l => <link rel="stylesheet" href={l.href} />)}

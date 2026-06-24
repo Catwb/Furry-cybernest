@@ -50,7 +50,6 @@ export default defineConfig({
       text: "#E2E8F0",
     },
     effects: {
-      scanlines: true,
       glitch: false,
       glowIntensity: "medium",
     },
