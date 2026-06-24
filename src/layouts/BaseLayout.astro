@@ -39,6 +39,19 @@ const isDark = mode === "dark";
 
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="alternate" type="application/rss+xml" title={config.site.title} href="/rss.xml" />
+
+    <script id="feat-config" type="application/json">
+      {JSON.stringify({
+        showLanguage: config.codeBlock?.showLanguage,
+        showLineNumbers: config.codeBlock?.showLineNumbers,
+        enableCopy: config.codeBlock?.enableCopy,
+        autoFoldThreshold: config.codeBlock?.autoFoldThreshold,
+        lightbox: config.lightbox?.enabled,
+        lightboxGallery: config.lightbox?.gallery,
+        lightboxContent: config.lightbox?.content,
+        lazyload: config.lazyload?.enabled,
+      })}
+    </script>
   </head>
   <body>
     {config.cdn.js.map(l => <script src={l.href}></script>)}
@@ -176,5 +189,7 @@ const isDark = mode === "dark";
         group.classList.toggle("nav-open");
       });
     </script>
+
+    <script is:inline src="/scripts/features.js"></script>
   </body>
 </html>

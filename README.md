@@ -8,14 +8,19 @@
 - **配置驱动** — 所有设置集中在 `site.config.ts`，Zod 校验+类型安全
 - **亮色/暗色/自动** 三种主题模式，CSS 变量实时切换，localStorage 持久化
 - **响应式** — 桌面悬浮药丸导航 + 手机汉堡菜单抽屉
-- **赛博视觉** — 扫描线、霓虹光效、网格背景
+- **赛博视觉** — 霓虹光效、网格背景、可配置主题色
 
 ### 内容
 - **博客** — Content Collections 驱动，支持标签、封面图、分页、归档（年/月时间线）
 - **小说** — 双集合（novels + chapters），章节目录、上下章导航、连载/完结状态
-- **画廊** — 可配置列数的网格布局
+- **画廊** — 可配置列数、分组、图片信息、灯箱展示
 - **友链** — 分组展示，可折叠，每链接可设独立色/头像
 - **评论** — Twikoo / Artalk 二选一，CDN 可覆盖
+
+### 增强功能
+- **代码块美化** — 语言标签、行号、一键复制、超长自动折叠（`>20行`），支持配置开关
+- **灯箱** — 点击文章正文图片 / 画廊图片可全屏放大查看，键盘 `Esc` 关闭
+- **图片懒加载** — 原生 `loading="lazy"` 减少带宽浪费
 
 ### 页面路由
 
@@ -72,10 +77,53 @@ pnpm preview   # 预览构建结果
 | `novels` | 小说默认设置 |
 | `comments` | 评论系统（twikoo/artalk）|
 | `friendLinks` | 友链列表（支持分组） |
-| `gallery` | 画廊列数、灯箱 |
+| `codeBlock` | 代码块：语言标签/行号/复制/折叠阈值/主题 |
+| `lightbox` | 灯箱总开关 + 正文/画廊独立开关 |
+| `lazyload` | 图片懒加载开关 |
+| `gallery` | 画廊列数、灯箱、分组展示 |
 | `footer` | 页脚 Markdown 内容 |
 | `rss` | RSS feed 配置 |
 | `cdnOverrides` | CDN 地址覆盖 |
+
+### 代码块配置
+
+```ts
+codeBlock: {
+  showLanguage: true,      // 显示语言标签
+  showLineNumbers: true,   // 显示行号
+  enableCopy: true,        // 显示复制按钮
+  autoFoldThreshold: 20,   // 超过指定行数自动折叠
+  theme: "github-dark",    // Astro Shiki 主题
+}
+```
+
+### 画廊配置
+
+```ts
+gallery: {
+  columns: 3,              // 默认列数，每个分组可覆盖
+  lightbox: true,
+  groups: [
+    {
+      name: "角色立绘",
+      slug: "characters",  // 用于标题锚点，可选
+      description: "角色设定、头像与完整立绘。",
+      columns: 3,
+      items: [
+        {
+          title: "银狐·赛博形态",
+          alt: "银狐赛博角色立绘",
+          description: "可选说明文字",
+          image: "/images/gallery/fox.jpg",
+          href: "/blog/character-fox",
+          aspectRatio: 3 / 4,
+          color: "#7c3aed", // 未设置 image 时生成占位图
+        },
+      ],
+    },
+  ],
+}
+```
 
 ## 内容管理
 
@@ -127,5 +175,6 @@ src/
   content/               # 内容源文件
   styles/globals.css     # 全局样式 + Tailwind 主题
   remark-plugins/        # Markdown 扩展插件
+public/scripts/features.js   # 代码块增强、灯箱等前端增强逻辑
 plugins/virtual-config.ts   # Vite 插件暴露配置到虚拟模块
 ```

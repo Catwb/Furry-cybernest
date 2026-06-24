@@ -29,7 +29,7 @@ const posts = allPosts
                post.data.cover && (
                  <div class="w-full aspect-video rounded-lg mb-4 overflow-hidden">
                    <img src={post.data.cover} alt={post.data.title}
-                        class="w-full h-full object-cover" />
+                         class="w-full h-full object-cover" loading="lazy" />
                  </div>
                )
              }

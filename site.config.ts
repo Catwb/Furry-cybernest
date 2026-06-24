@@ -138,9 +138,51 @@ export default defineConfig({
     },
   ],
 
+  codeBlock: {
+    showLanguage: true,
+    showLineNumbers: true,
+    enableCopy: true,
+    autoFoldThreshold: 20,
+    theme: "github-dark",
+  },
+
+  lightbox: {
+    enabled: true,
+    gallery: true,
+    content: true,
+  },
+
+  lazyload: {
+    enabled: true,
+  },
+
   gallery: {
     columns: 3,
     lightbox: true,
+    groups: [
+      {
+        name: "角色立绘",
+        slug: "characters",
+        description: "角色设定、头像与完整立绘。",
+        columns: 3,
+        items: [
+          { title: "银狐·赛博形态", alt: "银狐赛博角色立绘", color: "#7c3aed", aspectRatio: 3 / 4 },
+          { title: "赤狼·火焰纹章", alt: "赤狼角色设定图", color: "#e11d48", aspectRatio: 4 / 3 },
+          { title: "玄猫·暗影漫步", alt: "玄猫角色头像", color: "#0ea5e9", aspectRatio: 1 },
+        ],
+      },
+      {
+        name: "场景插画",
+        slug: "scenes",
+        description: "故事场景、世界观氛围和背景概念图。",
+        columns: 2,
+        items: [
+          { title: "赛博森林", alt: "霓虹光线中的赛博森林", color: "#0891b2", aspectRatio: 16 / 9 },
+          { title: "霓虹夜市", alt: "兽人聚集的霓虹夜市", color: "#f59e0b", aspectRatio: 4 / 3 },
+          { title: "数据海", alt: "由光点组成的数据海", color: "#22c55e", aspectRatio: 3 / 4 },
+        ],
+      },
+    ],
   },
 
   rss: {

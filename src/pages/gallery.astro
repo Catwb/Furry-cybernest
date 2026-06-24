@@ -1,6 +1,35 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
 import config from "virtual:site-config";
+
+const placeholderColors = [
+  "#7c3aed", "#0891b2", "#e11d48", "#0ea5e9",
+  "#f59e0b", "#22c55e", "#ec4899", "#14b8a6", "#8b5cf6",
+];
+const defaultRatios = [3 / 4, 4 / 3, 1, 16 / 9, 4 / 3, 3 / 4, 16 / 9, 1, 4 / 3];
+
+function pick<T>(arr: T[], i: number) {
+  return arr[i % arr.length];
+}
+
+function placeholderUrl(color: string, w: number, h: number, text: string) {
+  return "https://placehold.co/" + w + "x" + h + "/" + color.slice(1) + "/white?text=" + encodeURIComponent(text);
+}
+
+function itemView(item: { title?: string; alt?: string; image?: string; aspectRatio?: number; color?: string }, i: number) {
+  const ratio = item.aspectRatio || pick(defaultRatios, i);
+  const color = item.color || pick(placeholderColors, i);
+  const label = item.title || "Illustration " + (i + 1);
+  return {
+    ratio,
+    src: item.image || placeholderUrl(color, 800, Math.round(800 / ratio), label),
+    alt: item.alt || item.title || "插图 " + (i + 1),
+  };
+}
+
+const galleryGroups = config.gallery.groups.length
+  ? config.gallery.groups
+  : [{ name: "默认分组", items: Array.from({ length: 9 }, () => ({})) }];
 ---
 
 <BaseLayout title="画廊">
@@ -8,28 +37,42 @@ import config from "virtual:site-config";
     <h1 class="font-heading text-3xl neon-text-primary mb-2">画廊</h1>
     <p class="text-sm text-[var(--color-text)]/50 mb-10">插画与角色设计展示</p>
 
-    <div class="columns-1 md:columns-2 lg:columns-3 gap-4 space-y-4"
-         style={`columns: ${config.gallery.columns}`}>
-      {
-        Array.from({ length: 9 }).map((_, i) => (
-          <div
-            class="group relative break-inside-avoid rounded-xl neon-border overflow-hidden
-                   bg-gradient-to-br from-[var(--color-primary)]/10 to-[var(--color-secondary)]/5
-                   hover:neon-glow-primary transition-all duration-500 cursor-pointer"
-            style={`aspect-ratio: ${[3/4, 4/3, 1, 16/9, 4/3, 3/4, 16/9, 1, 4/3][i]}`}
-          >
-            <div class="w-full h-full flex items-center justify-center
-                        text-[var(--color-text)]/15 text-xs">
-              插图 {i + 1}
-            </div>
-            <div class="absolute inset-x-0 bottom-0 p-4
-                        bg-gradient-to-t from-[var(--color-bg)]/90 to-transparent
-                        opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-              <p class="text-xs text-[var(--color-text)]/70">角色插画 #{i + 1}</p>
-            </div>
-          </div>
-        ))
-      }
-    </div>
+    {
+      galleryGroups.map((group) => (
+            <section class="mb-14">
+              <h2 id={group.slug} class="font-heading text-xl neon-text-secondary mb-2 flex items-center gap-3
+                         before:w-1 before:h-5 before:rounded before:bg-[var(--color-primary)]">
+                {group.name}
+              </h2>
+              {group.description && <p class="text-sm text-[var(--color-text)]/45 mb-6">{group.description}</p>}
+              <div class="columns-1 md:columns-2 lg:columns-3 gap-4 space-y-4"
+                   style={`columns: ${group.columns || config.gallery.columns}`}>
+                {group.items.map((item, i) => {
+                  const view = itemView(item, i);
+                  return (
+                    <div class="gallery-item group relative break-inside-avoid rounded-xl neon-border overflow-hidden hover:neon-glow-primary transition-all duration-500"
+                         style={`aspect-ratio: ${view.ratio}`}>
+                      <img
+                        src={view.src}
+                        alt={view.alt}
+                        class="w-full h-full object-cover cursor-pointer transition-transform duration-500 group-hover:scale-105"
+                        loading="lazy"
+                      />
+                      {(item.title || item.description || item.href) && (
+                        <div class="absolute inset-x-0 bottom-0 p-4
+                                    bg-gradient-to-t from-[var(--color-bg)]/90 to-transparent
+                                    opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                          {item.title && <p class="text-xs text-[var(--color-text)]/80">{item.title}</p>}
+                          {item.description && <p class="text-[10px] text-[var(--color-text)]/45 mt-1 line-clamp-2">{item.description}</p>}
+                          {item.href && <a href={item.href} class="inline-block text-[10px] text-[var(--color-secondary)] mt-2 no-underline hover:underline">查看详情</a>}
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            </section>
+          ))
+    }
   </div>
 </BaseLayout>

@@ -104,9 +104,28 @@ export const CDNOverridesSchema = z.object({
   artalkCSS: z.string().optional(),
 });
 
+export const GalleryItemSchema = z.object({
+  title: z.string().default(""),
+  alt: z.string().optional(),
+  description: z.string().optional(),
+  image: z.string().optional(),
+  href: z.string().optional(),
+  aspectRatio: z.number().positive().optional(),
+  color: z.string().optional(),
+});
+
+export const GalleryGroupSchema = z.object({
+  name: z.string(),
+  slug: z.string().optional(),
+  description: z.string().optional(),
+  columns: z.number().int().min(1).max(6).optional(),
+  items: z.array(GalleryItemSchema).default([]),
+});
+
 export const GallerySchema = z.object({
   columns: z.number().int().min(1).max(6).default(3),
   lightbox: z.boolean().default(true),
+  groups: z.array(GalleryGroupSchema).default([]),
 });
 
 export const FriendLinkSchema = z.object({
@@ -124,6 +143,24 @@ export const FooterSchema = z.object({
   /** Full footer content in markdown */
   content: z.string().default(""),
 });
+
+export const CodeBlockSchema = z.object({
+  showLanguage: z.boolean().default(true),
+  showLineNumbers: z.boolean().default(true),
+  enableCopy: z.boolean().default(true),
+  autoFoldThreshold: z.number().int().min(5).max(200).default(20),
+  theme: z.string().default("github-dark"),
+}).default({});
+
+export const LightboxSchema = z.object({
+  enabled: z.boolean().default(true),
+  gallery: z.boolean().default(true),
+  content: z.boolean().default(true),
+}).default({});
+
+export const LazyloadSchema = z.object({
+  enabled: z.boolean().default(true),
+}).default({});
 
 export const RSSSchema = z.object({
   title: z.string().optional(),
@@ -169,6 +206,9 @@ export const SiteConfigSchema = z.object({
   friendLinks: z.array(FriendLinkSchema).default([]),
   comments: CommentsSchema.default({}),
   gallery: GallerySchema.default({}),
+  codeBlock: CodeBlockSchema.default({}),
+  lightbox: LightboxSchema.default({}),
+  lazyload: LazyloadSchema.default({}),
   rss: RSSSchema.default({}),
   footer: FooterSchema.default({}),
 });
@@ -178,3 +218,5 @@ export type NavItem = z.infer<typeof NavItemSchema>;
 export type SocialLink = z.infer<typeof SocialLinkSchema>;
 export type CDNLink = z.infer<typeof CDNLinkSchema>;
 export type FriendLink = z.infer<typeof FriendLinkSchema>;
+export type GalleryItem = z.infer<typeof GalleryItemSchema>;
+export type GalleryGroup = z.infer<typeof GalleryGroupSchema>;

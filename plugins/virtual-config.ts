@@ -47,7 +47,7 @@ export function virtualConfigPlugin(): Plugin {
             `const config = _parsed.data;`,
             `export default config;`,
             `export const siteConfig = config;`,
-            `export const { site, fonts, cdn, theme, nav, social, homepage, blog, comments, gallery, footer, cdnOverrides, friendLinks } = config;`,
+            `export const { site, fonts, cdn, theme, nav, social, homepage, blog, comments, gallery, codeBlock, lightbox, lazyload, footer, rss, cdnOverrides, friendLinks } = config;`,
           ].join("\n"),
           map: null,
         };

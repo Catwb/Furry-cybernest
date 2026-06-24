@@ -22,7 +22,7 @@ const { Content } = await post.render();
         post.data.cover && (
           <div class="w-full aspect-video rounded-xl overflow-hidden mb-6 neon-border">
             <img src={post.data.cover} alt={post.data.title}
-                 class="w-full h-full object-cover" />
+                 class="w-full h-full object-cover" loading="lazy" />
           </div>
         )
       }
