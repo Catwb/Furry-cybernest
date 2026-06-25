@@ -145,6 +145,11 @@ code, pre, kbd, samp {
   animation: fade-in-up 0.6s ease-out forwards;
 }
 
+/* ── Lift transition (transform only, no box-shadow flash) ── */
+.transition-lift {
+  transition: transform 0.3s;
+}
+
 /* ── Glitch ── */
 @keyframes glitch {
   0% { transform: translate(0); }

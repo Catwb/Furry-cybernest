@@ -37,9 +37,9 @@ const tags = [...tagMap.entries()].sort((a, b) => b[1].length - a[1].length);
       {tags.map(([tag, posts], i) => (
         <a href={`/blog/tags/${encodeURIComponent(tag)}`}
            data-animate style="transition-delay:{i * 0.04}s"
-           class="group px-5 py-2.5 rounded-xl neon-border no-underline
-                  bg-[var(--color-bg)]/40 hover:neon-glow-primary
-                  transition-all duration-300 hover:-translate-y-0.5">
+            class="group px-5 py-2.5 rounded-xl neon-border no-underline
+                   bg-[var(--color-bg)]/40 hover:neon-glow-primary
+                   transition-lift hover:-translate-y-0.5">
           <span class="text-sm text-[var(--color-text)]/80 group-hover:text-[var(--color-secondary)]
                        transition-colors duration-200">{tag}</span>
           <span class="ml-2 text-xs text-[var(--color-text)]/30">{posts.length}</span>

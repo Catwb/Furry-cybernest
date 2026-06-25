@@ -50,7 +50,7 @@ const galleryGroups = config.gallery.groups.length
                 {group.items.map((item, i) => {
                   const view = itemView(item, i);
                   return (
-                     <div class="gallery-item group relative break-inside-avoid rounded-xl neon-border overflow-hidden hover:neon-glow-primary transition-all duration-300 hover:-translate-y-0.5"
+                     <div class="gallery-item group relative break-inside-avoid rounded-xl neon-border overflow-hidden hover:neon-glow-primary transition-lift hover:-translate-y-0.5"
                          style={`aspect-ratio: ${view.ratio}`}>
                       <img
                         src={view.src}

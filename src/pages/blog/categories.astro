@@ -37,9 +37,9 @@ const categories = [...catMap.entries()].sort((a, b) => b[1].length - a[1].lengt
       {categories.map(([cat, posts], i) => (
         <a href={`/blog/categories/${encodeURIComponent(cat)}`}
            data-animate style="transition-delay:{i * 0.06}s"
-           class="flex items-center justify-between p-5 rounded-xl neon-border no-underline
-                  bg-[var(--color-bg)]/40 hover:neon-glow-primary
-                  transition-all duration-300 hover:-translate-y-0.5 group">
+            class="flex items-center justify-between p-5 rounded-xl neon-border no-underline
+                   bg-[var(--color-bg)]/40 hover:neon-glow-primary
+                   transition-lift hover:-translate-y-0.5 group">
           <div>
             <p class="text-sm text-[var(--color-text)]/80 group-hover:text-[var(--color-secondary)]
                       transition-colors duration-200">{cat}</p>
