@@ -30,7 +30,7 @@ const isDark = mode === "dark";
   <head>
     <meta charset="UTF-8" />
     <script is:inline>
-      (function(){var h=document.documentElement;try{var s=localStorage.getItem('theme');if(s==='dark'){h.classList.add('dark');var d=JSON.parse(h.getAttribute('data-theme')||'{}');if(d.dark)for(var k in d.dark)h.style.setProperty(k,d.dark[k])}}catch(e){}})();
+      (function(){var h=document.documentElement;try{var s=localStorage.getItem('theme');if(s==='dark'){h.classList.add('dark');var d=JSON.parse(h.getAttribute('data-theme'));if(d&&d.dark){var p=[];for(var k in d.dark)p.push(k+':'+d.dark[k]);h.setAttribute('style',p.join(';'))}}else{var d=JSON.parse(h.getAttribute('data-theme'));if(d&&d.light){var p=[];for(var k in d.light)p.push(k+':'+d.light[k]);h.setAttribute('style',p.join(';'))}}}catch(e){}})();
     </script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content={pageDesc} />
