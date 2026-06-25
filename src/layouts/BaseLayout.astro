@@ -13,30 +13,6 @@ const { title, description } = Astro.props;
 const pageTitle = title ? `${title} | ${config.site.title}` : config.site.title;
 const pageDesc = description || config.site.description;
 
-const { light, dark, mode } = config.theme;
-
-function styleObj(set: Record<string, string>, isDark: boolean) {
-  const base: Record<string, string> = {};
-  for (const [k, v] of Object.entries(set)) {
-    base[`--color-${k}`] = v;
-  }
-  base["--color-surface"] = set["surface"] ?? (isDark ? "#12122A" : "#F8F9FA");
-  base["--color-border"] = set["border"] ?? (isDark ? "rgba(124,58,237,0.3)" : "rgba(124,58,237,0.15)");
-  base["--color-glow"] = set["glow"] ?? (isDark ? "rgba(124,58,237,0.4)" : "rgba(124,58,237,0.12)");
-  base["--color-neon-primary"] = base["--color-primary"];
-  base["--color-neon-secondary"] = base["--color-secondary"];
-  base["--color-neon-accent"] = base["--color-accent"];
-  base["--color-neon-bg"] = base["--color-bg"];
-  base["--color-neon-text"] = base["--color-text"];
-  base["--color-neon-surface"] = base["--color-surface"];
-  base["--color-neon-border"] = base["--color-border"];
-  base["--color-neon-glow"] = base["--color-glow"];
-  return base;
-}
-const lightStyle = styleObj(light, false);
-const darkStyle = styleObj(dark, true);
-
-
 const featConfig = JSON.stringify({
   showLanguage: config.codeBlock?.showLanguage,
   showLineNumbers: config.codeBlock?.showLineNumbers,
@@ -50,14 +26,9 @@ const featConfig = JSON.stringify({
 ---
 
 <!doctype html>
-<html lang={config.site.language}
-      data-theme={JSON.stringify({ light: lightStyle, dark: darkStyle, mode })}>
+<html lang={config.site.language}>
   <head>
     <meta charset="UTF-8" />
-    <style>html:not([data-theme-ready]){visibility:hidden!important}</style>
-    <script is:inline>
-      (function(){var h=document.documentElement;try{var d=JSON.parse(h.getAttribute('data-theme'));var s=localStorage.getItem('theme');var t;if(s)t=s;else if(d&&d.mode==='auto')t=window.matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light';else t='light';if(t==='dark')h.classList.add('dark');h.style.colorScheme=t;if(d){var v=t==='dark'?d.dark:d.light;if(v){var p=[];for(var k in v)p.push(k+':'+v[k]);h.setAttribute('style',(h.getAttribute('style')||'')+';'+p.join(';'))}}}catch(e){}h.setAttribute('data-theme-ready','')})();
-    </script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content={pageDesc} />
     <meta name="author" content={config.site.author} />
@@ -89,36 +60,10 @@ const featConfig = JSON.stringify({
       <!-- Desktop nav -->
       <div id="desktop-nav" class="hidden md:flex items-center gap-6">
         <NavMenu items={config.nav} />
-        <button id="theme-toggle" class="theme-toggle shrink-0" aria-label="切换主题">
-          <svg id="theme-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="12" cy="12" r="5"/>
-            <line x1="12" y1="1" x2="12" y2="3"/>
-            <line x1="12" y1="21" x2="12" y2="23"/>
-            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
-            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
-            <line x1="1" y1="12" x2="3" y2="12"/>
-            <line x1="21" y1="12" x2="23" y2="12"/>
-            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
-            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
-          </svg>
-        </button>
       </div>
 
-      <!-- Mobile: theme toggle + hamburger -->
+      <!-- Mobile: hamburger -->
       <div class="flex md:hidden items-center gap-2">
-        <button id="theme-toggle-mobile" class="theme-toggle" aria-label="切换主题">
-          <svg id="theme-icon-mobile" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="12" cy="12" r="5"/>
-            <line x1="12" y1="1" x2="12" y2="3"/>
-            <line x1="12" y1="21" x2="12" y2="23"/>
-            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
-            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
-            <line x1="1" y1="12" x2="3" y2="12"/>
-            <line x1="21" y1="12" x2="23" y2="12"/>
-            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
-            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
-          </svg>
-        </button>
         <button id="hamburger" class="relative w-9 h-9 flex items-center justify-center
                                       text-[var(--color-text)]/60 hover:text-[var(--color-secondary)]
                                       transition-colors duration-200" aria-label="菜单">
@@ -157,34 +102,8 @@ const featConfig = JSON.stringify({
     </footer>
 
     <script is:inline>
-      const html = document.documentElement;
-      const themeData = JSON.parse(html.dataset.theme);
-
-      function applyVars(obj) { for (const [k, v] of Object.entries(obj)) html.style.setProperty(k, v); }
-
-      function setTheme(dark) {
-        html.classList.toggle("dark", dark);
-        document.querySelectorAll("#theme-icon, #theme-icon-mobile").forEach(function(el) {
-          el.innerHTML = dark
-            ? '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>'
-            : '<circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>';
-        });
-        applyVars(dark ? themeData.dark : themeData.light);
-        try { localStorage.setItem("theme", dark ? "dark" : "light"); } catch {}
-      }
-
-      // Sync icons with theme already applied by head script
-      document.querySelectorAll("#theme-icon, #theme-icon-mobile").forEach(function(el) {
-        el.innerHTML = html.classList.contains("dark")
-          ? '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>'
-          : '<circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>';
-      });
-
-      document.querySelectorAll("#theme-toggle, #theme-toggle-mobile").forEach(function(btn) {
-        if (btn) btn.addEventListener("click", function() { setTheme(!html.classList.contains("dark")); });
-      });
-
       /* Mobile hamburger */
+      var html = document.documentElement;
       var hamburger = document.getElementById("hamburger");
       var drawer = document.getElementById("mobile-drawer");
       var hamIcon = document.getElementById("hamburger-icon");

@@ -5,17 +5,9 @@
   --font-heading: "LXGW WenKai Medium", "Noto Serif SC", serif;
   --font-body: "LXGW WenKai", "Noto Sans SC", sans-serif;
   --font-bold: "LXGW WenKai Medium", "Noto Sans SC", sans-serif;
-  --color-neon-primary: var(--color-primary);
-  --color-neon-secondary: var(--color-secondary);
-  --color-neon-accent: var(--color-accent);
-  --color-neon-bg: var(--color-bg);
-  --color-neon-text: var(--color-text);
-  --color-neon-surface: var(--color-surface);
-  --color-neon-border: var(--color-border);
-  --color-neon-glow: var(--color-glow);
 }
 
-/* ── Light mode (default) ── */
+/* ── Color variables ── */
 :root {
   color-scheme: light;
   --color-primary: #7c3aed;
@@ -26,19 +18,14 @@
   --color-surface: #f8f9fa;
   --color-border: rgba(124, 58, 237, 0.15);
   --color-glow: rgba(124, 58, 237, 0.12);
-}
-
-/* ── Dark mode ── */
-.dark {
-  color-scheme: dark;
-  --color-primary: #a78bfa;
-  --color-secondary: #22d3ee;
-  --color-accent: #f472b6;
-  --color-bg: #0a0a1a;
-  --color-text: #e2e8f0;
-  --color-surface: #12122a;
-  --color-border: rgba(124, 58, 237, 0.3);
-  --color-glow: rgba(124, 58, 237, 0.4);
+  --color-neon-primary: var(--color-primary);
+  --color-neon-secondary: var(--color-secondary);
+  --color-neon-accent: var(--color-accent);
+  --color-neon-bg: var(--color-bg);
+  --color-neon-text: var(--color-text);
+  --color-neon-surface: var(--color-surface);
+  --color-neon-border: var(--color-border);
+  --color-neon-glow: var(--color-glow);
 }
 
 html {
@@ -48,10 +35,6 @@ html {
 body {
   background-color: var(--color-neon-bg);
   color: var(--color-neon-text);
-  transition: none;
-}
-html[data-theme-ready] body {
-  transition: background-color 0.3s, color 0.3s;
 }
 
 h1, h2, h3, h4, h5, h6 {
