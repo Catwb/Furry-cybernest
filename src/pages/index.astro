@@ -9,7 +9,7 @@ const { homepage } = config;
   <div class="cyber-grid min-h-screen overflow-x-hidden">
     <!-- Hero -->
     <section class="relative flex flex-col items-center justify-center text-center px-6 pt-24 pb-16">
-      <div class="max-w-5xl mx-auto animate-fade-in">
+      <div data-animate class="max-w-5xl mx-auto animate-fade-in">
         <h1 class="font-heading text-5xl md:text-7xl neon-text-primary mb-6 leading-tight break-words
                    [text-shadow:0_0_20px_var(--color-primary),0_0_40px_var(--color-glow)]">
           {homepage.hero.title}
@@ -38,14 +38,15 @@ const { homepage } = config;
 
     <!-- Featured Posts -->
     <section class="max-w-5xl mx-auto px-6 py-16">
-      <h2 class="font-heading text-2xl neon-text-secondary mb-8 text-center">精选故事</h2>
+      <h2 data-animate class="font-heading text-2xl neon-text-secondary mb-8 text-center">精选故事</h2>
       <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
         {
           Array.from({ length: homepage.featuredPosts }).map((_, i) => (
             <a href={i === 0 ? "/blog/cyber-forest" : "/blog"}
+               data-animate style="transition-delay:{i * 0.1}s"
                class="group block p-6 rounded-xl neon-border bg-[var(--color-bg)]/60
-                      hover:neon-glow-primary transition-all duration-500
-                      hover:-translate-y-1 no-underline">
+                       hover:neon-glow-primary transition-all duration-500
+                       hover:-translate-y-1 no-underline">
               <div class="w-full aspect-video rounded-lg mb-4
                           bg-gradient-to-br from-[var(--color-primary)]/20 to-[var(--color-secondary)]/10
                           flex items-center justify-center text-[var(--color-text)]/30 text-sm">
@@ -69,7 +70,7 @@ const { homepage } = config;
     <!-- Character Spotlight -->
     {
       homepage.showCharacterSpotlight && (
-        <section class="max-w-5xl mx-auto px-6 py-16">
+        <section data-animate class="max-w-5xl mx-auto px-6 py-16">
           <div class="relative rounded-2xl neon-border overflow-hidden
                       bg-gradient-to-r from-[var(--color-primary)]/10 to-[var(--color-secondary)]/5
                       p-8 md:p-12 flex flex-col md:flex-row items-center gap-8">

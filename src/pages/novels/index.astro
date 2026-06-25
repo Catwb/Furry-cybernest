@@ -8,8 +8,8 @@ const novels = (await getCollection("novels"))
 
 <BaseLayout title="小说">
   <div class="max-w-5xl mx-auto px-6 py-8">
-    <h1 class="font-heading text-3xl neon-text-primary mb-2">小说</h1>
-    <p class="text-sm text-[var(--color-text)]/50 mb-10">星海之间的故事</p>
+    <h1 data-animate class="font-heading text-3xl neon-text-primary mb-2">小说</h1>
+    <p data-animate class="text-sm text-[var(--color-text)]/50 mb-10">星海之间的故事</p>
 
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
       {
@@ -17,6 +17,7 @@ const novels = (await getCollection("novels"))
           const statusMap = { ongoing: "连载中", completed: "已完结", hiatus: "暂停" };
           return (
             <a href={`/novels/${novel.slug}`}
+               data-animate style="transition-delay:{i * 0.1}s"
                class="group relative rounded-xl neon-border p-6
                       bg-[var(--color-bg)]/40 hover:neon-glow-primary
                       transition-all duration-500 hover:-translate-y-1 no-underline">

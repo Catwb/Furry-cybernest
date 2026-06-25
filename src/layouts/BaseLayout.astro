@@ -181,6 +181,9 @@ const isDark = mode === "dark";
         });
       }
 
+      /* Scroll-triggered entrance animations */
+      (function(){var e=document.querySelectorAll('[data-animate]');if(!e.length)return;if(window.matchMedia('(prefers-reduced-motion: reduce)').matches)return;var o=new IntersectionObserver(function(n){n.forEach(function(n){if(n.isIntersecting){n.target.classList.add('observed');o.unobserve(n.target)}})},{threshold:0.1,rootMargin:'0px 0px -40px 0px'});e.forEach(function(n){o.observe(n)})})();
+
       /* Mobile: tap submenu parent toggles, child links navigate normally */
       drawer && drawer.addEventListener("click", function(e) {
         var link = e.target.closest(".nav-group > .nav-link");

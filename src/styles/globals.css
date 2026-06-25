@@ -111,7 +111,32 @@ code, pre, kbd, samp {
   background-size: 60px 60px;
 }
 
-/* ── Fade-in ── */
+/* ── Scroll-triggered entrance animations ── */
+@media (prefers-reduced-motion: no-preference) {
+  [data-animate] {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+  }
+  [data-animate].observed {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  [data-animate="fade"] {
+    transform: none;
+  }
+  [data-animate="scale"] {
+    transform: scale(0.95);
+  }
+  [data-animate="scale"].observed {
+    transform: scale(1);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  [data-animate] { opacity: 1; transform: none; transition: none; }
+}
+
+/* ── Fade-in-up (instant, for hero etc.) ── */
 @keyframes fade-in-up {
   from { opacity: 0; transform: translateY(20px); }
   to { opacity: 1; transform: translateY(0); }
