@@ -62,6 +62,7 @@ export default defineConfig({
       children: [
         { label: "全部文章", url: "/blog" },
         { label: "分类", url: "/blog/categories" },
+        { label: "标签", url: "/blog/tags" },
         { label: "归档", url: "/archive" },
       ],
     },

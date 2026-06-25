@@ -1,0 +1,59 @@
+---
+import BaseLayout from "../../../layouts/BaseLayout.astro";
+import { getCollection } from "astro:content";
+
+export async function getStaticPaths() {
+  const posts = (await getCollection("blog")).filter((p) => !p.data.draft);
+  const tags = new Set(posts.flatMap((p) => p.data.tags));
+  return [...tags].map((tag) => ({ params: { tag } }));
+}
+
+const { tag } = Astro.params;
+const allPosts = (await getCollection("blog")).filter((p) => !p.data.draft);
+const posts = allPosts.filter((p) => p.data.tags.includes(tag!))
+  .sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime());
+
+function postUrl(post: { data: { abbrlink?: string }; slug: string }) {
+  return post.data.abbrlink || post.slug;
+}
+---
+
+<BaseLayout title={`标签: ${tag}`}>
+  <div class="max-w-4xl mx-auto px-6 py-8">
+    <nav class="text-xs text-[var(--color-text)]/40 mb-4">
+      <a href="/blog/tags" class="hover:text-[var(--color-secondary)] transition-colors no-underline">标签</a>
+      <span class="mx-2">/</span>
+      <span class="text-[var(--color-text)]/60">{tag}</span>
+    </nav>
+    <h1 data-animate class="font-heading text-3xl neon-text-primary mb-2">{tag}</h1>
+    <p data-animate class="text-sm text-[var(--color-text)]/50 mb-10">
+      共 {posts.length} 篇文章
+    </p>
+
+    {
+      posts.map((post, i) => (
+        <a href={`/blog/${postUrl(post)}`}
+           data-animate style="transition-delay:{i * 0.06}s"
+           class="flex items-center gap-4 px-5 py-4 mb-2 rounded-xl neon-border no-underline
+                  bg-[var(--color-bg)]/40 hover:neon-glow-primary
+                  transition-all duration-300 hover:-translate-y-0.5 group">
+          <div class="flex-1 min-w-0">
+            <p class="text-sm text-[var(--color-text)]/80 group-hover:text-[var(--color-secondary)]
+                      transition-colors duration-200 truncate">{post.data.title}</p>
+            <div class="flex items-center gap-3 mt-1 text-xs text-[var(--color-text)]/30">
+              <time>{post.data.pubDate.toLocaleDateString("zh-CN")}</time>
+              {post.data.categories.length > 0 && (
+                <span>{post.data.categories.join(" / ")}</span>
+              )}
+            </div>
+          </div>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+               stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+               class="text-[var(--color-text)]/20 group-hover:text-[var(--color-secondary)] transition-colors">
+            <polyline points="9 18 15 12 9 6" />
+          </svg>
+        </a>
+      ))
+    }
+  </div>
+</BaseLayout>

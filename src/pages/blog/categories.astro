@@ -1,0 +1,57 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { getCollection } from "astro:content";
+
+function postUrl(post: { data: { abbrlink?: string }; slug: string }) {
+  return post.data.abbrlink || post.slug;
+}
+
+const posts = (await getCollection("blog")).filter((p) => !p.data.draft);
+
+const catMap = new Map<string, typeof posts>();
+for (const p of posts) {
+  for (const cat of p.data.categories) {
+    if (!catMap.has(cat)) catMap.set(cat, []);
+    catMap.get(cat)!.push(p);
+  }
+}
+const categories = [...catMap.entries()].sort((a, b) => b[1].length - a[1].length);
+---
+
+<BaseLayout title="分类">
+  <div class="max-w-4xl mx-auto px-6 py-8">
+    <h1 data-animate class="font-heading text-3xl neon-text-primary mb-2">分类</h1>
+    <p data-animate class="text-sm text-[var(--color-text)]/50 mb-10">
+      共 {categories.length} 个分类
+    </p>
+
+    {
+      categories.length === 0 && (
+        <div class="text-center py-20 text-sm text-[var(--color-text)]/30">
+          还没有分类
+        </div>
+      )
+    }
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      {categories.map(([cat, posts], i) => (
+        <a href={`/blog/categories/${encodeURIComponent(cat)}`}
+           data-animate style="transition-delay:{i * 0.06}s"
+           class="flex items-center justify-between p-5 rounded-xl neon-border no-underline
+                  bg-[var(--color-bg)]/40 hover:neon-glow-primary
+                  transition-all duration-300 hover:-translate-y-0.5 group">
+          <div>
+            <p class="text-sm text-[var(--color-text)]/80 group-hover:text-[var(--color-secondary)]
+                      transition-colors duration-200">{cat}</p>
+            <p class="text-xs text-[var(--color-text)]/30 mt-0.5">{posts.length} 篇文章</p>
+          </div>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+               stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+               class="text-[var(--color-text)]/20 group-hover:text-[var(--color-secondary)] transition-colors">
+            <polyline points="9 18 15 12 9 6" />
+          </svg>
+        </a>
+      ))}
+    </div>
+  </div>
+</BaseLayout>
