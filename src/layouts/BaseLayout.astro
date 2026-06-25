@@ -21,6 +21,17 @@ function styleObj(set: Record<string, string>) {
 const lightStyle = styleObj(light);
 const darkStyle = styleObj(dark);
 const isDark = mode === "dark";
+
+const featConfig = JSON.stringify({
+  showLanguage: config.codeBlock?.showLanguage,
+  showLineNumbers: config.codeBlock?.showLineNumbers,
+  enableCopy: config.codeBlock?.enableCopy,
+  autoFoldThreshold: config.codeBlock?.autoFoldThreshold,
+  lightbox: config.lightbox?.enabled,
+  lightboxGallery: config.lightbox?.gallery,
+  lightboxContent: config.lightbox?.content,
+  lazyload: config.lazyload?.enabled,
+});
 ---
 
 <!doctype html>
@@ -28,9 +39,9 @@ const isDark = mode === "dark";
       data-theme={JSON.stringify({ light: lightStyle, dark: darkStyle, mode })}>
   <head>
     <meta charset="UTF-8" />
-    <style>html{visibility:hidden}</style>
+    <style is:inline>html{visibility:hidden}</style>
     <script is:inline>
-      (function(){var h=document.documentElement;try{var d=JSON.parse(h.getAttribute('data-theme'));var s=localStorage.getItem('theme');var t;if(s)t=s;else if(d&&d.mode==='auto')t=window.matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light';else t='light';if(t==='dark')h.classList.add('dark');h.style.colorScheme=t;if(d){var v=t==='dark'?d.dark:d.light;if(v){var p=[];for(var k in v)p.push(k+':'+v[k]);h.setAttribute('style',(h.getAttribute('style')||'')+';'+p.join(';'))}}}catch(e){}h.style.visibility=''})();
+      (function(){var h=document.documentElement;try{var d=JSON.parse(h.getAttribute('data-theme'));var s=localStorage.getItem('theme');var t;if(s)t=s;else if(d&&d.mode==='auto')t=window.matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light';else t='light';if(t==='dark')h.classList.add('dark');h.style.colorScheme=t;if(d){var v=t==='dark'?d.dark:d.light;if(v){var p=[];for(var k in v)p.push(k+':'+v[k]);h.setAttribute('style',(h.getAttribute('style')||'')+';'+p.join(';'))}}}catch(e){}h.style.visibility='visible'})();
     </script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content={pageDesc} />
@@ -43,18 +54,7 @@ const isDark = mode === "dark";
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="alternate" type="application/rss+xml" title={config.site.title} href="/rss.xml" />
 
-    <script id="feat-config" type="application/json">
-      {JSON.stringify({
-        showLanguage: config.codeBlock?.showLanguage,
-        showLineNumbers: config.codeBlock?.showLineNumbers,
-        enableCopy: config.codeBlock?.enableCopy,
-        autoFoldThreshold: config.codeBlock?.autoFoldThreshold,
-        lightbox: config.lightbox?.enabled,
-        lightboxGallery: config.lightbox?.gallery,
-        lightboxContent: config.lightbox?.content,
-        lazyload: config.lazyload?.enabled,
-      })}
-    </script>
+    <script id="feat-config" type="application/json" set:html={featConfig} />
   </head>
   <body>
     {config.cdn.js.map(l => <script src={l.href}></script>)}
