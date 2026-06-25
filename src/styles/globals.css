@@ -48,6 +48,9 @@ html {
 body {
   background-color: var(--color-neon-bg);
   color: var(--color-neon-text);
+  transition: none;
+}
+html[data-theme-ready] body {
   transition: background-color 0.3s, color 0.3s;
 }
 

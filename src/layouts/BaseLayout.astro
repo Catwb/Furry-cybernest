@@ -41,7 +41,7 @@ const featConfig = JSON.stringify({
     <meta charset="UTF-8" />
     <script is:inline>document.documentElement.style.visibility='hidden';</script>
     <script is:inline>
-      (function(){var h=document.documentElement;try{var d=JSON.parse(h.getAttribute('data-theme'));var s=localStorage.getItem('theme');var t;if(s)t=s;else if(d&&d.mode==='auto')t=window.matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light';else t='light';if(t==='dark')h.classList.add('dark');h.style.colorScheme=t;if(d){var v=t==='dark'?d.dark:d.light;if(v){var p=[];for(var k in v)p.push(k+':'+v[k]);h.setAttribute('style',(h.getAttribute('style')||'')+';'+p.join(';'))}}}catch(e){}h.style.visibility='visible'})();
+      (function(){var h=document.documentElement;try{var d=JSON.parse(h.getAttribute('data-theme'));var s=localStorage.getItem('theme');var t;if(s)t=s;else if(d&&d.mode==='auto')t=window.matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light';else t='light';if(t==='dark')h.classList.add('dark');h.style.colorScheme=t;if(d){var v=t==='dark'?d.dark:d.light;if(v){var p=[];for(var k in v)p.push(k+':'+v[k]);h.setAttribute('style',(h.getAttribute('style')||'')+';'+p.join(';'))}}}catch(e){}h.setAttribute('data-theme-ready','');h.style.visibility='visible'})();
     </script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content={pageDesc} />
