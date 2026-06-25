@@ -20,7 +20,7 @@ function styleObj(set: Record<string, string>) {
 }
 const lightStyle = styleObj(light);
 const darkStyle = styleObj(dark);
-const isDark = mode === "dark";
+
 
 const featConfig = JSON.stringify({
   showLanguage: config.codeBlock?.showLanguage,
@@ -48,8 +48,8 @@ const featConfig = JSON.stringify({
     <meta name="author" content={config.site.author} />
     <title>{pageTitle}</title>
 
-    {config.fonts.cdn.filter(l => l.head).map(l => <link rel="stylesheet" href={l.href} />)}
-    {config.cdn.css.filter(l => l.head).map(l => <link rel="stylesheet" href={l.href} />)}
+    {config.fonts.cdn.filter((l: { head?: boolean }) => l.head).map((l: { href: string }) => <link rel="stylesheet" href={l.href} />)}
+    {config.cdn.css.filter((l: { head?: boolean }) => l.head).map((l: { href: string }) => <link rel="stylesheet" href={l.href} />)}
 
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="alternate" type="application/rss+xml" title={config.site.title} href="/rss.xml" />
@@ -57,9 +57,9 @@ const featConfig = JSON.stringify({
     <script id="feat-config" type="application/json" set:html={featConfig} />
   </head>
   <body>
-    {config.cdn.js.map(l => <script src={l.href}></script>)}
-    {config.fonts.cdn.filter(l => !l.head).map(l => <link rel="stylesheet" href={l.href} />)}
-    {config.cdn.css.filter(l => !l.head).map(l => <link rel="stylesheet" href={l.href} />)}
+    {config.cdn.js.map((l: { href: string }) => <script src={l.href}></script>)}
+    {config.fonts.cdn.filter((l: { head?: boolean }) => !l.head).map((l: { href: string }) => <link rel="stylesheet" href={l.href} />)}
+    {config.cdn.css.filter((l: { head?: boolean }) => !l.head).map((l: { href: string }) => <link rel="stylesheet" href={l.href} />)}
 
     <nav class="fixed top-4 left-1/2 -translate-x-1/2 z-50 max-w-3xl
                 bg-[var(--color-surface)]/80 backdrop-blur-md
