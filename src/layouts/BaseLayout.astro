@@ -1,6 +1,7 @@
 ---
 import config from "virtual:site-config";
 import NavMenu from "../components/NavMenu.astro";
+import { ViewTransitions } from "astro:transitions";
 import { marked } from "marked";
 import "../styles/globals.css";
 
@@ -41,13 +42,19 @@ const featConfig = JSON.stringify({
     <link rel="alternate" type="application/rss+xml" title={config.site.title} href="/rss.xml" />
 
     <script id="feat-config" type="application/json" set:html={featConfig} />
+
+    <ViewTransitions />
+    <meta name="astro-view-transitions-fallback" content="none" />
   </head>
   <body>
+    <div id="progress-bar" class="fixed top-0 left-0 h-[3px] bg-[var(--color-primary)] z-[9999] w-0 transition-[width] duration-200"></div>
+
     {config.cdn.js.map((l: { href: string }) => <script src={l.href}></script>)}
     {config.fonts.cdn.filter((l: { head?: boolean }) => !l.head).map((l: { href: string }) => <link rel="stylesheet" href={l.href} />)}
     {config.cdn.css.filter((l: { head?: boolean }) => !l.head).map((l: { href: string }) => <link rel="stylesheet" href={l.href} />)}
 
-    <nav class="fixed top-4 left-1/2 -translate-x-1/2 z-50 max-w-3xl
+    <nav data-astro-transition-persist="nav"
+         class="fixed top-4 left-1/2 -translate-x-1/2 z-50 max-w-3xl
                 bg-[var(--color-surface)]/80 backdrop-blur-md
                 neon-border rounded-2xl px-4 md:px-6 py-3
                 flex items-center justify-between"
@@ -89,6 +96,11 @@ const featConfig = JSON.stringify({
       </div>
     </div>
 
+    <div data-astro-transition-persist="hero-bg" class="fixed inset-0 w-full h-full -z-10">
+      <img src={config.homepage.hero.background} alt="" class="w-full h-full object-cover" />
+      <div class="absolute inset-0 bg-[var(--color-bg)]/60" />
+    </div>
+
     <main class="min-h-screen pt-24">
       <slot />
     </main>
@@ -117,9 +129,6 @@ const featConfig = JSON.stringify({
         });
       }
 
-      /* Scroll-triggered entrance animations */
-      (function(){var e=document.querySelectorAll('[data-animate]');if(!e.length)return;if(window.matchMedia('(prefers-reduced-motion: reduce)').matches)return;var o=new IntersectionObserver(function(n){n.forEach(function(n){if(n.isIntersecting){n.target.classList.add('observed');o.unobserve(n.target)}})},{threshold:0.05});e.forEach(function(n){o.observe(n)})})();
-
       /* Mobile: tap submenu parent toggles, child links navigate normally */
       drawer && drawer.addEventListener("click", function(e) {
         var link = e.target.closest(".nav-group > .nav-link");
@@ -130,6 +139,49 @@ const featConfig = JSON.stringify({
         e.preventDefault();
         group.classList.toggle("nav-open");
       });
+
+      /* Progress bar */
+      var bar = document.getElementById("progress-bar");
+      function startProgress() {
+        bar.style.transition = "none";
+        bar.style.width = "0%";
+        requestAnimationFrame(function() {
+          bar.style.transition = "width 0.4s ease";
+          bar.style.width = "70%";
+        });
+      }
+      function finishProgress() {
+        bar.style.transition = "width 0.2s ease";
+        bar.style.width = "100%";
+        setTimeout(function() {
+          bar.style.transition = "opacity 0.3s ease";
+          bar.style.opacity = "0";
+          setTimeout(function() {
+            bar.style.transition = "none";
+            bar.style.width = "0%";
+            bar.style.opacity = "1";
+          }, 300);
+        }, 200);
+      }
+
+      document.addEventListener("astro:page-load", function () {
+        finishProgress();
+        /* Scroll-triggered entrance animations */
+        var els = document.querySelectorAll("[data-animate]");
+        if (els.length && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+          var obs = new IntersectionObserver(function(entries) {
+            entries.forEach(function(entry) {
+              if (entry.isIntersecting) {
+                entry.target.classList.add("observed");
+                obs.unobserve(entry.target);
+              }
+            });
+          }, { threshold: 0.05 });
+          els.forEach(function(el) { obs.observe(el); });
+        }
+      });
+
+      document.addEventListener("astro:before-preparation", startProgress);
     </script>
 
     <script is:inline src="/scripts/features.js"></script>

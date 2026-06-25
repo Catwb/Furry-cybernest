@@ -55,16 +55,13 @@ function postUrl(post: { data: { abbrlink?: string }; slug: string }) {
         <a href={`/blog/${postUrl(post)}`}
            data-animate style={`transition-delay:${i * 0.06}s`}
             class="flex items-center gap-4 px-5 py-4 mb-2 rounded-xl neon-border no-underline
-                   bg-[var(--color-bg)]/40 hover:neon-glow-primary
+                   bg-[var(--color-bg)]/70 hover:neon-glow-primary
                    transition-lift hover:-translate-y-0.5 group">
           <div class="flex-1 min-w-0">
             <p class="text-sm text-[var(--color-text)]/80 group-hover:text-[var(--color-secondary)]
                       transition-colors duration-200 truncate">{post.data.title}</p>
             <div class="flex items-center gap-3 mt-1 text-xs text-[var(--color-text)]/30">
               <time>{post.data.pubDate.toLocaleDateString("zh-CN")}</time>
-              {post.data.tags.length > 0 && (
-                <span>{post.data.tags.slice(0, 3).join(", ")}{post.data.tags.length > 3 ? "…" : ""}</span>
-              )}
             </div>
           </div>
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"

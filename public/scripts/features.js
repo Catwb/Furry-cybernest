@@ -169,4 +169,9 @@
     initCodeBlocks();
     initLightbox();
   });
+
+  document.addEventListener("astro:page-load", function () {
+    initCodeBlocks();
+    initLightbox();
+  });
 })();

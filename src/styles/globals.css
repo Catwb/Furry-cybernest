@@ -218,7 +218,6 @@ code, pre, kbd, samp {
   border-left: 3px solid var(--color-primary);
   padding: 0.5em 0 0.5em 1.25rem;
   margin: 1.5em 0;
-  font-style: italic;
   opacity: 0.85;
   line-height: 1.8;
 }
@@ -494,4 +493,10 @@ code, pre, kbd, samp {
 /* ── Lazy Load ── */
 img[loading="lazy"] {
   transition: opacity 0.3s;
+}
+
+/* ── View Transitions: disable default fade animation ── */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
 }

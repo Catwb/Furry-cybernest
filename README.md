@@ -6,12 +6,12 @@
 
 ### 核心
 - **配置驱动** — 所有设置集中在 `site.config.ts`，Zod 校验+类型安全
-- **亮色/暗色/自动** 三种主题模式，CSS 变量实时切换，localStorage 持久化
 - **响应式** — 桌面悬浮药丸导航 + 手机汉堡菜单抽屉
 - **赛博视觉** — 霓虹光效、网格背景、可配置主题色
 
 ### 内容
-- **博客** — Content Collections 驱动，支持标签、封面图、分页、归档（年/月时间线）
+- **博客** — Content Collections 驱动，支持封面图、分页、归档（年/月时间线）
+- **分类** — 多级分类（如 `["小说", "赛博世界"]`），分类树展示
 - **小说** — 双集合（novels + chapters），章节目录、上下章导航、连载/完结状态
 - **画廊** — 可配置列数、分组、图片信息、灯箱展示
 - **友链** — 分组展示，可折叠，每链接可设独立色/头像
@@ -21,14 +21,18 @@
 - **代码块美化** — 语言标签、行号、一键复制、超长自动折叠（`>20行`），支持配置开关
 - **灯箱** — 点击文章正文图片 / 画廊图片可全屏放大查看，键盘 `Esc` 关闭
 - **图片懒加载** — 原生 `loading="lazy"` 减少带宽浪费
+- **滚动动画** — IntersectionObserver 驱动的入场动画
 
 ### 页面路由
 
 | 路由 | 说明 |
 |------|------|
-| `/` | 首页（Hero + 精选文章 + 角色卡片） |
+| `/` | 首页（Hero + 博客列表 + 分页 + 侧边栏） |
+| `/page/:page` | 首页分页（第 2、3、4… 页） |
 | `/blog` | 博客列表 |
 | `/blog/:slug` | 文章详情（支持 frontmatter `abbrlink` 自定义路径） |
+| `/blog/categories` | 分类总览（树形展示） |
+| `/blog/categories/:category` | 分类下的文章列表 |
 | `/novels` | 小说列表 |
 | `/novels/:slug` | 小说详情 + 章节目录 |
 | `/novels/:slug/:chapter` | 章节阅读 |
@@ -71,7 +75,7 @@ pnpm preview   # 预览构建结果
 | `cdn` | 字体/CSS/JS 外部资源 |
 | `nav` | 导航栏（支持多级嵌套） |
 | `social` | 社交链接（github/twitter/weibo/bilibili/pixiv） |
-| `homepage` | 首页 Hero、精选文章数、角色卡片 |
+| `homepage` | 首页配置（Hero、每页文章数、侧边栏组件） |
 | `blog` | 每页文章数、永久链接格式 |
 | `novels` | 小说默认设置 |
 | `comments` | 评论系统（twikoo/artalk）|
@@ -83,6 +87,24 @@ pnpm preview   # 预览构建结果
 | `footer` | 页脚 Markdown 内容 |
 | `rss` | RSS feed 配置 |
 | `cdnOverrides` | CDN 地址覆盖 |
+
+### 首页配置
+
+```ts
+homepage: {
+  hero: {
+    show: true,                    // 是否显示 Hero 区块
+    title: "欢迎来到 Furry CyberNest",
+    subtitle: "赛博森林深处，故事正在低语",
+    background: "none",            // "none" | "cyber-grid"
+  },
+  postsPerPage: 6,                 // 每页展示文章数
+  sidebar: {
+    characterSpotlight: true,      // 角色 Spotlight 卡片
+    categories: true,              // 分类列表
+  },
+}
+```
 
 ### 代码块配置
 
@@ -116,7 +138,7 @@ gallery: {
           image: "/images/gallery/fox.jpg",
           href: "/blog/character-fox",
           aspectRatio: 3 / 4,
-          color: "#7c3aed", // 未设置 image 时生成占位图
+          color: "#0ea5e9", // 未设置 image 时生成占位图
         },
       ],
     },
@@ -136,11 +158,27 @@ description: "摘要"
 pubDate: 2026-06-24
 abbrlink: "custom-slug"      # 可选，自定义 URL 路径（默认用文件名）
 cover: "/images/cover.jpg"   # 可选
-tags: ["标签1", "标签2"]
+categories:
+  - 小说                     # 多级分类：["父分类", "子分类"]
+  - 赛博世界
 draft: false
 ---
 正文 Markdown...
 ```
+
+### 分类
+
+分类支持多级结构，使用 `categories` 数组定义：
+
+```yaml
+categories:
+  - 小说          # 第一级
+  - 赛博世界      # 第二级（可选）
+```
+
+- `/blog/categories` — 分类总览页，树形展示所有分类
+- `/blog/categories/小说` — 该分类下的所有文章
+- `/blog/categories/小说/赛博世界` — 该子分类下的文章
 
 ### 小说
 ```bash
@@ -168,6 +206,7 @@ src/
   layouts/BaseLayout.astro   # 全局壳（导航、主题、页脚）
   components/
     NavMenu.astro        # 递归多级导航
+    Sidebar.astro        # 首页侧边栏（角色卡片、分类列表）
     SocialIcon.astro     # SVG 社交图标
     comments/            # Twikoo & Artalk
   pages/                 # 路由页面

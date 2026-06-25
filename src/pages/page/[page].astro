@@ -1,0 +1,118 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import Sidebar from "../../components/Sidebar.astro";
+import { getCollection } from "astro:content";
+import config from "virtual:site-config";
+
+export async function getStaticPaths() {
+  const perPage = config.homepage.postsPerPage;
+  const allPosts = (await getCollection("blog"))
+    .filter((p) => !p.data.draft)
+    .sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime());
+
+  const totalPages = Math.ceil(allPosts.length / perPage);
+  return Array.from({ length: totalPages - 1 }, (_, i) => ({
+    params: { page: String(i + 2) },
+  }));
+}
+
+function postUrl(post: { data: { abbrlink?: string }; slug: string }) {
+  return post.data.abbrlink || post.slug;
+}
+
+const { page } = Astro.params;
+const pageNum = Number(page);
+const perPage = config.homepage.postsPerPage;
+const allPosts = (await getCollection("blog"))
+  .filter((p) => !p.data.draft)
+  .sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime());
+
+const totalPages = Math.ceil(allPosts.length / perPage);
+const posts = allPosts.slice((pageNum - 1) * perPage, pageNum * perPage);
+const showSidebar = config.homepage.sidebar.characterSpotlight || config.homepage.sidebar.categories;
+---
+
+<BaseLayout title={`第 ${pageNum} 页`}>
+  <div class="max-w-6xl mx-auto px-6 py-8">
+    <div class={`flex flex-col ${showSidebar ? 'md:flex-row' : ''} gap-8`}>
+      <div class={showSidebar ? 'md:w-3/4' : 'w-full'}>
+        <div class="flex flex-col gap-5">
+          {
+            posts.map((post, i) => (
+              <a href={`/blog/${postUrl(post)}`}
+                 data-animate style={`transition-delay:${i * 0.04}s`}
+                 class="group relative flex flex-row items-stretch rounded-xl neon-border overflow-hidden no-underline
+                        bg-[var(--color-bg)]/70 hover:neon-glow-primary
+                        transition-lift hover:-translate-y-0.5">
+                {post.data.cover && (
+                  <div class="w-48 shrink-0 overflow-hidden hidden sm:block">
+                    <img src={post.data.cover} alt={post.data.title}
+                         class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" />
+                  </div>
+                )}
+                <div class="px-8 py-6 flex flex-col flex-1 min-w-0">
+                  <div class="flex items-center gap-2 mb-2">
+                    {post.data.categories.length > 0 && (
+                      <span class="text-xs text-[var(--color-primary)]">
+                        {post.data.categories.join("/")}
+                      </span>
+                    )}
+                    <time class="text-xs text-[var(--color-text)]/30">
+                      {post.data.pubDate.toLocaleDateString("zh-CN")}
+                    </time>
+                  </div>
+                  <h2 class="font-heading text-lg text-[var(--color-text)] group-hover:text-[var(--color-secondary)]
+                             transition-colors duration-200 mb-2 line-clamp-1">
+                    {post.data.title}
+                  </h2>
+                  {post.data.description && (
+                    <p class="text-sm text-[var(--color-text)]/45 line-clamp-2 flex-1">
+                      {post.data.description}
+                    </p>
+                  )}
+                </div>
+                <span class="hidden md:flex items-center pr-6 text-xs text-[var(--color-primary)]
+                             opacity-0 group-hover:opacity-100 transition-opacity duration-300 shrink-0">
+                  阅读 →
+                </span>
+              </a>
+            ))
+          }
+        </div>
+
+        <nav class="flex items-center justify-center gap-2 mt-10 text-sm">
+          {pageNum > 2 && (
+            <a href="/" class="text-[var(--color-text)]/40 hover:text-[var(--color-secondary)] transition-colors no-underline px-2 py-1">1</a>
+          )}
+          {pageNum > 3 && <span class="text-[var(--color-text)]/20">…</span>}
+          {pageNum > 1 && (
+            <a href={pageNum === 2 ? "/" : `/page/${pageNum - 1}`}
+               class="text-[var(--color-text)]/40 hover:text-[var(--color-secondary)] transition-colors no-underline px-2 py-1">
+              {pageNum - 1}
+            </a>
+          )}
+          <span class="text-[var(--color-primary)] font-heading">{pageNum}</span>
+          {pageNum < totalPages && (
+            <a href={`/page/${pageNum + 1}`}
+               class="text-[var(--color-text)]/40 hover:text-[var(--color-secondary)] transition-colors no-underline px-2 py-1">
+              {pageNum + 1}
+            </a>
+          )}
+          {pageNum < totalPages - 1 && <span class="text-[var(--color-text)]/20">…</span>}
+          {pageNum < totalPages - 1 && (
+            <a href={`/page/${totalPages}`}
+               class="text-[var(--color-text)]/40 hover:text-[var(--color-secondary)] transition-colors no-underline px-2 py-1">
+              {totalPages}
+            </a>
+          )}
+        </nav>
+      </div>
+
+      {showSidebar && (
+        <div class="md:w-1/4">
+          <Sidebar />
+        </div>
+      )}
+    </div>
+  </div>
+</BaseLayout>

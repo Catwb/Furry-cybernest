@@ -63,16 +63,18 @@ export const FontConfigSchema = z.object({
   cdn: z.array(CDNLinkSchema).default([]),
 });
 
-export const HeroSchema = z.object({
-  title: z.string().default("Welcome"),
-  subtitle: z.string().default(""),
-  backgroundEffect: z.enum(["none", "particles", "grid"]).default("particles"),
-});
-
 export const HomepageSchema = z.object({
-  hero: HeroSchema.default({}),
-  featuredPosts: z.number().int().min(0).max(20).default(3),
-  showCharacterSpotlight: z.boolean().default(true),
+  hero: z.object({
+    show: z.boolean().default(true),
+    title: z.string().default("Welcome"),
+    subtitle: z.string().default(""),
+    background: z.string().default(""),
+  }).default({}),
+  postsPerPage: z.number().int().min(1).max(50).default(6),
+  sidebar: z.object({
+    characterSpotlight: z.boolean().default(true),
+    categories: z.boolean().default(true),
+  }).default({}),
 });
 
 export const BlogSchema = z.object({

@@ -60,9 +60,7 @@ export default defineConfig({
     {
       label: "博文",
       children: [
-        { label: "全部文章", url: "/blog" },
         { label: "分类", url: "/blog/categories" },
-        { label: "标签", url: "/blog/tags" },
         { label: "归档", url: "/archive" },
       ],
     },
@@ -87,12 +85,16 @@ export default defineConfig({
 
   homepage: {
     hero: {
+      show: true,
       title: "欢迎来到 Furry CyberNest",
       subtitle: "赛博森林深处，故事正在低语",
-      backgroundEffect: "particles",
+      background: "https://api.furry.ist/furry-img/?mode=auto",
     },
-    featuredPosts: 3,
-    showCharacterSpotlight: true,
+    postsPerPage: 6,
+    sidebar: {
+      characterSpotlight: true,
+      categories: true,
+    },
   },
 
   blog: {

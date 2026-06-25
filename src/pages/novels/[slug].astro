@@ -54,11 +54,11 @@ const wordCount = chapters.reduce((sum, c) => sum + c.body.length, 0);
     <div class="space-y-2">
       {
         chapters.map((ch, i) => (
-          <a
+           <a
             href={`/novels/${slug}/${ch.data.chapter}`}
             class="flex items-center gap-4 px-5 py-4 rounded-xl
-                   hover:bg-[var(--color-primary)]/5
-                   border border-transparent hover:border-[var(--color-primary)]/20
+                   bg-[var(--color-bg)]/70 neon-border
+                   hover:neon-glow-primary
                    transition-all duration-300 no-underline group"
           >
             <span class="w-8 h-8 rounded-full flex items-center justify-center text-xs
