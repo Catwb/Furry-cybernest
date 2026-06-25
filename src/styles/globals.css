@@ -115,8 +115,8 @@ code, pre, kbd, samp {
 @media (prefers-reduced-motion: no-preference) {
   [data-animate] {
     opacity: 0;
-    transform: translateY(24px);
-    transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+    transform: translateY(12px);
+    transition: opacity 0.4s cubic-bezier(0.22, 1, 0.36, 1), transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
   }
   [data-animate].observed {
     opacity: 1;
