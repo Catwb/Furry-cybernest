@@ -15,11 +15,26 @@ const pageDesc = description || config.site.description;
 
 const { light, dark, mode } = config.theme;
 
-function styleObj(set: Record<string, string>) {
-  return Object.fromEntries(Object.entries(set).map(([k, v]) => [`--color-${k}`, v]));
+function styleObj(set: Record<string, string>, isDark: boolean) {
+  const base: Record<string, string> = {};
+  for (const [k, v] of Object.entries(set)) {
+    base[`--color-${k}`] = v;
+  }
+  base["--color-surface"] = set["surface"] ?? (isDark ? "#12122A" : "#F8F9FA");
+  base["--color-border"] = set["border"] ?? (isDark ? "rgba(124,58,237,0.3)" : "rgba(124,58,237,0.15)");
+  base["--color-glow"] = set["glow"] ?? (isDark ? "rgba(124,58,237,0.4)" : "rgba(124,58,237,0.12)");
+  base["--color-neon-primary"] = base["--color-primary"];
+  base["--color-neon-secondary"] = base["--color-secondary"];
+  base["--color-neon-accent"] = base["--color-accent"];
+  base["--color-neon-bg"] = base["--color-bg"];
+  base["--color-neon-text"] = base["--color-text"];
+  base["--color-neon-surface"] = base["--color-surface"];
+  base["--color-neon-border"] = base["--color-border"];
+  base["--color-neon-glow"] = base["--color-glow"];
+  return base;
 }
-const lightStyle = styleObj(light);
-const darkStyle = styleObj(dark);
+const lightStyle = styleObj(light, false);
+const darkStyle = styleObj(dark, true);
 
 
 const featConfig = JSON.stringify({
