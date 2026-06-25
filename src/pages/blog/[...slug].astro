@@ -42,7 +42,7 @@ const readingTime = Math.max(1, Math.ceil(wordCount / 500));
               <>
                 {i > 0 && <span class="text-[var(--color-text)]/20">/</span>}
                 <a href={`/blog/categories/${cat}`}
-                   class="text-[var(--color-primary)] hover:text-[var(--color-secondary)] transition-colors no-underline">
+                   class="text-[var(--color-text)] hover:text-[var(--color-secondary)] transition-colors no-underline">
                   {cat}
                 </a>
               </>
@@ -82,8 +82,8 @@ const readingTime = Math.max(1, Math.ceil(wordCount / 500));
               {post.data.categories.map((cat, i) => (
                 <>
                   {i > 0 && <span class="text-[var(--color-text)]/20">/</span>}
-                  <a href={`/blog/categories/${cat}`}
-                     class="text-[var(--color-primary)] hover:text-[var(--color-secondary)] transition-colors no-underline">
+                   <a href={`/blog/categories/${cat}`}
+                     class="text-[var(--color-text)] hover:text-[var(--color-secondary)] transition-colors no-underline">
                     {cat}
                   </a>
                 </>

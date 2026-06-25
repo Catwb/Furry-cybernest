@@ -89,17 +89,6 @@ for (const post of posts) {
                                        group-hover:neon-text-primary transition-all duration-300 truncate">
                             {post.data.title}
                           </span>
-
-                          <div class="flex gap-1.5">
-                            {
-                              post.data.tags.slice(0, 2).map((tag) => (
-                                <span class="text-[10px] px-1.5 py-0.5 rounded
-                                            text-[var(--color-primary)] bg-[var(--color-primary)]/10">
-                                  {tag}
-                                </span>
-                              ))
-                            }
-                          </div>
                         </a>
                       ))
                     }

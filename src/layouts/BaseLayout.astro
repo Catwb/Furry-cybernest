@@ -114,32 +114,6 @@ const featConfig = JSON.stringify({
     </footer>
 
     <script is:inline>
-      /* Mobile hamburger */
-      var html = document.documentElement;
-      var hamburger = document.getElementById("hamburger");
-      var drawer = document.getElementById("mobile-drawer");
-      var hamIcon = document.getElementById("hamburger-icon");
-      var closeIcon = document.getElementById("close-icon");
-      if (hamburger && drawer) {
-        hamburger.addEventListener("click", function() {
-          var open = drawer.classList.toggle("translate-x-full");
-          hamIcon.classList.toggle("hidden");
-          closeIcon.classList.toggle("hidden");
-          html.classList.toggle("overflow-hidden", !open);
-        });
-      }
-
-      /* Mobile: tap submenu parent toggles, child links navigate normally */
-      drawer && drawer.addEventListener("click", function(e) {
-        var link = e.target.closest(".nav-group > .nav-link");
-        if (!link) return;
-        var group = link.parentElement;
-        if (!group) return;
-        if (!group.querySelector(":scope > .nav-submenu")) return;
-        e.preventDefault();
-        group.classList.toggle("nav-open");
-      });
-
       /* Progress bar */
       var bar = document.getElementById("progress-bar");
       function startProgress() {
@@ -164,9 +138,38 @@ const featConfig = JSON.stringify({
         }, 200);
       }
 
+      function initHamburger() {
+        var html = document.documentElement;
+        var hamburger = document.getElementById("hamburger");
+        var drawer = document.getElementById("mobile-drawer");
+        var hamIcon = document.getElementById("hamburger-icon");
+        var closeIcon = document.getElementById("close-icon");
+        if (!hamburger || !drawer) return;
+        /* Reset state on navigation */
+        drawer.classList.add("translate-x-full");
+        html.classList.remove("overflow-hidden");
+        if (hamIcon) hamIcon.classList.remove("hidden");
+        if (closeIcon) closeIcon.classList.add("hidden");
+        hamburger.onclick = function() {
+          var open = drawer.classList.toggle("translate-x-full");
+          hamIcon.classList.toggle("hidden");
+          closeIcon.classList.toggle("hidden");
+          html.classList.toggle("overflow-hidden", !open);
+        };
+        drawer.onclick = function(e) {
+          var link = e.target.closest(".nav-group > .nav-link");
+          if (!link) return;
+          var group = link.parentElement;
+          if (!group) return;
+          if (!group.querySelector(":scope > .nav-submenu")) return;
+          e.preventDefault();
+          group.classList.toggle("nav-open");
+        };
+      }
+
       document.addEventListener("astro:page-load", function () {
         finishProgress();
-        /* Scroll-triggered entrance animations */
+        initHamburger();
         var els = document.querySelectorAll("[data-animate]");
         if (els.length && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
           var obs = new IntersectionObserver(function(entries) {
@@ -182,6 +185,7 @@ const featConfig = JSON.stringify({
       });
 
       document.addEventListener("astro:before-preparation", startProgress);
+      initHamburger();
     </script>
 
     <script is:inline src="/scripts/features.js"></script>
