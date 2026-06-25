@@ -4,14 +4,25 @@ import { getCollection } from "astro:content";
 
 export async function getStaticPaths() {
   const posts = (await getCollection("blog")).filter((p) => !p.data.draft);
-  const cats = new Set(posts.flatMap((p) => p.data.categories));
-  return [...cats].map((cat) => ({ params: { category: cat } }));
+  const catPaths = new Set<string>();
+  for (const p of posts) {
+    const cats = p.data.categories;
+    if (!cats || cats.length === 0) continue;
+    for (let i = 1; i <= cats.length; i++) {
+      catPaths.add(cats.slice(0, i).join("/"));
+    }
+  }
+  return [...catPaths].map((cat) => ({ params: { category: cat } }));
 }
 
 const { category } = Astro.params;
+const segments = category!.split("/");
 const allPosts = (await getCollection("blog")).filter((p) => !p.data.draft);
-const posts = allPosts.filter((p) => p.data.categories.includes(category!))
-  .sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime());
+const posts = allPosts.filter((p) => {
+  const cats = p.data.categories;
+  if (!cats || cats.length < segments.length) return false;
+  return segments.every((s, i) => cats[i] === s);
+}).sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime());
 
 function postUrl(post: { data: { abbrlink?: string }; slug: string }) {
   return post.data.abbrlink || post.slug;
@@ -22,10 +33,19 @@ function postUrl(post: { data: { abbrlink?: string }; slug: string }) {
   <div class="max-w-4xl mx-auto px-6 py-8">
     <nav class="text-xs text-[var(--color-text)]/40 mb-4">
       <a href="/blog/categories" class="hover:text-[var(--color-secondary)] transition-colors no-underline">分类</a>
-      <span class="mx-2">/</span>
-      <span class="text-[var(--color-text)]/60">{category}</span>
+      {segments.map((seg, i) => (
+        <>
+          <span class="mx-2">/</span>
+          {i === segments.length - 1 ? (
+            <span class="text-[var(--color-text)]/60">{seg}</span>
+          ) : (
+            <a href={`/blog/categories/${segments.slice(0, i + 1).join("/")}`}
+               class="hover:text-[var(--color-secondary)] transition-colors no-underline">{seg}</a>
+          )}
+        </>
+      ))}
     </nav>
-    <h1 data-animate class="font-heading text-3xl neon-text-primary mb-2">{category}</h1>
+    <h1 data-animate class="font-heading text-3xl neon-text-primary mb-2">{segments[segments.length - 1]}</h1>
     <p data-animate class="text-sm text-[var(--color-text)]/50 mb-10">
       共 {posts.length} 篇文章
     </p>
@@ -33,7 +53,7 @@ function postUrl(post: { data: { abbrlink?: string }; slug: string }) {
     {
       posts.map((post, i) => (
         <a href={`/blog/${postUrl(post)}`}
-           data-animate style="transition-delay:{i * 0.06}s"
+           data-animate style={`transition-delay:${i * 0.06}s`}
             class="flex items-center gap-4 px-5 py-4 mb-2 rounded-xl neon-border no-underline
                    bg-[var(--color-bg)]/40 hover:neon-glow-primary
                    transition-lift hover:-translate-y-0.5 group">

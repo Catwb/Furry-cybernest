@@ -2,48 +2,89 @@
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import { getCollection } from "astro:content";
 
-function postUrl(post: { data: { abbrlink?: string }; slug: string }) {
-  return post.data.abbrlink || post.slug;
-}
-
 const posts = (await getCollection("blog")).filter((p) => !p.data.draft);
 
-const catMap = new Map<string, typeof posts>();
+interface CatNode {
+  name: string;
+  full: string;
+  posts: typeof posts;
+  children: Map<string, CatNode>;
+}
+
+const root = new Map<string, CatNode>();
 for (const p of posts) {
-  for (const cat of p.data.categories) {
-    if (!catMap.has(cat)) catMap.set(cat, []);
-    catMap.get(cat)!.push(p);
+  const cats = p.data.categories;
+  if (!cats || cats.length === 0) continue;
+
+  let map = root;
+  let fullPath = "";
+  for (let i = 0; i < cats.length; i++) {
+    const name = cats[i];
+    fullPath = fullPath ? `${fullPath}/${name}` : name;
+    if (!map.has(name)) {
+      map.set(name, { name, full: fullPath, posts: [], children: new Map() });
+    }
+    const node = map.get(name)!;
+    node.posts.push(p);
+    map = node.children;
   }
 }
-const categories = [...catMap.entries()].sort((a, b) => b[1].length - a[1].length);
+
+function sortNodes(nodes: Map<string, CatNode>): CatNode[] {
+  return [...nodes.values()].sort((a, b) => b.posts.length - a.posts.length);
+}
+
+function flatten(nodes: Map<string, CatNode>): { cat: CatNode; depth: number }[] {
+  const result: { cat: CatNode; depth: number }[] = [];
+  for (const node of sortNodes(nodes)) {
+    result.push({ cat: node, depth: 0 });
+    for (const child of flatten(node.children)) {
+      result.push({ cat: child.cat, depth: child.depth + 1 });
+    }
+  }
+  return result;
+}
 ---
 
 <BaseLayout title="分类">
   <div class="max-w-4xl mx-auto px-6 py-8">
     <h1 data-animate class="font-heading text-3xl neon-text-primary mb-2">分类</h1>
     <p data-animate class="text-sm text-[var(--color-text)]/50 mb-10">
-      共 {categories.length} 个分类
+      共 {flatten(root).filter((x) => x.depth === 0).length} 个顶级分类
     </p>
 
-    {
-      categories.length === 0 && (
-        <div class="text-center py-20 text-sm text-[var(--color-text)]/30">
-          还没有分类
-        </div>
-      )
-    }
+    {flatten(root).length === 0 && (
+      <div class="text-center py-20 text-sm text-[var(--color-text)]/30">
+        还没有分类
+      </div>
+    )}
 
-    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-      {categories.map(([cat, posts], i) => (
-        <a href={`/blog/categories/${encodeURIComponent(cat)}`}
-           data-animate style="transition-delay:{i * 0.06}s"
-            class="flex items-center justify-between p-5 rounded-xl neon-border no-underline
-                   bg-[var(--color-bg)]/40 hover:neon-glow-primary
-                   transition-lift hover:-translate-y-0.5 group">
-          <div>
-            <p class="text-sm text-[var(--color-text)]/80 group-hover:text-[var(--color-secondary)]
-                      transition-colors duration-200">{cat}</p>
-            <p class="text-xs text-[var(--color-text)]/30 mt-0.5">{posts.length} 篇文章</p>
+    <div class="space-y-2">
+      {flatten(root).map(({ cat, depth }, i) => (
+        <a
+          href={`/blog/categories/${cat.full}`}
+          data-animate
+          style={`transition-delay:${i * 0.04}s`}
+          class={`flex items-center justify-between rounded-xl neon-border no-underline
+                  bg-[var(--color-bg)]/40 hover:neon-glow-primary
+                  transition-lift hover:-translate-y-0.5 group
+                  ${depth === 0 ? 'p-5' : 'p-4 ml-6 border-l-2 border-[var(--color-primary)]/20'}`}
+        >
+          <div class="flex items-center gap-3">
+            {depth > 0 && (
+              <span class="text-[var(--color-primary)]/40 text-xs font-mono">/</span>
+            )}
+            <div>
+              <p class={`${depth === 0 ? 'text-sm' : 'text-xs'} text-[var(--color-text)]/80
+                         group-hover:text-[var(--color-secondary)]
+                         transition-colors duration-200`}>
+                {cat.name}
+              </p>
+              <p class="text-xs text-[var(--color-text)]/30 mt-0.5">
+                {cat.posts.length} 篇文章
+                {cat.children.size > 0 && ` · ${cat.children.size} 个子分类`}
+              </p>
+            </div>
           </div>
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
