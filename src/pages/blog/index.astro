@@ -18,11 +18,10 @@ const posts = allPosts
     <h1 data-animate class="font-heading text-3xl neon-text-primary mb-2">博客</h1>
     <p data-animate class="text-sm text-[var(--color-text)]/50 mb-10">赛博森林的故事集</p>
 
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <div data-animate class="grid grid-cols-1 md:grid-cols-2 gap-6">
       {
         posts.map((post) => (
           <a href={`/blog/${postUrl(post)}`}
-             data-animate style="transition-delay:{i * 0.1}s"
              class="group relative rounded-xl neon-border p-6
                     bg-[var(--color-bg)]/40 hover:neon-glow-primary
                     transition-all duration-300 hover:-translate-y-0.5 no-underline">
