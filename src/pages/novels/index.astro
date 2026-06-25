@@ -19,8 +19,8 @@ const novels = (await getCollection("novels"))
             <a href={`/novels/${novel.slug}`}
                data-animate style="transition-delay:{i * 0.1}s"
                class="group relative rounded-xl neon-border p-6
-                      bg-[var(--color-bg)]/40 hover:neon-glow-primary
-                      transition-all duration-500 hover:-translate-y-1 no-underline">
+                       bg-[var(--color-bg)]/40 hover:neon-glow-primary
+                       transition-all duration-300 hover:-translate-y-0.5 no-underline">
               <div class="w-full aspect-video rounded-lg mb-4
                           bg-gradient-to-br from-[var(--color-primary)]/15 to-[var(--color-accent)]/10
                           flex items-center justify-center text-[var(--color-text)]/20 text-xs">
