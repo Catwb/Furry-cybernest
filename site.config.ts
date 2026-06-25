@@ -166,7 +166,7 @@ export default defineConfig({
         description: "角色设定、头像与完整立绘。",
         columns: 3,
         items: [
-          { title: "银狐·赛博形态", alt: "银狐赛博角色立绘", color: "#7c3aed", aspectRatio: 3 / 4 },
+          { title: "银狐·赛博形态", alt: "银狐赛博角色立绘", color: "#0ea5e9", aspectRatio: 3 / 4 },
           { title: "赤狼·火焰纹章", alt: "赤狼角色设定图", color: "#e11d48", aspectRatio: 4 / 3 },
           { title: "玄猫·暗影漫步", alt: "玄猫角色头像", color: "#0ea5e9", aspectRatio: 1 },
         ],

@@ -9,7 +9,7 @@ export const CDNLinkSchema = z.object({
 });
 
 export const ColorSetSchema = z.object({
-  primary: z.string().default("#7C3AED"),
+  primary: z.string().default("#0EA5E9"),
   secondary: z.string().default("#0891B2"),
   accent: z.string().default("#E11D48"),
   bg: z.string().default("#FFFFFF"),

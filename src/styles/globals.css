@@ -10,14 +10,14 @@
 /* ── Color variables ── */
 :root {
   color-scheme: light;
-  --color-primary: #7c3aed;
-  --color-secondary: #0891b2;
-  --color-accent: #e11d48;
+  --color-primary: #0ea5e9;
+  --color-secondary: #eab308;
+  --color-accent: #f59e0b;
   --color-bg: #ffffff;
   --color-text: #1a1a2e;
   --color-surface: #f8f9fa;
-  --color-border: rgba(124, 58, 237, 0.15);
-  --color-glow: rgba(124, 58, 237, 0.12);
+  --color-border: rgba(14, 165, 233, 0.15);
+  --color-glow: rgba(14, 165, 233, 0.12);
   --color-neon-primary: var(--color-primary);
   --color-neon-secondary: var(--color-secondary);
   --color-neon-accent: var(--color-accent);
@@ -133,7 +133,7 @@ code, pre, kbd, samp {
 
 /* ── Lift transition (transform only, no box-shadow flash) ── */
 .transition-lift {
-  transition: transform 0.3s;
+  transition: translate 0.3s;
 }
 
 /* ── Glitch ── */
