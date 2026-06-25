@@ -72,7 +72,6 @@ export default defineConfig({
       children: [
         { label: "友链", url: "/friends" },
         { label: "关于", url: "/about" },
-        { label: "联系", url: "/contact" },
       ],
     },
   ],

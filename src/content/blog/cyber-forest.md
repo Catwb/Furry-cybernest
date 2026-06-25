@@ -2,12 +2,16 @@
 title: "赛博森林的银狐"
 description: "在霓虹闪烁的赛博森林深处，一只银狐苏醒于数据洪流之中"
 pubDate: 2026-06-24
+updatedDate: 2026-06-25
 abbrlink: "cyber-forest"
 # cover: "/images/cyber-forest-cover.jpg"
 tags:
   - 赛博世界
   - 银狐
   - 第一章
+categories:
+  - 小说
+  - 赛博世界
 draft: false
 ---
 

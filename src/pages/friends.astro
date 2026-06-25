@@ -122,11 +122,9 @@ const { Content } = pageEntry ? await pageEntry.render() : { Content: undefined 
     <!-- Markdown Content -->
     {
       Content && (
-        <section class="neon-border rounded-xl p-6 md:p-8 bg-[var(--color-surface)]/30 mb-12">
-          <div class="prose-neon">
-            <Content />
-          </div>
-        </section>
+        <div class="prose-neon mt-12">
+          <Content />
+        </div>
       )
     }
   </div>

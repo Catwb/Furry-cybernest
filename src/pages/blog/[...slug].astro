@@ -13,6 +13,9 @@ export async function getStaticPaths() {
 
 const { post } = Astro.props;
 const { Content } = await post.render();
+
+const wordCount = post.body.trim().length;
+const readingTime = Math.max(1, Math.ceil(wordCount / 500));
 ---
 
 <BaseLayout title={post.data.title}>
@@ -26,20 +29,27 @@ const { Content } = await post.render();
           </div>
         )
       }
-      <div class="flex flex-wrap gap-2 mb-4">
-        {
-          post.data.tags.map((tag) => (
-            <span class="px-2 py-0.5 rounded-full text-[10px] neon-border
-                        text-[var(--color-primary)] bg-[var(--color-primary)]/10">
-              {tag}
-            </span>
-          ))
-        }
-      </div>
+
+      <!-- Categories -->
+      {
+        post.data.categories.length > 0 && (
+          <nav class="flex flex-wrap items-center gap-1 text-xs text-[var(--color-text)]/50 mb-3">
+            {post.data.categories.map((cat, i) => (
+              <>
+                {i > 0 && <span class="text-[var(--color-text)]/20">/</span>}
+                <span class="hover:text-[var(--color-secondary)] transition-colors">{cat}</span>
+              </>
+            ))}
+          </nav>
+        )
+      }
+
       <h1 class="font-heading text-3xl md:text-4xl neon-text-primary mt-2 mb-4">
         {post.data.title}
       </h1>
-      <div class="flex items-center gap-4 text-xs text-[var(--color-text)]/40">
+
+      <!-- Meta row: date, reading time, word count -->
+      <div class="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-[var(--color-text)]/40">
         <time>{post.data.pubDate.toLocaleDateString("zh-CN")}</time>
         {post.data.updatedDate && (
           <>
@@ -47,12 +57,77 @@ const { Content } = await post.render();
             <span>更新于 {post.data.updatedDate.toLocaleDateString("zh-CN")}</span>
           </>
         )}
+        <span class="w-1 h-1 rounded-full bg-[var(--color-text)]/20"></span>
+        <span>约 {wordCount} 字</span>
+        <span class="w-1 h-1 rounded-full bg-[var(--color-text)]/20"></span>
+        <span>预计阅读 {readingTime} 分钟</span>
       </div>
+
+      <!-- Tags -->
+      {
+        post.data.tags.length > 0 && (
+          <div class="flex flex-wrap gap-2 mt-4">
+            {post.data.tags.map((tag) => (
+              <span class="px-2 py-0.5 rounded-full text-[10px] neon-border
+                          text-[var(--color-primary)] bg-[var(--color-primary)]/10">
+                {tag}
+              </span>
+            ))}
+          </div>
+        )
+      }
     </header>
 
     <div class="prose-neon">
       <Content />
     </div>
+
+    <!-- Meta Footer -->
+    <footer class="mt-16 pt-8 border-t border-[var(--color-border)]">
+      <!-- Categories -->
+      {
+        post.data.categories.length > 0 && (
+          <div class="flex items-center gap-2 text-sm text-[var(--color-text)]/60 mb-3">
+            <span class="font-heading text-xs uppercase tracking-wider text-[var(--color-text)]/30">分类</span>
+            <nav class="flex items-center gap-1">
+              {post.data.categories.map((cat, i) => (
+                <>
+                  {i > 0 && <span class="text-[var(--color-text)]/20">/</span>}
+                  <span class="hover:text-[var(--color-secondary)] transition-colors">{cat}</span>
+                </>
+              ))}
+            </nav>
+          </div>
+        )
+      }
+
+      <!-- Tags -->
+      {
+        post.data.tags.length > 0 && (
+          <div class="flex items-center gap-2 text-sm text-[var(--color-text)]/60 mb-4">
+            <span class="font-heading text-xs uppercase tracking-wider text-[var(--color-text)]/30">标签</span>
+            <div class="flex flex-wrap gap-1.5">
+              {post.data.tags.map((tag) => (
+                <span class="px-2 py-0.5 rounded text-[11px] neon-border
+                            text-[var(--color-secondary)] bg-[var(--color-secondary)]/8">
+                  {tag}
+                </span>
+              ))}
+            </div>
+          </div>
+        )
+      }
+
+      <!-- Date & Stats -->
+      <div class="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-[var(--color-text)]/30">
+        <span>发布: {post.data.pubDate.toLocaleDateString("zh-CN")}</span>
+        {post.data.updatedDate && (
+          <span>更新: {post.data.updatedDate.toLocaleDateString("zh-CN")}</span>
+        )}
+        <span>{wordCount} 字</span>
+        <span>阅读约 {readingTime} 分钟</span>
+      </div>
+    </footer>
   </article>
 
   <Comments />

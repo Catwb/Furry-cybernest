@@ -33,6 +33,21 @@ const posts = allPosts
                  </div>
                )
              }
+
+            <!-- Categories -->
+            {
+              post.data.categories.length > 0 && (
+                <div class="flex items-center gap-1 text-[10px] text-[var(--color-text)]/40 mb-1.5">
+                  {post.data.categories.map((cat, i) => (
+                    <>
+                      {i > 0 && <span class="text-[var(--color-text)]/20">/</span>}
+                      <span>{cat}</span>
+                    </>
+                  ))}
+                </div>
+              )
+            }
+
             <div class="flex flex-wrap gap-1.5 mb-2">
               {
                 post.data.tags.slice(0, 3).map((tag) => (

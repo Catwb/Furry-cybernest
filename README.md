@@ -35,7 +35,6 @@
 | `/archive` | 文章归档 |
 | `/about` | 关于 |
 | `/friends` | 友链 |
-| `/contact` | 联系 |
 | `/gallery` | 画廊 |
 | `/rss.xml` | RSS 2.0 |
 | `/atom.xml` | Atom 1.0 |
