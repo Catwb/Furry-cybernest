@@ -39,7 +39,8 @@ const region = twikoo?.region || "";
               var poll = setInterval(function() {
                 if (typeof twikoo !== "undefined") {
                   clearInterval(poll);
-                  try { twikoo.init({ envId: envId, el: "#twikoo-comments", region: region }); }
+                  var isDark = document.documentElement.classList.contains("dark");
+                  try { twikoo.init({ envId: envId, el: "#twikoo-comments", region: region, darkMode: isDark }); }
                   catch(e) {}
                 }
               }, 100);

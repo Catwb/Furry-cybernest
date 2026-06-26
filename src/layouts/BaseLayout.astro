@@ -39,10 +39,13 @@ const featConfig = JSON.stringify({
     <script is:inline>
       (function() {
         var t = localStorage.getItem("theme");
+        var html = document.documentElement;
         if (t === "dark" || (!t && window.matchMedia("(prefers-color-scheme: dark)").matches)) {
-          document.documentElement.classList.add("dark");
+          html.classList.add("dark");
+          html.setAttribute("color-scheme", "dark");
         } else {
-          document.documentElement.classList.remove("dark");
+          html.classList.remove("dark");
+          html.removeAttribute("color-scheme");
         }
       })();
     </script>
@@ -66,8 +69,10 @@ const featConfig = JSON.stringify({
         var html = document.documentElement;
         if (t === "dark" || (!t && window.matchMedia("(prefers-color-scheme: dark)").matches)) {
           if (!html.classList.contains("dark")) html.classList.add("dark");
+          html.setAttribute("color-scheme", "dark");
         } else {
           html.classList.remove("dark");
+          html.removeAttribute("color-scheme");
         }
       })();
     </script>
@@ -212,7 +217,7 @@ const featConfig = JSON.stringify({
         function applyTheme(theme) {
           var dark = theme === "dark";
           var html = document.documentElement;
-          if (dark) { html.classList.add("dark"); } else { html.classList.remove("dark"); }
+          if (dark) { html.classList.add("dark"); html.setAttribute("color-scheme", "dark"); } else { html.classList.remove("dark"); html.removeAttribute("color-scheme"); }
           /* Sync icon state */
           [document.getElementById("theme-toggle-desktop"), document.getElementById("theme-toggle-mobile")].forEach(function(btn) {
             if (!btn) return;
@@ -234,6 +239,9 @@ const featConfig = JSON.stringify({
           var next = document.documentElement.classList.contains("dark") ? "light" : "dark";
           applyTheme(next);
           localStorage.setItem("theme", next);
+          if (window._twikooInit && document.getElementById("twikoo-comments")) {
+            window._twikooInit();
+          }
         }
         /* Bind toggle buttons */
         [document.getElementById("theme-toggle-desktop"), document.getElementById("theme-toggle-mobile")].forEach(function(btn) {
