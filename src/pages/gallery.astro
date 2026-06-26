@@ -34,7 +34,7 @@ const galleryGroups = config.gallery.groups.length
 
 <BaseLayout title="画廊">
   <div class="max-w-6xl mx-auto px-6 py-8">
-    <div data-animate class="rounded-xl bg-white p-6 neon-border">
+    <div data-animate class="rounded-xl bg-[var(--color-card)] p-6 neon-border">
       <h1 class="font-heading text-3xl neon-text-primary page-title">画廊</h1>
       <p class="text-sm text-[var(--color-text)]/50 mb-6">插画与角色设计展示</p>
 
@@ -51,7 +51,7 @@ const galleryGroups = config.gallery.groups.length
               {group.items.map((item, i) => {
                 const view = itemView(item, i);
                 return (
-                  <div class="gallery-item group relative break-inside-avoid rounded-xl neon-border bg-white overflow-hidden hover:neon-glow-primary transition-lift hover:-translate-y-0.5"
+                  <div class="gallery-item group relative break-inside-avoid rounded-xl neon-border bg-[var(--color-card)] overflow-hidden hover:neon-glow-primary transition-lift hover:-translate-y-0.5"
                       style={`aspect-ratio: ${view.ratio}`}>
                     <img
                       src={view.src}

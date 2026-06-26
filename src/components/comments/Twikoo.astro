@@ -5,7 +5,6 @@ const twikooCDN = config.cdnOverrides?.twikoo || "https://cdn.jsdelivr.net/npm/t
 const twikooCSS = config.cdnOverrides?.twikooCSS || "";
 const envId = twikoo?.envId || "";
 const region = twikoo?.region || "";
-const twikooScript = `(function(){var s=document.createElement("script");s.src="${twikooCDN}";s.async=true;document.head.appendChild(s);var i=setInterval(function(){if(typeof twikoo!=="undefined"){clearInterval(i);twikoo.init({envId:"${envId}",region:"${region}",el:"#twikoo-comments"})}},100)})()`;
 ---
 
 {
@@ -13,7 +12,46 @@ const twikooScript = `(function(){var s=document.createElement("script");s.src="
     <>
       {twikooCSS && <link rel="stylesheet" href={twikooCSS} />}
       <div id="twikoo-comments" class="min-h-[200px]"></div>
-      <script is:inline set:html={twikooScript} />
+      <div id="twikoo-config" class="hidden" aria-hidden="true"
+           data-cdn={twikooCDN} data-env-id={envId} data-region={region}></div>
+      <script is:inline>
+        (function() {
+          var cfgEl = document.getElementById("twikoo-config");
+          if (!cfgEl) return;
+          var cdn = cfgEl.getAttribute("data-cdn");
+          var envId = cfgEl.getAttribute("data-env-id");
+          var region = cfgEl.getAttribute("data-region");
+          if (!cdn || !envId) return;
+
+          function initComments() {
+            var el = document.getElementById("twikoo-comments");
+            if (!el) return;
+
+            /* Remove old SDK script and global to force fresh init */
+            var oldScript = document.querySelector('script[src="' + cdn + '"]');
+            if (oldScript) oldScript.remove();
+            try { delete window.twikoo; } catch(e) {}
+            window.twikoo = undefined;
+
+            var s = document.createElement("script");
+            s.src = cdn; s.async = true;
+            s.onload = function() {
+              var poll = setInterval(function() {
+                if (typeof twikoo !== "undefined") {
+                  clearInterval(poll);
+                  try { twikoo.init({ envId: envId, el: "#twikoo-comments", region: region }); }
+                  catch(e) {}
+                }
+              }, 100);
+            };
+            document.head.appendChild(s);
+          }
+
+          if (window._twikooInit) document.removeEventListener("astro:page-load", window._twikooInit);
+          window._twikooInit = initComments;
+          document.addEventListener("astro:page-load", initComments);
+        })();
+      </script>
     </>
   )
 }

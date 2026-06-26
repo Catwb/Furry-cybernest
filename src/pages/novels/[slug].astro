@@ -22,7 +22,7 @@ const wordCount = chapters.reduce((sum, c) => sum + c.body.length, 0);
 <BaseLayout title={novel.data.title}>
   <div class="max-w-3xl mx-auto px-6 py-8">
     <!-- Novel header -->
-    <div data-animate class="rounded-xl bg-white p-8 neon-border mb-8 text-center">
+    <div data-animate class="rounded-xl bg-[var(--color-card)] p-8 neon-border mb-8 text-center">
       <div class="w-24 h-24 mx-auto rounded-full neon-border mb-4
                   bg-gradient-to-br from-[var(--color-primary)]/20 to-[var(--color-accent)]/10
                   flex items-center justify-center text-2xl">
@@ -57,7 +57,7 @@ const wordCount = chapters.reduce((sum, c) => sum + c.body.length, 0);
            <a
             href={`/novels/${slug}/${ch.data.chapter}`}
             class="flex items-center gap-4 px-5 py-4 rounded-xl
-                   bg-white neon-border
+                   bg-[var(--color-card)] neon-border
                    hover:neon-glow-primary
                    transition-all duration-300 no-underline group"
           >

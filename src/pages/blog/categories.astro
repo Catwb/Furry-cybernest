@@ -48,7 +48,7 @@ function flatten(nodes: Map<string, CatNode>): { cat: CatNode; depth: number }[]
 
 <BaseLayout title="分类">
   <div class="max-w-4xl mx-auto px-6 py-8">
-    <div data-animate class="rounded-xl bg-white p-6 neon-border">
+    <div data-animate class="rounded-xl bg-[var(--color-card)] p-6 neon-border">
       <h1 class="font-heading text-3xl neon-text-primary page-title">分类</h1>
       <p class="text-sm text-[var(--color-text)]/50">
         共 {flatten(root).filter((x) => x.depth === 0).length} 个顶级分类
@@ -67,7 +67,7 @@ function flatten(nodes: Map<string, CatNode>): { cat: CatNode; depth: number }[]
             data-animate
             style={`transition-delay:${i * 0.04}s`}
             class={`flex items-center justify-between rounded-xl neon-border no-underline
-                    bg-white hover:neon-glow-primary
+                    bg-[var(--color-card)] hover:neon-glow-primary
                     transition-lift hover:-translate-y-0.5 group
                     ${depth === 0 ? 'p-5' : 'p-4 ml-6 border-l-2 border-[var(--color-primary)]/20'}`}
           >

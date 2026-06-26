@@ -55,7 +55,7 @@ function postUrl(post: { data: { abbrlink?: string }; slug: string }) {
         <a href={`/posts/${postUrl(post)}`}
            data-animate style={`transition-delay:${i * 0.06}s`}
             class="flex items-center gap-4 px-5 py-4 mb-2 rounded-xl neon-border no-underline
-                   bg-white hover:neon-glow-primary
+                   bg-[var(--color-card)] hover:neon-glow-primary
                    transition-lift hover:-translate-y-0.5 group">
           <div class="flex-1 min-w-0">
             <p class="text-sm text-[var(--color-text)]/80 group-hover:text-[var(--color-secondary)]

@@ -9,13 +9,14 @@
 
 /* ── Color variables ── */
 :root {
-  color-scheme: light;
+  color-scheme: light dark;
   --color-primary: #0ea5e9;
   --color-secondary: #eab308;
   --color-accent: #f59e0b;
   --color-bg: #ffffff;
   --color-text: #1a1a2e;
   --color-surface: #f8f9fa;
+  --color-card: #ffffff;
   --color-border: rgba(14, 165, 233, 0.15);
   --color-glow: rgba(14, 165, 233, 0.12);
   --color-neon-primary: var(--color-primary);
@@ -28,6 +29,16 @@
   --color-neon-glow: var(--color-glow);
 }
 
+.dark {
+  color-scheme: dark;
+  --color-bg: #0f172a;
+  --color-text: #e2e8f0;
+  --color-surface: #1e293b;
+  --color-card: #1e293b;
+  --color-border: rgba(14, 165, 233, 0.25);
+  --color-glow: rgba(14, 165, 233, 0.2);
+}
+
 html {
   font-family: var(--font-body);
   overscroll-behavior-y: auto;
@@ -37,6 +48,9 @@ html {
 body {
   background-color: var(--color-neon-bg);
   color: var(--color-neon-text);
+}
+.dark footer {
+  background: var(--color-surface);
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -222,6 +236,8 @@ code, pre, kbd, samp {
   margin: 1.5em 0;
   opacity: 0.85;
   line-height: 1.8;
+  background: color-mix(in srgb, var(--color-primary) 6%, transparent);
+  border-radius: 0 6px 6px 0;
 }
 
 .prose-neon ul,
@@ -243,6 +259,9 @@ code, pre, kbd, samp {
   border-radius: 4px;
   font-size: 0.875em;
 }
+.dark .prose-neon code {
+  background: color-mix(in srgb, var(--color-primary) 20%, transparent);
+}
 .prose-neon pre {
   background: color-mix(in srgb, var(--color-bg) 60%, black);
   border: 1px solid var(--color-border);
@@ -263,6 +282,10 @@ code, pre, kbd, samp {
   height: 1px;
   background: var(--color-border);
   margin: 2.5em 0;
+}
+
+.dark .prose-neon hr {
+  background: color-mix(in srgb, var(--color-border) 60%, transparent);
 }
 
 .prose-neon img {
@@ -288,6 +311,9 @@ code, pre, kbd, samp {
 .prose-neon th {
   background: color-mix(in srgb, var(--color-primary) 8%, transparent);
   font-family: var(--font-heading);
+}
+.dark .prose-neon th {
+  background: color-mix(in srgb, var(--color-primary) 15%, transparent);
 }
 
 .prose-neon strong {

@@ -8,7 +8,7 @@ const novels = (await getCollection("novels"))
 
 <BaseLayout title="小说">
   <div class="max-w-5xl mx-auto px-6 py-8">
-    <div data-animate class="rounded-xl bg-white p-6 mb-8 neon-border">
+    <div data-animate class="rounded-xl bg-[var(--color-card)] p-6 mb-8 neon-border">
       <h1 class="font-heading text-3xl neon-text-primary page-title">小说</h1>
       <p class="text-sm text-[var(--color-text)]/50">星海之间的故事</p>
     </div>
@@ -20,7 +20,7 @@ const novels = (await getCollection("novels"))
           return (
             <a href={`/novels/${novel.slug}`}
                class="group relative rounded-xl neon-border p-6
-                       bg-white hover:neon-glow-primary
+                       bg-[var(--color-card)] hover:neon-glow-primary
                        transition-lift hover:-translate-y-0.5 no-underline">
               <div class="w-full aspect-video rounded-lg mb-4
                           bg-gradient-to-br from-[var(--color-primary)]/15 to-[var(--color-accent)]/10

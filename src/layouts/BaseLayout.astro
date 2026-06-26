@@ -35,6 +35,18 @@ const featConfig = JSON.stringify({
     <meta name="author" content={config.site.author} />
     <title>{pageTitle}</title>
 
+    <!-- Flash prevention + theme persistence: runs on every page load including View Transitions -->
+    <script is:inline>
+      (function() {
+        var t = localStorage.getItem("theme");
+        if (t === "dark" || (!t && window.matchMedia("(prefers-color-scheme: dark)").matches)) {
+          document.documentElement.classList.add("dark");
+        } else {
+          document.documentElement.classList.remove("dark");
+        }
+      })();
+    </script>
+
     {config.fonts.cdn.filter((l: { head?: boolean }) => l.head).map((l: { href: string }) => <link rel="stylesheet" href={l.href} />)}
     {config.cdn.css.filter((l: { head?: boolean }) => l.head).map((l: { href: string }) => <link rel="stylesheet" href={l.href} />)}
 
@@ -47,6 +59,18 @@ const featConfig = JSON.stringify({
     <meta name="astro-view-transitions-fallback" content="none" />
   </head>
   <body>
+    <!-- Re-apply theme after every navigation (View Transitions may reset html class) -->
+    <script is:inline>
+      (function() {
+        var t = localStorage.getItem("theme");
+        var html = document.documentElement;
+        if (t === "dark" || (!t && window.matchMedia("(prefers-color-scheme: dark)").matches)) {
+          if (!html.classList.contains("dark")) html.classList.add("dark");
+        } else {
+          html.classList.remove("dark");
+        }
+      })();
+    </script>
     <div id="progress-bar" class="fixed top-0 left-0 h-[3px] bg-[var(--color-primary)] z-[9999] w-0 transition-[width] duration-200"></div>
 
     {config.cdn.js.map((l: { href: string }) => <script src={l.href}></script>)}
@@ -55,7 +79,7 @@ const featConfig = JSON.stringify({
 
     <nav data-astro-transition-persist="nav"
          class="fixed top-4 left-1/2 -translate-x-1/2 z-50 max-w-3xl
-                bg-white/95
+                bg-[var(--color-card)]/95
                 neon-border rounded-2xl px-4 md:px-6 py-3
                 flex items-center justify-between"
          style="width: calc(100vw - 2rem)">
@@ -67,10 +91,26 @@ const featConfig = JSON.stringify({
       <!-- Desktop nav -->
       <div id="desktop-nav" class="hidden md:flex items-center gap-6">
         <NavMenu items={config.nav} />
+        <button id="theme-toggle-desktop" class="theme-toggle" aria-label="切换主题">
+          <svg class="sun-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+          </svg>
+          <svg class="moon-icon hidden" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+          </svg>
+        </button>
       </div>
 
-      <!-- Mobile: hamburger -->
-      <div class="flex md:hidden items-center gap-2">
+      <!-- Mobile: hamburger + theme toggle -->
+      <div class="flex md:hidden items-center gap-1">
+        <button id="theme-toggle-mobile" class="theme-toggle" aria-label="切换主题">
+          <svg class="sun-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+          </svg>
+          <svg class="moon-icon hidden" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+          </svg>
+        </button>
         <button id="hamburger" class="relative w-9 h-9 flex items-center justify-center
                                       text-[var(--color-text)]/60 hover:text-[var(--color-secondary)]
                                       transition-colors duration-200" aria-label="菜单">
@@ -168,9 +208,43 @@ const featConfig = JSON.stringify({
         };
       }
 
+      function initThemeToggle() {
+        function applyTheme(theme) {
+          var dark = theme === "dark";
+          var html = document.documentElement;
+          if (dark) { html.classList.add("dark"); } else { html.classList.remove("dark"); }
+          /* Sync icon state */
+          [document.getElementById("theme-toggle-desktop"), document.getElementById("theme-toggle-mobile")].forEach(function(btn) {
+            if (!btn) return;
+            var sun = btn.querySelector(".sun-icon");
+            var moon = btn.querySelector(".moon-icon");
+            if (sun) sun.classList.toggle("hidden", dark);
+            if (moon) moon.classList.toggle("hidden", !dark);
+          });
+        }
+        function getPreferred() {
+          var s = localStorage.getItem("theme");
+          if (s) return s;
+          return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+        }
+        /* Force-apply from localStorage every time (survive View Transitions) */
+        applyTheme(getPreferred());
+        /* Toggle: flip and save */
+        function toggle() {
+          var next = document.documentElement.classList.contains("dark") ? "light" : "dark";
+          applyTheme(next);
+          localStorage.setItem("theme", next);
+        }
+        /* Bind toggle buttons */
+        [document.getElementById("theme-toggle-desktop"), document.getElementById("theme-toggle-mobile")].forEach(function(btn) {
+          if (btn) btn.onclick = toggle;
+        });
+      }
+
       document.addEventListener("astro:page-load", function () {
         finishProgress();
         initHamburger();
+        initThemeToggle();
         var els = document.querySelectorAll("[data-animate]");
         if (els.length && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
           var obs = new IntersectionObserver(function(entries) {
@@ -187,6 +261,7 @@ const featConfig = JSON.stringify({
 
       document.addEventListener("astro:before-preparation", startProgress);
       initHamburger();
+      initThemeToggle();
     </script>
 
     <script is:inline src="/scripts/features.js"></script>

@@ -38,16 +38,16 @@ const showSidebar = config.homepage.sidebar.author || config.homepage.sidebar.ca
         <div class="flex items-center gap-4">
           {config.social.map((s) => (
             <a href={s.url} target="_blank" rel="noopener"
-               class="w-10 h-10 rounded-full bg-white/15 backdrop-blur-md border border-white/20
-                      flex items-center justify-center text-white/80 hover:bg-white/30
+               class="w-10 h-10 rounded-full bg-[var(--color-card)]/15 backdrop-blur-md border border-white/20
+                      flex items-center justify-center text-white/80 hover:bg-[var(--color-card)]/30
                       hover:text-white transition-all duration-300">
               <span class="text-xs font-bold">{s.name.charAt(0)}</span>
             </a>
           ))}
         </div>
         <a href="#main-content"
-           class="w-10 h-10 rounded-full bg-white/15 backdrop-blur-md border border-white/20
-                  flex items-center justify-center text-white/80 hover:bg-white/30
+           class="w-10 h-10 rounded-full bg-[var(--color-card)]/15 backdrop-blur-md border border-white/20
+                  flex items-center justify-center text-white/80 hover:bg-[var(--color-card)]/30
                   hover:translate-y-1 transition-all duration-300">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -80,7 +80,7 @@ const showSidebar = config.homepage.sidebar.author || config.homepage.sidebar.ca
               <a href={`/posts/${postUrl(post)}`}
                  data-animate style={`transition-delay:${i * 0.04}s`}
                  class={`group flex items-stretch rounded-xl neon-border overflow-hidden no-underline
-                        bg-white hover:neon-glow-primary
+                        bg-[var(--color-card)] hover:neon-glow-primary
                         transition-lift hover:-translate-y-0.5
                         ${post.data.cover ? 'flex-row' : 'flex-col px-8 py-6'}`}>
                 {post.data.cover && (

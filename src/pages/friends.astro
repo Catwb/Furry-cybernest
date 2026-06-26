@@ -19,7 +19,7 @@ const { Content } = pageEntry ? await pageEntry.render() : { Content: undefined 
 
 <BaseLayout title="友情链接">
   <div class="max-w-4xl mx-auto px-6 py-8">
-    <div data-animate class="rounded-xl bg-white p-6 neon-border">
+    <div data-animate class="rounded-xl bg-[var(--color-card)] p-6 neon-border">
       <h1 class="font-heading text-3xl neon-text-primary page-title">友情链接</h1>
       <p class="text-sm text-[var(--color-text)]/50 mb-6">赛博森林的邻居们</p>
 
@@ -52,7 +52,7 @@ const { Content } = pageEntry ? await pageEntry.render() : { Content: undefined 
                     target="_blank"
                     rel="noopener noreferrer"
                      class="group flex items-center gap-4 p-5 rounded-xl neon-border
-                            bg-white
+                            bg-[var(--color-card)]
                             hover:neon-glow-primary transition-lift
                             hover:-translate-y-0.5 no-underline"
                   >
