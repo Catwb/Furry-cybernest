@@ -27,68 +27,66 @@ const { Content } = pageEntry ? await pageEntry.render() : { Content: undefined 
       {
         [...groups.entries()].map(([groupName, links]) => (
           <section class="friend-group mb-4" data-open="true">
-            <div class="rounded-xl bg-[var(--color-surface)] neon-border p-5">
-              <button class="friend-group-toggle w-full flex items-center gap-2 mb-4 text-left cursor-pointer
-                             bg-transparent border-none p-0 font-inherit"
-                      aria-expanded="true">
-                <div class="flex items-center gap-2 flex-1">
-                  <svg class="friend-group-arrow w-4 h-4 text-[var(--color-text)]/40 shrink-0
-                              transition-transform duration-200" width="16" height="16"
-                       viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                       stroke-linecap="round" stroke-linejoin="round">
-                    <polyline points="6 9 12 15 18 9" />
-                  </svg>
-                  <h2 class="font-heading text-lg neon-text-secondary flex items-center gap-2 m-0">
-                    <span class="w-1.5 h-1.5 rounded-full bg-[var(--color-secondary)]"></span>
-                    {groupName}
-                    <span class="text-xs text-[var(--color-text)]/30 font-normal">({links.length})</span>
-                  </h2>
-                </div>
-              </button>
-              <div class="friend-group-body grid grid-cols-1 md:grid-cols-2 gap-4">
-                {
-                  links.map((link) => (
-                    <a
-                      href={link.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                       class="group flex items-center gap-4 p-5 rounded-xl neon-border
-                              bg-white
-                              hover:neon-glow-primary transition-lift
-                              hover:-translate-y-0.5 no-underline"
-                    >
-                      <div class="w-12 h-12 rounded-full flex-shrink-0 overflow-hidden
-                                  neon-border bg-gradient-to-br from-[var(--color-primary)]/15 to-[var(--color-secondary)]/10
-                                  flex items-center justify-center
-                                  text-sm font-heading text-[var(--color-text)]/40
-                                  group-hover:neon-glow-accent transition-all duration-300"
-                           style={link.color ? `border-color:${link.color}` : ""}>
-                        {link.avatar
-                          ? <img src={link.avatar} alt={link.name} class="w-full h-full object-cover" loading="lazy" />
-                          : <span>{link.name.charAt(0)}</span>
-                        }
-                      </div>
-                      <div class="min-w-0 flex-1">
-                        <div class="font-heading text-sm text-[var(--color-text)]
-                                    group-hover:text-[var(--color-secondary)] transition-colors duration-200"
-                             style={link.color ? `color:${link.color}` : ""}>
-                          {link.name}
-                        </div>
-                        {link.description && (
-                          <div class="text-xs text-[var(--color-text)]/50 mt-0.5 line-clamp-2">
-                            {link.description}
-                          </div>
-                        )}
-                      </div>
-                      <svg class="w-4 h-4 text-[var(--color-text)]/30 group-hover:text-[var(--color-secondary)]
-                                  transition-colors duration-200 flex-shrink-0" width="16" height="16"
-                           viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M7 17l9.2-9.2M17 17V7H7"/>
-                      </svg>
-                    </a>
-                  ))
-                }
+            <button class="friend-group-toggle w-full flex items-center gap-2 mb-4 text-left cursor-pointer
+                           bg-transparent border-none p-0 font-inherit"
+                    aria-expanded="true">
+              <div class="flex items-center gap-2 flex-1">
+                <svg class="friend-group-arrow w-4 h-4 text-[var(--color-text)]/40 shrink-0
+                            transition-transform duration-200" width="16" height="16"
+                     viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                     stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="6 9 12 15 18 9" />
+                </svg>
+                <h2 class="font-heading text-lg neon-text-secondary flex items-center gap-2 m-0">
+                  <span class="w-1.5 h-1.5 rounded-full bg-[var(--color-secondary)]"></span>
+                  {groupName}
+                  <span class="text-xs text-[var(--color-text)]/30 font-normal">({links.length})</span>
+                </h2>
               </div>
+            </button>
+            <div class="friend-group-body grid grid-cols-1 md:grid-cols-2 gap-4">
+              {
+                links.map((link) => (
+                  <a
+                    href={link.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                     class="group flex items-center gap-4 p-5 rounded-xl neon-border
+                            bg-white
+                            hover:neon-glow-primary transition-lift
+                            hover:-translate-y-0.5 no-underline"
+                  >
+                    <div class="w-12 h-12 rounded-full flex-shrink-0 overflow-hidden
+                                neon-border bg-gradient-to-br from-[var(--color-primary)]/15 to-[var(--color-secondary)]/10
+                                flex items-center justify-center
+                                text-sm font-heading text-[var(--color-text)]/40
+                                group-hover:neon-glow-accent transition-all duration-300"
+                         style={link.color ? `border-color:${link.color}` : ""}>
+                      {link.avatar
+                        ? <img src={link.avatar} alt={link.name} class="w-full h-full object-cover" loading="lazy" />
+                        : <span>{link.name.charAt(0)}</span>
+                      }
+                    </div>
+                    <div class="min-w-0 flex-1">
+                      <div class="font-heading text-sm text-[var(--color-text)]
+                                  group-hover:text-[var(--color-secondary)] transition-colors duration-200"
+                           style={link.color ? `color:${link.color}` : ""}>
+                        {link.name}
+                      </div>
+                      {link.description && (
+                        <div class="text-xs text-[var(--color-text)]/50 mt-0.5 line-clamp-2">
+                          {link.description}
+                        </div>
+                      )}
+                    </div>
+                    <svg class="w-4 h-4 text-[var(--color-text)]/30 group-hover:text-[var(--color-secondary)]
+                                transition-colors duration-200 flex-shrink-0" width="16" height="16"
+                         viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M7 17l9.2-9.2M17 17V7H7"/>
+                    </svg>
+                  </a>
+                ))
+              }
             </div>
           </section>
         ))
@@ -121,8 +119,7 @@ const { Content } = pageEntry ? await pageEntry.render() : { Content: undefined 
 
       {
         config.friendLinks.length === 0 && (
-          <div class="text-center py-20 text-sm text-[var(--color-text)]/30
-                      neon-border rounded-xl bg-[var(--color-surface)] mb-4">
+          <div class="text-center py-20 text-sm text-[var(--color-text)]/30 mb-4">
             还没有添加友链，在 <code class="text-[var(--color-secondary)]">site.config.ts</code> 中配置
           </div>
         )
@@ -131,10 +128,8 @@ const { Content } = pageEntry ? await pageEntry.render() : { Content: undefined 
       <!-- Markdown Content -->
       {
         Content && (
-          <div data-animate class="rounded-xl bg-[var(--color-surface)] neon-border p-6">
-            <div class="prose-neon">
-              <Content />
-            </div>
+          <div class="prose-neon">
+            <Content />
           </div>
         )
       }

@@ -55,7 +55,7 @@ const featConfig = JSON.stringify({
 
     <nav data-astro-transition-persist="nav"
          class="fixed top-4 left-1/2 -translate-x-1/2 z-50 max-w-3xl
-                bg-[var(--color-surface)]/80 backdrop-blur-md
+                bg-white/95
                 neon-border rounded-2xl px-4 md:px-6 py-3
                 flex items-center justify-between"
          style="width: calc(100vw - 2rem)">
@@ -97,7 +97,7 @@ const featConfig = JSON.stringify({
     </div>
 
     {config.homepage.hero.background && config.homepage.hero.background !== "none" && (
-      <div class="fixed inset-0 w-full h-full -z-10">
+      <div data-astro-transition-persist="bg" class="fixed inset-0 w-full h-full -z-10">
         <img src={config.homepage.hero.background} alt="" class="w-full h-full object-cover" />
       </div>
     )}

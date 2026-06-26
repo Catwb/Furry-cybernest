@@ -40,42 +40,40 @@ const galleryGroups = config.gallery.groups.length
 
       {
         galleryGroups.map((group) => (
-              <section class="mb-6 last:mb-0">
-                <div data-animate class="rounded-xl bg-[var(--color-surface)] neon-border p-5">
-                  <h2 id={group.slug} class="font-heading text-xl neon-text-secondary flex items-center gap-3 mb-4
-                             before:w-1 before:h-5 before:rounded before:bg-[var(--color-primary)]">
-                    {group.name}
-                  </h2>
-                  {group.description && <p class="text-sm text-[var(--color-text)]/45 mb-4">{group.description}</p>}
-                  <div class="columns-1 md:columns-2 lg:columns-3 gap-4 space-y-4"
-                       style={`columns: ${group.columns || config.gallery.columns}`}>
-                    {group.items.map((item, i) => {
-                      const view = itemView(item, i);
-                      return (
-                         <div class="gallery-item group relative break-inside-avoid rounded-xl neon-border bg-white overflow-hidden hover:neon-glow-primary transition-lift hover:-translate-y-0.5"
-                             style={`aspect-ratio: ${view.ratio}`}>
-                          <img
-                            src={view.src}
-                            alt={view.alt}
-                            class="w-full h-full object-cover cursor-pointer transition-transform duration-500 group-hover:scale-105"
-                            loading="lazy"
-                          />
-                          {(item.title || item.description || item.href) && (
-                            <div class="absolute inset-x-0 bottom-0 p-4
-                                        bg-gradient-to-t from-black/80 to-transparent
-                                        opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                              {item.title && <p class="text-xs text-white/80">{item.title}</p>}
-                              {item.description && <p class="text-[10px] text-white/45 mt-1 line-clamp-2">{item.description}</p>}
-                              {item.href && <a href={item.href} class="inline-block text-[10px] text-[var(--color-secondary)] mt-2 no-underline hover:underline">查看详情</a>}
-                            </div>
-                          )}
-                        </div>
-                      );
-                    })}
+          <section class="mb-6 last:mb-0">
+            <h2 id={group.slug} class="font-heading text-xl neon-text-secondary flex items-center gap-3 mb-4
+                       before:w-1 before:h-5 before:rounded before:bg-[var(--color-primary)]">
+              {group.name}
+            </h2>
+            {group.description && <p class="text-sm text-[var(--color-text)]/45 mb-4">{group.description}</p>}
+            <div class="columns-1 md:columns-2 lg:columns-3 gap-4 space-y-4"
+                 style={`columns: ${group.columns || config.gallery.columns}`}>
+              {group.items.map((item, i) => {
+                const view = itemView(item, i);
+                return (
+                  <div class="gallery-item group relative break-inside-avoid rounded-xl neon-border bg-white overflow-hidden hover:neon-glow-primary transition-lift hover:-translate-y-0.5"
+                      style={`aspect-ratio: ${view.ratio}`}>
+                    <img
+                      src={view.src}
+                      alt={view.alt}
+                      class="w-full h-full object-cover cursor-pointer transition-transform duration-500 group-hover:scale-105"
+                      loading="lazy"
+                    />
+                    {(item.title || item.description || item.href) && (
+                      <div class="absolute inset-x-0 bottom-0 p-4
+                                  bg-gradient-to-t from-black/80 to-transparent
+                                  opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                        {item.title && <p class="text-xs text-white/80">{item.title}</p>}
+                        {item.description && <p class="text-[10px] text-white/45 mt-1 line-clamp-2">{item.description}</p>}
+                        {item.href && <a href={item.href} class="inline-block text-[10px] text-[var(--color-secondary)] mt-2 no-underline hover:underline">查看详情</a>}
+                      </div>
+                    )}
                   </div>
-                </div>
-              </section>
-            ))
+                );
+              })}
+            </div>
+          </section>
+        ))
       }
     </div>
   </div>
