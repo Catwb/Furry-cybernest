@@ -2,6 +2,7 @@
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import { getCollection, getEntry } from "astro:content";
 import Comments from "../../components/comments/Comments.astro";
+import config from "virtual:site-config";
 
 export async function getStaticPaths() {
   const posts = await getCollection("blog");
@@ -19,7 +20,7 @@ const readingTime = Math.max(1, Math.ceil(wordCount / 500));
 ---
 
 <BaseLayout title={post.data.title}>
-  <article class="max-w-3xl mx-auto px-6 py-8 animate-fade-in">
+  <article class="max-w-3xl mx-auto px-6 py-8 animate-fade-in bg-white rounded-2xl">
     <header class="mb-10">
       {
         post.data.cover && (
@@ -54,7 +55,7 @@ const readingTime = Math.max(1, Math.ceil(wordCount / 500));
       <!-- Meta row: date, reading time, word count -->
       <div class="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-[var(--color-text)]/40">
         <time>{post.data.pubDate.toLocaleDateString("zh-CN")}</time>
-        {post.data.updatedDate && (
+        {config.blog.showUpdatedDate && post.data.updatedDate && (
           <>
             <span class="w-1 h-1 rounded-full bg-[var(--color-text)]/20"></span>
             <span>更新于 {post.data.updatedDate.toLocaleDateString("zh-CN")}</span>
@@ -96,7 +97,7 @@ const readingTime = Math.max(1, Math.ceil(wordCount / 500));
       <!-- Date & Stats -->
       <div class="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-[var(--color-text)]/30">
         <span>发布: {post.data.pubDate.toLocaleDateString("zh-CN")}</span>
-        {post.data.updatedDate && (
+        {config.blog.showUpdatedDate && post.data.updatedDate && (
           <span>更新: {post.data.updatedDate.toLocaleDateString("zh-CN")}</span>
         )}
         <span>{wordCount} 字</span>

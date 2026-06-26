@@ -29,7 +29,7 @@ const allPosts = (await getCollection("blog"))
 
 const totalPages = Math.ceil(allPosts.length / perPage);
 const posts = allPosts.slice((pageNum - 1) * perPage, pageNum * perPage);
-const showSidebar = config.homepage.sidebar.characterSpotlight || config.homepage.sidebar.categories;
+const showSidebar = config.homepage.sidebar.author || config.homepage.sidebar.categories || config.homepage.sidebar.recentPosts || config.homepage.sidebar.archives || config.homepage.sidebar.siteInfo;
 ---
 
 <BaseLayout title={`第 ${pageNum} 页`}>
@@ -39,42 +39,35 @@ const showSidebar = config.homepage.sidebar.characterSpotlight || config.homepag
         <div class="flex flex-col gap-5">
           {
             posts.map((post, i) => (
-              <a href={`/blog/${postUrl(post)}`}
+              <a href={`/posts/${postUrl(post)}`}
                  data-animate style={`transition-delay:${i * 0.04}s`}
-                 class="group relative flex flex-row items-stretch rounded-xl neon-border overflow-hidden no-underline
-                        bg-[var(--color-bg)]/70 hover:neon-glow-primary
-                        transition-lift hover:-translate-y-0.5">
+                 class={`group flex items-stretch rounded-xl neon-border overflow-hidden no-underline
+                        bg-white hover:neon-glow-primary
+                        transition-lift hover:-translate-y-0.5
+                        ${post.data.cover ? 'flex-row' : 'flex-col px-8 py-6'}`}>
                 {post.data.cover && (
-                  <div class="w-48 shrink-0 overflow-hidden hidden sm:block">
+                  <div class="w-40 shrink-0 overflow-hidden hidden sm:block">
                     <img src={post.data.cover} alt={post.data.title}
                          class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" />
                   </div>
                 )}
-                <div class="px-8 py-6 flex flex-col flex-1 min-w-0">
-                  <div class="flex items-center gap-2 mb-2">
-                    {post.data.categories.length > 0 && (
-                      <span class="text-xs text-[var(--color-text)]/60">
-                        {post.data.categories.join("/")}
-                      </span>
-                    )}
-                    <time class="text-xs text-[var(--color-text)]/30">
-                      {post.data.pubDate.toLocaleDateString("zh-CN")}
-                    </time>
-                  </div>
+                <div class={`flex flex-col flex-1 min-w-0 ${post.data.cover ? 'px-6 py-5' : ''}`}>
                   <h2 class="font-heading text-lg text-[var(--color-text)] group-hover:text-[var(--color-secondary)]
                              transition-colors duration-200 mb-2 line-clamp-1">
                     {post.data.title}
                   </h2>
                   {post.data.description && (
-                    <p class="text-sm text-[var(--color-text)]/45 line-clamp-2 flex-1">
+                    <p class="text-sm text-[var(--color-text)]/45 line-clamp-2 mb-3">
                       {post.data.description}
                     </p>
                   )}
+                  <div class="flex items-center gap-3 text-xs text-[var(--color-text)]/30 mt-auto">
+                    {post.data.categories.length > 0 && (
+                      <span>{post.data.categories.join("/")}</span>
+                    )}
+                    <time>{post.data.pubDate.toLocaleDateString("zh-CN")}</time>
+                  </div>
                 </div>
-                <span class="hidden md:flex items-center pr-6 text-xs text-[var(--color-primary)]
-                             opacity-0 group-hover:opacity-100 transition-opacity duration-300 shrink-0">
-                  阅读 →
-                </span>
               </a>
             ))
           }

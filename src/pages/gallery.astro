@@ -34,23 +34,27 @@ const galleryGroups = config.gallery.groups.length
 
 <BaseLayout title="画廊">
   <div class="max-w-6xl mx-auto px-6 py-8">
-    <h1 data-animate class="font-heading text-3xl neon-text-primary mb-2">画廊</h1>
-    <p data-animate class="text-sm text-[var(--color-text)]/50 mb-10">插画与角色设计展示</p>
+    <div data-animate class="rounded-xl bg-white p-6 mb-8 neon-border">
+      <h1 class="font-heading text-3xl neon-text-primary mb-2">画廊</h1>
+      <p class="text-sm text-[var(--color-text)]/50">插画与角色设计展示</p>
+    </div>
 
     {
       galleryGroups.map((group) => (
             <section class="mb-14">
-              <h2 id={group.slug} class="font-heading text-xl neon-text-secondary mb-2 flex items-center gap-3
-                         before:w-1 before:h-5 before:rounded before:bg-[var(--color-primary)]">
-                {group.name}
-              </h2>
-              {group.description && <p class="text-sm text-[var(--color-text)]/45 mb-6">{group.description}</p>}
+              <div class="rounded-xl bg-white p-5 mb-4 neon-border">
+                <h2 id={group.slug} class="font-heading text-xl neon-text-secondary flex items-center gap-3
+                           before:w-1 before:h-5 before:rounded before:bg-[var(--color-primary)]">
+                  {group.name}
+                </h2>
+                {group.description && <p class="text-sm text-[var(--color-text)]/45 mt-1">{group.description}</p>}
+              </div>
               <div class="columns-1 md:columns-2 lg:columns-3 gap-4 space-y-4"
                    style={`columns: ${group.columns || config.gallery.columns}`}>
                 {group.items.map((item, i) => {
                   const view = itemView(item, i);
                   return (
-                     <div class="gallery-item group relative break-inside-avoid rounded-xl neon-border overflow-hidden hover:neon-glow-primary transition-lift hover:-translate-y-0.5"
+                     <div class="gallery-item group relative break-inside-avoid rounded-xl neon-border bg-white overflow-hidden hover:neon-glow-primary transition-lift hover:-translate-y-0.5"
                          style={`aspect-ratio: ${view.ratio}`}>
                       <img
                         src={view.src}

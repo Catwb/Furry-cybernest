@@ -96,12 +96,13 @@ const featConfig = JSON.stringify({
       </div>
     </div>
 
-    <div data-astro-transition-persist="hero-bg" class="fixed inset-0 w-full h-full -z-10">
-      <img src={config.homepage.hero.background} alt="" class="w-full h-full object-cover" />
-      <div class="absolute inset-0 bg-[var(--color-bg)]/60" />
-    </div>
+    {config.homepage.hero.background && config.homepage.hero.background !== "none" && (
+      <div class="fixed inset-0 w-full h-full -z-10">
+        <img src={config.homepage.hero.background} alt="" class="w-full h-full object-cover" />
+      </div>
+    )}
 
-    <main class="min-h-screen pt-24">
+    <main class="min-h-screen pt-24 relative">
       <slot />
     </main>
 

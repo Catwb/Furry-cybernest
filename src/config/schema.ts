@@ -72,15 +72,19 @@ export const HomepageSchema = z.object({
   }).default({}),
   postsPerPage: z.number().int().min(1).max(50).default(6),
   sidebar: z.object({
-    characterSpotlight: z.boolean().default(true),
     categories: z.boolean().default(true),
+    author: z.boolean().default(true),
+    recentPosts: z.boolean().default(true),
+    archives: z.boolean().default(true),
+    siteInfo: z.boolean().default(true),
   }).default({}),
 });
 
 export const BlogSchema = z.object({
   postsPerPage: z.number().int().min(1).max(50).default(6),
-  permalink: z.string().default("/blog/:slug"),
+  permalink: z.string().default("/posts/:slug"),
   excerpt: z.boolean().default(true),
+  showUpdatedDate: z.boolean().default(true),
 });
 
 export const TwikooConfigSchema = z.object({
@@ -102,6 +106,7 @@ export const CommentsSchema = z.object({
 
 export const CDNOverridesSchema = z.object({
   twikoo: z.string().optional(),
+  twikooCSS: z.string().optional(),
   artalk: z.string().optional(),
   artalkCSS: z.string().optional(),
 });

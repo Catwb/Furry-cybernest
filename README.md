@@ -29,7 +29,6 @@
 |------|------|
 | `/` | 首页（Hero + 博客列表 + 分页 + 侧边栏） |
 | `/page/:page` | 首页分页（第 2、3、4… 页） |
-| `/blog` | 博客列表 |
 | `/blog/:slug` | 文章详情（支持 frontmatter `abbrlink` 自定义路径） |
 | `/blog/categories` | 分类总览（树形展示） |
 | `/blog/categories/:category` | 分类下的文章列表 |
@@ -96,7 +95,7 @@ homepage: {
     show: true,                    // 是否显示 Hero 区块
     title: "欢迎来到 Furry CyberNest",
     subtitle: "赛博森林深处，故事正在低语",
-    background: "none",            // "none" | "cyber-grid"
+    background: "https://...",     // 背景图 URL，"none" 隐藏
   },
   postsPerPage: 6,                 // 每页展示文章数
   sidebar: {
@@ -105,6 +104,8 @@ homepage: {
   },
 }
 ```
+
+背景图以全屏封面形式展示在首页 Hero 区域，不做滤镜处理。内容区域使用白色半透明底色覆盖，背景仅在 Hero 区域可见。卡片中的封面图为可选字段，添加 `cover` 则显示左侧缩略图，不添加则纯文字展示。
 
 ### 代码块配置
 

@@ -25,7 +25,7 @@ export async function GET(context: APIContext) {
 
   const entries = await Promise.all(
     items.map(async (post) => {
-      const link = `${site}/blog/${postSlug(post)}/`;
+      const link = `${site}/posts/${postSlug(post)}/`;
       const html = await marked.parse(post.body || "");
       const categories = post.data.tags
         .map((t) => `      <category term="${escapeXml(t)}" />`)

@@ -22,7 +22,7 @@ export async function GET(context: APIContext) {
       title: post.data.title,
       pubDate: post.data.pubDate,
       description: post.data.description,
-      link: `/blog/${postSlug(post)}/`,
+      link: `/posts/${postSlug(post)}/`,
       categories: post.data.tags,
     })),
     customData: config.rss.copyright ? `<copyright>${config.rss.copyright}</copyright>` : "",

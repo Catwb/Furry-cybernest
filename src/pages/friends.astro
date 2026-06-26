@@ -19,8 +19,10 @@ const { Content } = pageEntry ? await pageEntry.render() : { Content: undefined 
 
 <BaseLayout title="友情链接">
   <div class="max-w-4xl mx-auto px-6 py-8">
-    <h1 data-animate class="font-heading text-3xl neon-text-primary mb-2">友情链接</h1>
-    <p data-animate class="text-sm text-[var(--color-text)]/50 mb-10">赛博森林的邻居们</p>
+    <div data-animate class="rounded-xl bg-white p-6 mb-8 neon-border">
+      <h1 class="font-heading text-3xl neon-text-primary mb-2">友情链接</h1>
+      <p class="text-sm text-[var(--color-text)]/50">赛博森林的邻居们</p>
+    </div>
 
     <!-- Friend Link Groups (collapsible, default open) -->
     {
@@ -29,17 +31,19 @@ const { Content } = pageEntry ? await pageEntry.render() : { Content: undefined 
           <button class="friend-group-toggle w-full flex items-center gap-2 mb-4 text-left cursor-pointer
                          bg-transparent border-none p-0 font-inherit"
                   aria-expanded="true">
-            <svg class="friend-group-arrow w-4 h-4 text-[var(--color-text)]/40 shrink-0
-                        transition-transform duration-200" width="16" height="16"
-                 viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                 stroke-linecap="round" stroke-linejoin="round">
-              <polyline points="6 9 12 15 18 9" />
-            </svg>
-            <h2 class="font-heading text-lg neon-text-secondary flex items-center gap-2 m-0">
-              <span class="w-1.5 h-1.5 rounded-full bg-[var(--color-secondary)]"></span>
-              {groupName}
-              <span class="text-xs text-[var(--color-text)]/30 font-normal">({links.length})</span>
-            </h2>
+            <div class="flex items-center gap-2 flex-1 rounded-xl bg-white px-5 py-3 neon-border">
+              <svg class="friend-group-arrow w-4 h-4 text-[var(--color-text)]/40 shrink-0
+                          transition-transform duration-200" width="16" height="16"
+                   viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                   stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="6 9 12 15 18 9" />
+              </svg>
+              <h2 class="font-heading text-lg neon-text-secondary flex items-center gap-2 m-0">
+                <span class="w-1.5 h-1.5 rounded-full bg-[var(--color-secondary)]"></span>
+                {groupName}
+                <span class="text-xs text-[var(--color-text)]/30 font-normal">({links.length})</span>
+              </h2>
+            </div>
           </button>
           <div class="friend-group-body grid grid-cols-1 md:grid-cols-2 gap-4">
             {
@@ -49,7 +53,7 @@ const { Content } = pageEntry ? await pageEntry.render() : { Content: undefined 
                   target="_blank"
                   rel="noopener noreferrer"
                    class="group flex items-center gap-4 p-5 rounded-xl neon-border
-                          bg-[var(--color-surface)]/50
+                          bg-white
                           hover:neon-glow-primary transition-lift
                           hover:-translate-y-0.5 no-underline"
                 >
@@ -98,22 +102,26 @@ const { Content } = pageEntry ? await pageEntry.render() : { Content: undefined 
       }
     </style>
 
-    <script>
-      document.querySelectorAll(".friend-group-toggle").forEach(function(btn) {
-        btn.addEventListener("click", function() {
-          var group = btn.closest(".friend-group");
-          if (!group) return;
-          var open = group.getAttribute("data-open") === "true";
-          group.setAttribute("data-open", open ? "false" : "true");
-          btn.setAttribute("aria-expanded", !open);
+    <script is:inline>
+      function initFriendGroups() {
+        document.querySelectorAll(".friend-group-toggle").forEach(function(btn) {
+          btn.onclick = function() {
+            var group = btn.closest(".friend-group");
+            if (!group) return;
+            var open = group.getAttribute("data-open") === "true";
+            group.setAttribute("data-open", open ? "false" : "true");
+            btn.setAttribute("aria-expanded", !open);
+          };
         });
-      });
+      }
+      document.addEventListener("astro:page-load", initFriendGroups);
+      initFriendGroups();
     </script>
 
     {
       config.friendLinks.length === 0 && (
         <div class="text-center py-20 text-sm text-[var(--color-text)]/30
-                    neon-border rounded-xl bg-[var(--color-surface)]/30 mb-12">
+                    neon-border rounded-xl bg-white mb-12">
           还没有添加友链，在 <code class="text-[var(--color-secondary)]">site.config.ts</code> 中配置
         </div>
       )

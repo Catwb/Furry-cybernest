@@ -2,23 +2,18 @@
 import config from "virtual:site-config";
 const { twikoo } = config.comments;
 const twikooCDN = config.cdnOverrides?.twikoo || "https://cdn.jsdelivr.net/npm/twikoo@1.6.41/dist/twikoo.all.min.js";
+const twikooCSS = config.cdnOverrides?.twikooCSS || "";
 const envId = twikoo?.envId || "";
 const region = twikoo?.region || "";
+const twikooScript = `(function(){var s=document.createElement("script");s.src="${twikooCDN}";s.async=true;document.head.appendChild(s);var i=setInterval(function(){if(typeof twikoo!=="undefined"){clearInterval(i);twikoo.init({envId:"${envId}",region:"${region}",el:"#twikoo-comments"})}},100)})()`;
 ---
 
 {
   twikoo && (
     <>
+      {twikooCSS && <link rel="stylesheet" href={twikooCSS} />}
       <div id="twikoo-comments" class="min-h-[200px]"></div>
-      <script define:vars={{ twikooCDN, envId, region }}>
-        const s = document.createElement("script");
-        s.src = twikooCDN;
-        s.onload = () => {
-          // @ts-ignore
-          twikoo.init({ envId, region });
-        };
-        document.head.appendChild(s);
-      </script>
+      <script is:inline set:html={twikooScript} />
     </>
   )
 }

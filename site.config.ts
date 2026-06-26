@@ -92,28 +92,37 @@ export default defineConfig({
     },
     postsPerPage: 6,
     sidebar: {
-      characterSpotlight: true,
       categories: true,
+      author: true,
+      recentPosts: true,
+      archives: true,
+      siteInfo: true,
     },
   },
 
   blog: {
     postsPerPage: 6,
-    permalink: "/blog/:slug",
+    permalink: "/posts/:slug",
     excerpt: true,
+    showUpdatedDate: false,
   },
 
   comments: {
     enabled: true,
     provider: "twikoo",
     twikoo: {
-      envId: "https://your-twikoo.vercel.app",
+      envId: "https://twikoo.245179.xyz/.netlify/functions/twikoo",
       region: "",
     },
     artalk: {
       server: "https://artalk.example.com",
       site: "Furry CyberNest",
     },
+  },
+
+  cdnOverrides: {
+    twikoo: "https://unpkg.com/twikoo@1.7.12/dist/twikoo.all.min.js",
+    twikooCSS: "https://cdn.245179.xyz/css/twikoo.css",
   },
 
   friendLinks: [
