@@ -17,7 +17,7 @@ const { items, level = 0 } = Astro.props;
       return (
         <div class="nav-group">
           <a
-            href={item.url || "#"}
+            href={item.url || "javascript:void(0)"}
             class="nav-link cursor-pointer flex items-center gap-1"
             aria-haspopup="true"
           >

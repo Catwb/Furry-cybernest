@@ -38,11 +38,15 @@
   --color-border: rgba(14, 165, 233, 0.25);
   --color-glow: rgba(14, 165, 233, 0.2);
 }
+.dark .bg-site img {
+  filter: brightness(0.35) saturate(0.6);
+}
 
 html {
   font-family: var(--font-body);
   overscroll-behavior-y: auto;
   scrollbar-gutter: stable;
+  background-color: var(--color-neon-bg);
 }
 
 body {
@@ -541,8 +545,4 @@ img[loading="lazy"] {
   border-radius: 1px;
 }
 
-/* ── View Transitions: disable default fade animation ── */
-::view-transition-old(root),
-::view-transition-new(root) {
-  animation: none;
-}
+

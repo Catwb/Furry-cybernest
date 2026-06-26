@@ -50,7 +50,7 @@ const region = twikoo?.region || "";
 
           if (window._twikooInit) document.removeEventListener("astro:page-load", window._twikooInit);
           window._twikooInit = initComments;
-          document.addEventListener("astro:page-load", initComments);
+          initComments();
         })();
       </script>
     </>

@@ -1,7 +1,7 @@
 ---
 import config from "virtual:site-config";
 import NavMenu from "../components/NavMenu.astro";
-import { ViewTransitions } from "astro:transitions";
+
 import { marked } from "marked";
 import "../styles/globals.css";
 
@@ -57,33 +57,14 @@ const featConfig = JSON.stringify({
     <link rel="alternate" type="application/rss+xml" title={config.site.title} href="/rss.xml" />
 
     <script id="feat-config" type="application/json" set:html={featConfig} />
-
-    <ViewTransitions />
-    <meta name="astro-view-transitions-fallback" content="none" />
   </head>
   <body>
-    <!-- Re-apply theme after every navigation (View Transitions may reset html class) -->
-    <script is:inline>
-      (function() {
-        var t = localStorage.getItem("theme");
-        var html = document.documentElement;
-        if (t === "dark" || (!t && window.matchMedia("(prefers-color-scheme: dark)").matches)) {
-          if (!html.classList.contains("dark")) html.classList.add("dark");
-          html.setAttribute("color-scheme", "dark");
-        } else {
-          html.classList.remove("dark");
-          html.removeAttribute("color-scheme");
-        }
-      })();
-    </script>
-    <div id="progress-bar" class="fixed top-0 left-0 h-[3px] bg-[var(--color-primary)] z-[9999] w-0 transition-[width] duration-200"></div>
 
     {config.cdn.js.map((l: { href: string }) => <script src={l.href}></script>)}
     {config.fonts.cdn.filter((l: { head?: boolean }) => !l.head).map((l: { href: string }) => <link rel="stylesheet" href={l.href} />)}
     {config.cdn.css.filter((l: { head?: boolean }) => !l.head).map((l: { href: string }) => <link rel="stylesheet" href={l.href} />)}
 
-    <nav data-astro-transition-persist="nav"
-         class="fixed top-4 left-1/2 -translate-x-1/2 z-50 max-w-3xl
+    <nav class="fixed top-4 left-1/2 -translate-x-1/2 z-50 max-w-3xl
                 bg-[var(--color-card)]/95
                 neon-border rounded-2xl px-4 md:px-6 py-3
                 flex items-center justify-between"
@@ -142,7 +123,7 @@ const featConfig = JSON.stringify({
     </div>
 
     {config.homepage.hero.background && config.homepage.hero.background !== "none" && (
-      <div data-astro-transition-persist="bg" class="fixed inset-0 w-full h-full -z-10">
+      <div class="bg-site fixed inset-0 w-full h-full -z-10">
         <img src={config.homepage.hero.background} alt="" class="w-full h-full object-cover" />
       </div>
     )}
@@ -160,30 +141,6 @@ const featConfig = JSON.stringify({
     </footer>
 
     <script is:inline>
-      /* Progress bar */
-      var bar = document.getElementById("progress-bar");
-      function startProgress() {
-        bar.style.transition = "none";
-        bar.style.width = "0%";
-        requestAnimationFrame(function() {
-          bar.style.transition = "width 0.4s ease";
-          bar.style.width = "70%";
-        });
-      }
-      function finishProgress() {
-        bar.style.transition = "width 0.2s ease";
-        bar.style.width = "100%";
-        setTimeout(function() {
-          bar.style.transition = "opacity 0.3s ease";
-          bar.style.opacity = "0";
-          setTimeout(function() {
-            bar.style.transition = "none";
-            bar.style.width = "0%";
-            bar.style.opacity = "1";
-          }, 300);
-        }, 200);
-      }
-
       function initHamburger() {
         var html = document.documentElement;
         var hamburger = document.getElementById("hamburger");
@@ -191,7 +148,6 @@ const featConfig = JSON.stringify({
         var hamIcon = document.getElementById("hamburger-icon");
         var closeIcon = document.getElementById("close-icon");
         if (!hamburger || !drawer) return;
-        /* Reset state on navigation */
         drawer.classList.add("translate-x-full");
         html.classList.remove("overflow-hidden");
         if (hamIcon) hamIcon.classList.remove("hidden");
@@ -218,7 +174,6 @@ const featConfig = JSON.stringify({
           var dark = theme === "dark";
           var html = document.documentElement;
           if (dark) { html.classList.add("dark"); html.setAttribute("color-scheme", "dark"); } else { html.classList.remove("dark"); html.removeAttribute("color-scheme"); }
-          /* Sync icon state */
           [document.getElementById("theme-toggle-desktop"), document.getElementById("theme-toggle-mobile")].forEach(function(btn) {
             if (!btn) return;
             var sun = btn.querySelector(".sun-icon");
@@ -232,9 +187,7 @@ const featConfig = JSON.stringify({
           if (s) return s;
           return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
         }
-        /* Force-apply from localStorage every time (survive View Transitions) */
         applyTheme(getPreferred());
-        /* Toggle: flip and save */
         function toggle() {
           var next = document.documentElement.classList.contains("dark") ? "light" : "dark";
           applyTheme(next);
@@ -243,17 +196,13 @@ const featConfig = JSON.stringify({
             window._twikooInit();
           }
         }
-        /* Bind toggle buttons */
         [document.getElementById("theme-toggle-desktop"), document.getElementById("theme-toggle-mobile")].forEach(function(btn) {
           if (btn) btn.onclick = toggle;
         });
       }
 
-      document.addEventListener("astro:page-load", function () {
-        finishProgress();
-        initHamburger();
-        initThemeToggle();
-        var els = document.querySelectorAll("[data-animate]");
+      function initScrollObserver() {
+        var els = document.querySelectorAll("[data-animate]:not(.observed)");
         if (els.length && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
           var obs = new IntersectionObserver(function(entries) {
             entries.forEach(function(entry) {
@@ -265,13 +214,90 @@ const featConfig = JSON.stringify({
           }, { threshold: 0.05 });
           els.forEach(function(el) { obs.observe(el); });
         }
-      });
+      }
 
-      document.addEventListener("astro:before-preparation", startProgress);
       initHamburger();
       initThemeToggle();
+      initScrollObserver();
     </script>
 
     <script is:inline src="/scripts/features.js"></script>
+
+    <script is:inline>
+      (function() {
+        if (!window.history.pushState) return;
+
+        function _reinitPage() {
+          initScrollObserver();
+          if (window._reinitFeatures) window._reinitFeatures();
+          document.querySelectorAll(".friend-group-toggle").forEach(function(btn) {
+            btn.onclick = function() {
+              var group = btn.closest(".friend-group");
+              if (!group) return;
+              var open = group.getAttribute("data-open") === "true";
+              group.setAttribute("data-open", open ? "false" : "true");
+              btn.setAttribute("aria-expanded", !open);
+            };
+          });
+        }
+        window._reinitPage = _reinitPage;
+
+        function normalizeHref(href) {
+          if (!href) return "";
+          if (href.startsWith("http://") || href.startsWith("https://") || href.startsWith("//")) return "";
+          if (href.startsWith("#") || href.startsWith("mailto:") || href.startsWith("tel:") || href.startsWith("javascript:")) return "";
+          return href;
+        }
+
+        document.addEventListener("click", function(e) {
+          var link = e.target.closest("a[href]");
+          if (!link) return;
+          var href = normalizeHref(link.getAttribute("href"));
+          if (!href) return;
+          if (link.hasAttribute("target") || link.hasAttribute("download")) return;
+          e.preventDefault();
+          pjax(href);
+        });
+
+        function pjax(url) {
+          document.body.classList.add("pjax-loading");
+          fetch(url).then(function(r) {
+            if (!r.ok) throw new Error("fetch failed");
+            return r.text();
+          }).then(function(html) {
+            var tmp = document.createElement("div");
+            tmp.innerHTML = html;
+
+            var newMain = tmp.querySelector("main");
+            var oldMain = document.querySelector("main");
+            if (newMain && oldMain) {
+              var scripts = Array.from(newMain.querySelectorAll("script"));
+              var inlineCodes = scripts.filter(function(s) { return !s.src; }).map(function(s) { return s.textContent; });
+
+              oldMain.innerHTML = newMain.innerHTML;
+
+              inlineCodes.forEach(function(code) {
+                try { (new Function(code))(); } catch(e) {}
+              });
+            }
+
+            var m = html.match(/<title>([\s\S]*?)<\/title>/);
+            if (m) document.title = m[1].trim();
+
+            history.pushState({}, "", url);
+            window.scrollTo(0, 0);
+            _reinitPage();
+          }).catch(function() {
+            window.location.href = url;
+          }).finally(function() {
+            document.body.classList.remove("pjax-loading");
+          });
+        }
+
+        window.addEventListener("popstate", function() {
+          pjax(location.pathname + location.search);
+        });
+      })();
+    </script>
   </body>
 </html>

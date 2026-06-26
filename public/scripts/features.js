@@ -114,6 +114,7 @@
 
   function initLightbox() {
     if (cfg.lightbox === false) return;
+    if (document.querySelector(".lightbox-overlay")) return;
 
     var overlay = document.createElement("div");
     overlay.className = "lightbox-overlay";
@@ -165,13 +166,12 @@
     }
   }
 
-  document.addEventListener("DOMContentLoaded", function () {
+  function initAll() {
     initCodeBlocks();
     initLightbox();
-  });
+  }
 
-  document.addEventListener("astro:page-load", function () {
-    initCodeBlocks();
-    initLightbox();
-  });
+  window._reinitFeatures = initAll;
+
+  document.addEventListener("DOMContentLoaded", initAll);
 })();
