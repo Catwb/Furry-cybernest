@@ -123,7 +123,7 @@ const featConfig = JSON.stringify({
     </div>
 
     {config.homepage.hero.background && config.homepage.hero.background !== "none" && (
-      <div class="bg-site fixed inset-0 w-full h-full">
+      <div class="bg-site fixed inset-0 w-full h-full -z-10">
         <img src={config.homepage.hero.background} alt="" class="w-full h-full object-cover" />
       </div>
     )}
@@ -132,7 +132,7 @@ const featConfig = JSON.stringify({
       <slot />
     </main>
 
-    <footer class="neon-border border-x-0 border-b-0 mt-24 py-12">
+    <footer class="neon-border border-x-0 border-b-0 mt-24 py-12 bg-[var(--color-card)]/80">
       <div class="max-w-5xl mx-auto px-6">
         <div class="prose-footer max-w-lg mx-auto text-center">
           <Fragment set:html={marked.parse(config.footer.content || "")} />

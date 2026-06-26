@@ -50,7 +50,7 @@ html {
 }
 
 body {
-  background-color: var(--color-neon-bg);
+  background-color: transparent;
   color: var(--color-neon-text);
 }
 .dark footer {
