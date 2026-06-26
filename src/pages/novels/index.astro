@@ -8,8 +8,10 @@ const novels = (await getCollection("novels"))
 
 <BaseLayout title="小说">
   <div class="max-w-5xl mx-auto px-6 py-8">
-    <h1 data-animate class="font-heading text-3xl neon-text-primary mb-2">小说</h1>
-    <p data-animate class="text-sm text-[var(--color-text)]/50 mb-10">星海之间的故事</p>
+    <div data-animate class="rounded-xl bg-white p-6 mb-8 neon-border">
+      <h1 class="font-heading text-3xl neon-text-primary page-title">小说</h1>
+      <p class="text-sm text-[var(--color-text)]/50">星海之间的故事</p>
+    </div>
 
     <div data-animate class="grid grid-cols-1 md:grid-cols-2 gap-6">
       {

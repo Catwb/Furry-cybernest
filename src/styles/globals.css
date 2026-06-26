@@ -496,6 +496,24 @@ img[loading="lazy"] {
   transition: opacity 0.3s;
 }
 
+/* ── Page Title ── */
+.page-title {
+  position: relative;
+  padding-bottom: 0.75rem;
+  margin-bottom: 1.5rem;
+  border-bottom: 1px solid var(--color-border);
+}
+.page-title::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  width: 3rem;
+  height: 2px;
+  background: var(--color-primary);
+  border-radius: 1px;
+}
+
 /* ── View Transitions: disable default fade animation ── */
 ::view-transition-old(root),
 ::view-transition-new(root) {

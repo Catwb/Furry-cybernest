@@ -30,28 +30,30 @@ const { Content } = await current.render();
 <BaseLayout title={`${current.data.title} · ${novel.data.title}`}>
   <div class="max-w-3xl mx-auto px-6 py-8">
     <!-- Top nav -->
-    <div class="flex items-center justify-between mb-8 text-sm">
-      <a href={`/novels/${slug}`}
-         class="flex items-center gap-1 text-[var(--color-text)]/40 hover:text-[var(--color-secondary)]
-                transition-colors duration-300 no-underline">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-             stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <polyline points="15 18 9 12 15 6" />
-        </svg>
-        {novel.data.title}
-      </a>
-      <span class="text-xs text-[var(--color-text)]/30">
-        第 {chapterNum} 章
-      </span>
-    </div>
+    <div class="rounded-xl bg-white neon-border p-6 mb-8">
+      <div class="flex items-center justify-between mb-6 text-sm">
+        <a href={`/novels/${slug}`}
+           class="flex items-center gap-1 text-[var(--color-text)]/40 hover:text-[var(--color-secondary)]
+                  transition-colors duration-300 no-underline">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+               stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="15 18 9 12 15 6" />
+          </svg>
+          {novel.data.title}
+        </a>
+        <span class="text-xs text-[var(--color-text)]/30">
+          第 {chapterNum} 章
+        </span>
+      </div>
 
-    <!-- Chapter title -->
-    <h1 class="font-heading text-2xl neon-text-primary mb-2">{current.data.title}</h1>
-    {current.data.pubDate && (
-      <p class="text-xs text-[var(--color-text)]/30 mb-8">
-        {current.data.pubDate.toLocaleDateString("zh-CN")}
-      </p>
-    )}
+      <!-- Chapter title -->
+      <h1 class="font-heading text-2xl neon-text-primary mb-2">{current.data.title}</h1>
+      {current.data.pubDate && (
+        <p class="text-xs text-[var(--color-text)]/30">
+          {current.data.pubDate.toLocaleDateString("zh-CN")}
+        </p>
+      )}
+    </div>
 
     <!-- Content -->
     <div data-animate class="prose-neon max-w-none bg-white rounded-xl neon-border px-8 py-6">

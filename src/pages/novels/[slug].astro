@@ -22,13 +22,13 @@ const wordCount = chapters.reduce((sum, c) => sum + c.body.length, 0);
 <BaseLayout title={novel.data.title}>
   <div class="max-w-3xl mx-auto px-6 py-8">
     <!-- Novel header -->
-    <div data-animate class="text-center mb-12">
+    <div data-animate class="rounded-xl bg-white p-8 neon-border mb-8 text-center">
       <div class="w-24 h-24 mx-auto rounded-full neon-border mb-4
                   bg-gradient-to-br from-[var(--color-primary)]/20 to-[var(--color-accent)]/10
                   flex items-center justify-center text-2xl">
         🦊
       </div>
-      <h1 class="font-heading text-3xl neon-text-primary mb-2">{novel.data.title}</h1>
+      <h1 class="font-heading text-3xl neon-text-primary page-title">{novel.data.title}</h1>
       <p class="text-sm text-[var(--color-text)]/40 mb-2">{novel.data.author}</p>
       <div class="flex items-center justify-center gap-2 mb-4">
         <span class="text-xs px-2 py-0.5 rounded text-[var(--color-accent)] bg-[var(--color-accent)]/10">
