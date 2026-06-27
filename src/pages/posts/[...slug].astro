@@ -17,6 +17,13 @@ const { Content } = await post.render();
 
 const wordCount = post.body.trim().length;
 const readingTime = Math.max(1, Math.ceil(wordCount / 500));
+
+const allPosts = (await getCollection("blog"))
+  .filter((p) => !p.data.draft)
+  .sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime());
+const curIdx = allPosts.findIndex((p) => p.slug === post.slug);
+const prevPost = curIdx > 0 ? allPosts[curIdx - 1] : null;
+const nextPost = curIdx < allPosts.length - 1 ? allPosts[curIdx + 1] : null;
 ---
 
 <BaseLayout title={post.data.title}>
@@ -38,15 +45,13 @@ const readingTime = Math.max(1, Math.ceil(wordCount / 500));
       <!-- Categories -->
       {
         post.data.categories.length > 0 && (
-          <nav class="flex flex-wrap items-center gap-1 text-xs mb-4">
-            {post.data.categories.map((cat, i) => (
-              <>
-                {i > 0 && <span class="text-[var(--color-text)]/20">/</span>}
-                <a href={`/blog/categories/${cat}`}
-                   class="text-[var(--color-text)] hover:text-[var(--color-secondary)] transition-colors no-underline">
-                  {cat}
-                </a>
-              </>
+          <nav class="flex flex-wrap items-center gap-2 text-xs mb-4">
+            {post.data.categories.map((cat) => (
+              <a href={`/blog/categories/${cat}`}
+                 class="px-2.5 py-0.5 rounded-full neon-border text-[var(--color-primary)]/70 bg-[var(--color-primary)]/5
+                        hover:text-[var(--color-secondary)] hover:bg-[var(--color-secondary)]/5 transition-all no-underline">
+                {cat}
+              </a>
             ))}
           </nav>
         )
@@ -74,35 +79,72 @@ const readingTime = Math.max(1, Math.ceil(wordCount / 500));
 
     <!-- Meta Footer -->
     <footer data-animate class="mt-16 pt-8 border-t border-[var(--color-border)]">
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs text-[var(--color-text)]/50 mb-8">
+        <div>
+          <span class="block text-[10px] uppercase tracking-wider text-[var(--color-text)]/20 mb-1">作者</span>
+          <span>{config.site.author}</span>
+        </div>
+        <div>
+          <span class="block text-[10px] uppercase tracking-wider text-[var(--color-text)]/20 mb-1">发布于</span>
+          <time>{post.data.pubDate.toLocaleDateString("zh-CN")}</time>
+          {config.blog.showUpdatedDate && post.data.updatedDate && (
+            <span class="ml-2">(更新: {post.data.updatedDate.toLocaleDateString("zh-CN")})</span>
+          )}
+        </div>
+        <div>
+          <span class="block text-[10px] uppercase tracking-wider text-[var(--color-text)]/20 mb-1">字数</span>
+          <span>约 {wordCount} 字 · {readingTime} 分钟</span>
+        </div>
+        <div>
+          <span class="block text-[10px] uppercase tracking-wider text-[var(--color-text)]/20 mb-1">许可</span>
+          <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank" rel="noopener"
+             class="text-[var(--color-text)] hover:text-[var(--color-secondary)] transition-colors no-underline">
+            CC BY-NC-SA 4.0
+          </a>
+        </div>
+      </div>
+
       <!-- Categories -->
       {
         post.data.categories.length > 0 && (
-          <div class="flex items-center gap-2 text-sm text-[var(--color-text)]/60 mb-3">
+          <div class="flex items-center gap-2 text-sm text-[var(--color-text)]/60 mb-6">
             <span class="font-heading text-xs uppercase tracking-wider text-[var(--color-text)]/30">分类</span>
             <nav class="flex items-center gap-1">
               {post.data.categories.map((cat, i) => (
-                <>
-                  {i > 0 && <span class="text-[var(--color-text)]/20">/</span>}
+                <span>
+                  {i > 0 && <span class="mx-1 text-[var(--color-text)]/20">/</span>}
                    <a href={`/blog/categories/${cat}`}
                      class="text-[var(--color-text)] hover:text-[var(--color-secondary)] transition-colors no-underline">
                     {cat}
                   </a>
-                </>
+                </span>
               ))}
             </nav>
           </div>
         )
       }
 
-      <!-- Date & Stats -->
-      <div class="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-[var(--color-text)]/30">
-        <span>发布: {post.data.pubDate.toLocaleDateString("zh-CN")}</span>
-        {config.blog.showUpdatedDate && post.data.updatedDate && (
-          <span>更新: {post.data.updatedDate.toLocaleDateString("zh-CN")}</span>
-        )}
-        <span>{wordCount} 字</span>
-        <span>阅读约 {readingTime} 分钟</span>
-      </div>
+      <!-- Prev / Next -->
+      <nav class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-6 border-t border-[var(--color-border)]">
+        {nextPost ? (
+          <a href={`/posts/${nextPost.data.abbrlink || nextPost.slug}`}
+             class="group text-left no-underline">
+            <span class="text-[10px] uppercase tracking-wider text-[var(--color-text)]/20">← 上一篇</span>
+            <span class="block text-sm text-[var(--color-text)]/70 group-hover:text-[var(--color-secondary)] transition-colors mt-1 line-clamp-1">
+              {nextPost.data.title}
+            </span>
+          </a>
+        ) : <div></div>}
+        {prevPost ? (
+          <a href={`/posts/${prevPost.data.abbrlink || prevPost.slug}`}
+             class="group text-right no-underline">
+            <span class="text-[10px] uppercase tracking-wider text-[var(--color-text)]/20">下一篇 →</span>
+            <span class="block text-sm text-[var(--color-text)]/70 group-hover:text-[var(--color-secondary)] transition-colors mt-1 line-clamp-1">
+              {prevPost.data.title}
+            </span>
+          </a>
+        ) : <div></div>}
+      </nav>
     </footer>
   </article>
 

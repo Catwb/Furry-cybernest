@@ -151,6 +151,15 @@ code, pre, kbd, samp {
   animation: fade-in-up 0.6s ease-out forwards;
 }
 
+/* ── PJAX page enter animation ── */
+@keyframes pjax-enter {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.pjax-enter {
+  animation: pjax-enter 0.35s ease-out;
+}
+
 /* ── Lift transition (transform only, no box-shadow flash) ── */
 .transition-lift {
   transition: translate 0.3s;
@@ -172,8 +181,8 @@ code, pre, kbd, samp {
 /* ── Prose styling for blog content ── */
 .prose-neon {
   font-family: var(--font-body);
-  line-height: 1.9;
-  font-size: 1rem;
+  line-height: 1.95;
+  font-size: 1.0625rem;
 }
 
 .prose-neon p {
@@ -181,13 +190,13 @@ code, pre, kbd, samp {
 }
 
 .prose-neon h1 {
-  font-size: 2.25rem;
+  font-size: 2.5rem;
   color: var(--color-primary);
   margin: 2em 0 0.6em;
   line-height: 1.3;
 }
 .prose-neon h2 {
-  font-size: 1.75rem;
+  font-size: 1.875rem;
   color: var(--color-secondary);
   border-bottom: 1px solid var(--color-border);
   padding-bottom: 0.5rem;
@@ -195,13 +204,13 @@ code, pre, kbd, samp {
   line-height: 1.35;
 }
 .prose-neon h3 {
-  font-size: 1.375rem;
+  font-size: 1.5rem;
   color: var(--color-primary);
   margin: 1.8em 0 0.5em;
   line-height: 1.4;
 }
 .prose-neon h4 {
-  font-size: 1.125rem;
+  font-size: 1.25rem;
   color: var(--color-secondary);
   margin: 1.5em 0 0.4em;
   line-height: 1.45;

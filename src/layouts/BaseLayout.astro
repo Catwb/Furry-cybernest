@@ -290,6 +290,9 @@ const featConfig = JSON.stringify({
               var inlineCodes = scripts.filter(function(s) { return !s.src; }).map(function(s) { return s.textContent; });
 
               oldMain.innerHTML = newMain.innerHTML;
+              oldMain.classList.remove("pjax-enter");
+              void oldMain.offsetWidth;
+              oldMain.classList.add("pjax-enter");
 
               inlineCodes.forEach(function(code) {
                 try { (new Function(code))(); } catch(e) {}
