@@ -166,12 +166,42 @@
     }
   }
 
+  function initActiveNav() {
+    var path = window.location.pathname;
+    document.querySelectorAll("#desktop-nav .nav-link, #mobile-drawer .nav-link").forEach(function(link) {
+      link.classList.remove("active");
+      var href = link.getAttribute("href");
+      if (!href || href === "#" || href.startsWith("javascript:")) return;
+      if (href === "/" && path === "/") {
+        link.classList.add("active");
+      } else if (href !== "/" && path.startsWith(href)) {
+        link.classList.add("active");
+      }
+    });
+  }
+
+  var _navShadowInitialized = false;
+  function initNavShadow() {
+    if (_navShadowInitialized) return;
+    _navShadowInitialized = true;
+    var nav = document.querySelector("nav");
+    if (!nav) return;
+    function onScroll() {
+      nav.classList.toggle("nav-scrolled", window.scrollY > 100);
+    }
+    window.addEventListener("scroll", onScroll, { passive: true });
+    onScroll();
+  }
+
   function initAll() {
     initCodeBlocks();
     initLightbox();
+    initActiveNav();
+    initNavShadow();
   }
 
   window._reinitFeatures = initAll;
+  window._reinitActiveNav = initActiveNav;
 
   document.addEventListener("DOMContentLoaded", initAll);
 })();

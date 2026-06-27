@@ -254,6 +254,7 @@ const featConfig = JSON.stringify({
         function _reinitPage() {
           initScrollObserver();
           if (window._reinitFeatures) window._reinitFeatures();
+          if (window._reinitActiveNav) window._reinitActiveNav();
         }
         window._reinitPage = _reinitPage;
 

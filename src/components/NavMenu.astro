@@ -175,6 +175,51 @@ const { items, level = 0 } = Astro.props;
     transform: rotate(180deg);
   }
 
+  /* ── Desktop nav: hover underline animation + active state ── */
+  /* Only top-level leaf items get the underline; submenu items are excluded */
+  #desktop-nav > a.nav-link {
+    position: relative;
+    opacity: 0.6;
+    text-decoration: none;
+    transition: opacity 0.2s;
+  }
+  #desktop-nav > a.nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: -4px;
+    left: 50%;
+    width: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--color-primary), var(--color-secondary));
+    border-radius: 1px;
+    transition: width 0.25s ease, left 0.25s ease;
+  }
+  #desktop-nav > a.nav-link:hover::after,
+  #desktop-nav > a.nav-link.active::after {
+    width: 100%;
+    left: 0;
+  }
+  #desktop-nav > a.nav-link:hover,
+  #desktop-nav > a.nav-link.active {
+    opacity: 1;
+  }
+
+  /* Other nav links (parent items, submenu items): stable opacity, no underline */
+  .nav-group > .nav-link {
+    opacity: 0.7;
+  }
+  .nav-group > .nav-link:hover {
+    opacity: 0.9;
+  }
+
+  /* ── Nav scroll shadow ── */
+  nav.nav-scrolled {
+    box-shadow: 0 2px 24px rgba(0,0,0,0.08);
+  }
+  .dark nav.nav-scrolled {
+    box-shadow: 0 2px 24px rgba(0,0,0,0.3);
+  }
+
   /* ── Shared ── */
   nav .nav-submenu .nav-link svg { opacity: 0.4; }
   nav .nav-submenu .nav-link:hover svg { opacity: 0.8; }
