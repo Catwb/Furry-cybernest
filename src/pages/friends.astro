@@ -101,20 +101,6 @@ const { Content } = pageEntry ? await pageEntry.render() : { Content: undefined 
         }
       </style>
 
-      <script is:inline>
-        (function() {
-          document.querySelectorAll(".friend-group-toggle").forEach(function(btn) {
-            btn.onclick = function() {
-              var group = btn.closest(".friend-group");
-              if (!group) return;
-              var open = group.getAttribute("data-open") === "true";
-              group.setAttribute("data-open", open ? "false" : "true");
-              btn.setAttribute("aria-expanded", !open);
-            };
-          });
-        })();
-      </script>
-
       {
         config.friendLinks.length === 0 && (
           <div class="text-center py-20 text-sm text-[var(--color-text)]/30 mb-4">

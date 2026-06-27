@@ -18,6 +18,7 @@
 - **评论** — Twikoo / Artalk 二选一，CDN 可覆盖
 
 ### 增强功能
+- **PJAX 无刷新导航** — 拦截内部链接，fetch + 替换 `<main>` 内容，保留头部/导航/背景，fallback 到全页刷新
 - **代码块美化** — 语言标签、行号、一键复制、超长自动折叠（`>20行`），支持配置开关
 - **灯箱** — 点击文章正文图片 / 画廊图片可全屏放大查看，键盘 `Esc` 关闭
 - **图片懒加载** — 原生 `loading="lazy"` 减少带宽浪费
@@ -29,9 +30,9 @@
 |------|------|
 | `/` | 首页（Hero + 博客列表 + 分页 + 侧边栏） |
 | `/page/:page` | 首页分页（第 2、3、4… 页） |
-| `/blog/:slug` | 文章详情（支持 frontmatter `abbrlink` 自定义路径） |
+| `/posts/[...slug]` | 文章详情（支持 `abbrlink` 自定义路径） |
 | `/blog/categories` | 分类总览（树形展示） |
-| `/blog/categories/:category` | 分类下的文章列表 |
+| `/blog/categories/:category+` | 分类下的文章列表（支持多级） |
 | `/novels` | 小说列表 |
 | `/novels/:slug` | 小说详情 + 章节目录 |
 | `/novels/:slug/:chapter` | 章节阅读 |
@@ -105,7 +106,7 @@ homepage: {
 }
 ```
 
-背景图以全屏封面形式展示在首页 Hero 区域，不做滤镜处理。内容区域使用白色半透明底色覆盖，背景仅在 Hero 区域可见。卡片中的封面图为可选字段，添加 `cover` 则显示左侧缩略图，不添加则纯文字展示。
+背景图设为全站固定背景（`position: fixed`），所有页面可见。暗色模式下自动降低亮度（`brightness(0.35) saturate(0.6)`）。内容区域使用卡片底色（`--color-card`）覆盖，保证文字可读性。
 
 ### 代码块配置
 
@@ -202,18 +203,17 @@ draft: false
 
 ```
 src/
-  content.config.ts      # Content Collections 定义
-  config/schema.ts       # Zod 校验配置
-  layouts/BaseLayout.astro   # 全局壳（导航、主题、页脚）
+  content.config.ts           # Content Collections 定义
+  config/schema.ts            # Zod 校验配置
+  layouts/BaseLayout.astro    # 全局壳（导航、主题、PJAX、侧栏、页脚）
   components/
-    NavMenu.astro        # 递归多级导航
-    Sidebar.astro        # 首页侧边栏（角色卡片、分类列表）
-    SocialIcon.astro     # SVG 社交图标
-    comments/            # Twikoo & Artalk
-  pages/                 # 路由页面
-  content/               # 内容源文件
-  styles/globals.css     # 全局样式 + Tailwind 主题
-  remark-plugins/        # Markdown 扩展插件
-public/scripts/features.js   # 代码块增强、灯箱等前端增强逻辑
-plugins/virtual-config.ts   # Vite 插件暴露配置到虚拟模块
+    NavMenu.astro             # 递归多级导航
+    Sidebar.astro             # 首页侧边栏（作者卡片、最新文章、分类、归档）
+    comments/                 # Twikoo（含 CSS 自定义 + darkMode 同步）
+  pages/                      # 路由页面
+  content/                    # 内容源文件
+  styles/globals.css          # 全局样式 + Tailwind v4 主题
+  remark-plugins/             # Markdown 扩展插件（Stellar 风格标签）
+public/scripts/features.js    # 代码块增强、灯箱（支持 PJAX 后重初始化）
+plugins/virtual-config.ts     # Vite 插件暴露配置到虚拟模块
 ```
