@@ -550,7 +550,7 @@ img[loading="lazy"] {
   left: 0;
   width: 3rem;
   height: 2px;
-  background: var(--color-primary);
+  background: var(--title-bar-color, var(--color-primary));
   border-radius: 1px;
 }
 

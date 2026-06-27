@@ -31,46 +31,56 @@ function postUrl(post: { data: { abbrlink?: string }; slug: string }) {
 
 <BaseLayout title={`分类: ${category}`}>
   <div class="max-w-4xl mx-auto px-6 py-8">
-    <nav class="text-xs text-[var(--color-text)]/40 mb-4">
-      <a href="/blog/categories" class="hover:text-[var(--color-secondary)] transition-colors no-underline">分类</a>
-      {segments.map((seg, i) => (
-        <>
-          <span class="mx-2">/</span>
-          {i === segments.length - 1 ? (
-            <span class="text-[var(--color-text)]/60">{seg}</span>
-          ) : (
-            <a href={`/blog/categories/${segments.slice(0, i + 1).join("/")}`}
-               class="hover:text-[var(--color-secondary)] transition-colors no-underline">{seg}</a>
-          )}
-        </>
-      ))}
-    </nav>
-    <h1 data-animate class="font-heading text-3xl neon-text-primary page-title">{segments[segments.length - 1]}</h1>
-    <p data-animate class="text-sm text-[var(--color-text)]/50 mb-10">
-      共 {posts.length} 篇文章
-    </p>
+    <div data-animate class="rounded-xl bg-[var(--color-card)] p-6 neon-border">
+      <nav class="text-xs text-[var(--color-text)]/40 mb-4">
+        <a href="/blog/categories" class="hover:text-[var(--color-secondary)] transition-colors no-underline">分类</a>
+        {segments.map((seg, i) => (
+          <>
+            <span class="mx-2">/</span>
+            {i === segments.length - 1 ? (
+              <span class="text-[var(--color-text)]/60">{seg}</span>
+            ) : (
+              <a href={`/blog/categories/${segments.slice(0, i + 1).join("/")}`}
+                 class="hover:text-[var(--color-secondary)] transition-colors no-underline">{seg}</a>
+            )}
+          </>
+        ))}
+      </nav>
+      <h1 data-animate class="font-heading text-3xl neon-text-primary page-title">{segments[segments.length - 1]}</h1>
+      <p data-animate class="text-sm text-[var(--color-text)]/50 mb-6">
+        共 {posts.length} 篇文章
+      </p>
 
-    {
-      posts.map((post, i) => (
-        <a href={`/posts/${postUrl(post)}`}
-           data-animate style={`transition-delay:${i * 0.06}s`}
-            class="flex items-center gap-4 px-5 py-4 mb-2 rounded-xl neon-border no-underline
-                   bg-[var(--color-card)] hover:neon-glow-primary
-                   transition-lift hover:-translate-y-0.5 group">
-          <div class="flex-1 min-w-0">
-            <p class="text-sm text-[var(--color-text)]/80 group-hover:text-[var(--color-secondary)]
-                      transition-colors duration-200 truncate">{post.data.title}</p>
-            <div class="flex items-center gap-3 mt-1 text-xs text-[var(--color-text)]/30">
-              <time>{post.data.pubDate.toLocaleDateString("zh-CN")}</time>
-            </div>
+      {
+        posts.length === 0 && (
+          <div class="text-center py-10 text-sm text-[var(--color-text)]/30">
+            还没有文章
           </div>
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-               stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-               class="text-[var(--color-text)]/20 group-hover:text-[var(--color-secondary)] transition-colors">
-            <polyline points="9 18 15 12 9 6" />
-          </svg>
-        </a>
-      ))
-    }
+        )
+      }
+
+      <div class="space-y-2">
+        {posts.map((post, i) => (
+          <a href={`/posts/${postUrl(post)}`}
+             data-animate style={`transition-delay:${i * 0.06}s`}
+              class="flex items-center gap-4 px-5 py-4 rounded-xl neon-border no-underline
+                     bg-[var(--color-card)] hover:neon-glow-primary
+                     transition-lift hover:-translate-y-0.5 group">
+            <div class="flex-1 min-w-0">
+              <p class="text-sm text-[var(--color-text)]/80 group-hover:text-[var(--color-secondary)]
+                        transition-colors duration-200 truncate">{post.data.title}</p>
+              <div class="flex items-center gap-3 mt-1 text-xs text-[var(--color-text)]/30">
+                <time>{post.data.pubDate.toLocaleDateString("zh-CN")}</time>
+              </div>
+            </div>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                 stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                 class="text-[var(--color-text)]/20 group-hover:text-[var(--color-secondary)] transition-colors">
+              <polyline points="9 18 15 12 9 6" />
+            </svg>
+          </a>
+        ))}
+      </div>
+    </div>
   </div>
 </BaseLayout>
