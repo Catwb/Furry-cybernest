@@ -143,11 +143,9 @@ const featConfig = JSON.stringify({
       <slot />
     </main>
 
-    <footer class="neon-border border-x-0 border-b-0 mt-24 py-12 bg-[var(--color-card)]/80">
-      <div class="max-w-5xl mx-auto px-6">
-        <div class="prose-footer max-w-lg mx-auto text-center">
-          <Fragment set:html={marked.parse(config.footer.content || "")} />
-        </div>
+    <footer class="rounded-2xl mx-4 lg:mx-auto lg:max-w-5xl mt-24 py-12 px-6 neon-border bg-[var(--color-card)]/80">
+      <div class="prose-footer max-w-lg mx-auto text-center">
+        <Fragment set:html={marked.parse(config.footer.content || "")} />
       </div>
     </footer>
 

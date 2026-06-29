@@ -52,9 +52,9 @@ const { Content } = pageEntry ? await pageEntry.render() : { Content: undefined 
                     target="_blank"
                     rel="noopener noreferrer"
                      class="group flex items-center gap-4 p-5 rounded-xl neon-border
-                            bg-[var(--color-card)]
                             hover:neon-glow-primary transition-lift
                             hover:-translate-y-0.5 no-underline"
+                     style={link.color ? `background:color-mix(in srgb, ${link.color} 10%, var(--color-card))` : "background:var(--color-card)"}
                   >
                     <div class="w-12 h-12 rounded-full flex-shrink-0 overflow-hidden
                                 neon-border bg-gradient-to-br from-[var(--color-primary)]/15 to-[var(--color-secondary)]/10
@@ -91,15 +91,6 @@ const { Content } = pageEntry ? await pageEntry.render() : { Content: undefined 
           </section>
         ))
       }
-
-      <style is:global>
-        .friend-group[data-open="false"] .friend-group-body {
-          display: none;
-        }
-        .friend-group[data-open="false"] .friend-group-arrow {
-          transform: rotate(-90deg);
-        }
-      </style>
 
       {
         config.friendLinks.length === 0 && (

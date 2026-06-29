@@ -53,9 +53,7 @@ body {
   background-color: transparent;
   color: var(--color-neon-text);
 }
-.dark footer {
-  background: var(--color-surface);
-}
+
 
 h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-heading);
@@ -534,6 +532,14 @@ code, pre, kbd, samp {
 /* ── Lazy Load ── */
 img[loading="lazy"] {
   transition: opacity 0.3s;
+}
+
+/* ── Friend group collapse ── */
+.friend-group[data-open="false"] .friend-group-body {
+  display: none;
+}
+.friend-group[data-open="false"] .friend-group-arrow {
+  transform: rotate(-90deg);
 }
 
 /* ── Page Title ── */
