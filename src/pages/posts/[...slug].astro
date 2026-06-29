@@ -27,7 +27,7 @@ const nextPost = curIdx < allPosts.length - 1 ? allPosts[curIdx + 1] : null;
 ---
 
 <BaseLayout title={post.data.title}>
-  <article class="max-w-3xl mx-auto px-6 py-8 animate-fade-in bg-[var(--color-card)] rounded-2xl">
+  <article class="max-w-3xl mx-auto px-6 pt-8 pb-0 animate-fade-in bg-[var(--color-card)] rounded-t-2xl">
     <header class="mb-10">
       {
         post.data.cover && (
@@ -46,13 +46,17 @@ const nextPost = curIdx < allPosts.length - 1 ? allPosts[curIdx + 1] : null;
       {
         post.data.categories.length > 0 && (
           <nav class="flex flex-wrap items-center gap-2 text-xs mb-4">
-            {post.data.categories.map((cat) => (
-              <a href={`/blog/categories/${cat}`}
-                 class="px-2.5 py-0.5 rounded-full neon-border text-[var(--color-primary)]/70 bg-[var(--color-primary)]/5
-                        hover:text-[var(--color-secondary)] hover:bg-[var(--color-secondary)]/5 transition-all no-underline">
-                {cat}
-              </a>
-            ))}
+            {post.data.categories.map((_, i) => {
+              const fullPath = post.data.categories.slice(0, i + 1).join("/");
+              const label = post.data.categories[i];
+              return (
+                <a href={`/blog/categories/${fullPath}`}
+                   class="px-2.5 py-0.5 rounded-full neon-border text-[var(--color-primary)]/70 bg-[var(--color-primary)]/5
+                          hover:text-[var(--color-secondary)] hover:bg-[var(--color-secondary)]/5 transition-all no-underline">
+                  {label}
+                </a>
+              );
+            })}
           </nav>
         )
       }
@@ -110,15 +114,19 @@ const nextPost = curIdx < allPosts.length - 1 ? allPosts[curIdx + 1] : null;
           <div class="flex items-center gap-2 text-sm text-[var(--color-text)]/60 mb-6">
             <span class="font-heading text-xs uppercase tracking-wider text-[var(--color-text)]/30">分类</span>
             <nav class="flex items-center gap-1">
-              {post.data.categories.map((cat, i) => (
-                <span>
-                  {i > 0 && <span class="mx-1 text-[var(--color-text)]/20">/</span>}
-                   <a href={`/blog/categories/${cat}`}
-                     class="text-[var(--color-text)] hover:text-[var(--color-secondary)] transition-colors no-underline">
-                    {cat}
-                  </a>
-                </span>
-              ))}
+              {post.data.categories.map((_, i) => {
+                const fullPath = post.data.categories.slice(0, i + 1).join("/");
+                const label = post.data.categories[i];
+                return (
+                  <span>
+                    {i > 0 && <span class="mx-1 text-[var(--color-text)]/20">/</span>}
+                    <a href={`/blog/categories/${fullPath}`}
+                       class="text-[var(--color-text)] hover:text-[var(--color-secondary)] transition-colors no-underline">
+                      {label}
+                    </a>
+                  </span>
+                );
+              })}
             </nav>
           </div>
         )
@@ -148,5 +156,7 @@ const nextPost = curIdx < allPosts.length - 1 ? allPosts[curIdx + 1] : null;
     </footer>
   </article>
 
-  <Comments />
+  <section class="max-w-3xl mx-auto px-6 bg-[var(--color-card)] rounded-b-2xl p-6 lg:p-8">
+    <Comments variant="inline" />
+  </section>
 </BaseLayout>

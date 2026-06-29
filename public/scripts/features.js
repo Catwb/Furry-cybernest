@@ -18,6 +18,10 @@
       var cls = code.className || "";
       var m = cls.match(/language-(\w+)/);
       if (m) lang = m[1];
+      if (!lang) {
+        var dl = pre.getAttribute("data-language");
+        if (dl) lang = dl;
+      }
 
       var lines = code.textContent.split("\n").length - 1;
       if (lines < 1) lines = 1;
@@ -112,60 +116,6 @@
     });
   }
 
-  function initLightbox() {
-    if (cfg.lightbox === false) return;
-    if (document.querySelector(".lightbox-overlay")) return;
-
-    var overlay = document.createElement("div");
-    overlay.className = "lightbox-overlay";
-    overlay.innerHTML = '<button class="lightbox-close">&times;</button><img class="lightbox-img" src="" alt=""><p class="lightbox-caption"></p>';
-    document.body.appendChild(overlay);
-
-    var imgEl = overlay.querySelector(".lightbox-img");
-    var capEl = overlay.querySelector(".lightbox-caption");
-    var closeBtn = overlay.querySelector(".lightbox-close");
-
-    function open(src, alt) {
-      imgEl.src = src;
-      imgEl.alt = alt || "";
-      capEl.textContent = alt || "";
-      overlay.classList.add("active");
-      document.body.style.overflow = "hidden";
-    }
-
-    function close() {
-      overlay.classList.remove("active");
-      document.body.style.overflow = "";
-      imgEl.src = "";
-    }
-
-    closeBtn.addEventListener("click", close);
-    overlay.addEventListener("click", function (e) {
-      if (e.target === overlay || e.target === imgEl) close();
-    });
-    document.addEventListener("keydown", function (e) {
-      if (e.key === "Escape") close();
-    });
-
-    if (cfg.lightboxGallery !== false) {
-      document.querySelectorAll(".gallery-item img").forEach(function (img) {
-        img.style.cursor = "pointer";
-        img.addEventListener("click", function () {
-          open(img.src, img.alt);
-        });
-      });
-    }
-
-    if (cfg.lightboxContent !== false) {
-      document.querySelectorAll(".prose-neon img").forEach(function (img) {
-        img.style.cursor = "pointer";
-        img.addEventListener("click", function () {
-          open(img.src, img.alt);
-        });
-      });
-    }
-  }
-
   function initActiveNav() {
     var path = window.location.pathname;
     document.querySelectorAll("#desktop-nav .nav-link, #mobile-drawer .nav-link").forEach(function(link) {
@@ -195,7 +145,6 @@
 
   function initAll() {
     initCodeBlocks();
-    initLightbox();
     initActiveNav();
     initNavShadow();
   }

@@ -57,6 +57,7 @@ const featConfig = JSON.stringify({
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="alternate" type="application/rss+xml" title={config.site.title} href="/rss.xml" />
 
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.css" />
     <script id="feat-config" type="application/json" set:html={featConfig} />
   </head>
   <body>
@@ -64,6 +65,13 @@ const featConfig = JSON.stringify({
     {config.cdn.js.map((l: { href: string }) => <script src={l.href}></script>)}
     {config.fonts.cdn.filter((l: { head?: boolean }) => !l.head).map((l: { href: string }) => <link rel="stylesheet" href={l.href} />)}
     {config.cdn.css.filter((l: { head?: boolean }) => !l.head).map((l: { href: string }) => <link rel="stylesheet" href={l.href} />)}
+    <script is:inline src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.umd.js"></script>
+    <script is:inline>
+      if (typeof Fancybox !== "undefined") {
+        Fancybox.bind("[data-fancybox]", { animated: true });
+      }
+      window._reinitFancybox = function(){};
+    </script>
 
     <nav class="fixed top-4 left-1/2 -translate-x-1/2 z-50 max-w-3xl
                 bg-[var(--color-card)]/95
@@ -168,13 +176,19 @@ const featConfig = JSON.stringify({
           html.classList.toggle("overflow-hidden", !open);
         };
         drawer.onclick = function(e) {
-          var link = e.target.closest(".nav-group > .nav-link");
+          var link = e.target.closest("a");
           if (!link) return;
-          var group = link.parentElement;
-          if (!group) return;
-          if (!group.querySelector(":scope > .nav-submenu")) return;
-          e.preventDefault();
-          group.classList.toggle("nav-open");
+          // Parent toggle: expand/collapse submenu, don't close drawer
+          if (link.matches(".nav-group > .nav-link") && link.parentElement.querySelector(":scope > .nav-submenu")) {
+            e.preventDefault();
+            link.parentElement.classList.toggle("nav-open");
+            return;
+          }
+          // Regular nav link: close drawer
+          drawer.classList.add("translate-x-full");
+          hamIcon.classList.remove("hidden");
+          closeIcon.classList.add("hidden");
+          html.classList.remove("overflow-hidden");
         };
       }
 
@@ -234,11 +248,78 @@ const featConfig = JSON.stringify({
 
     <script is:inline src="/scripts/features.js"></script>
 
+    <!-- PJAX Loading Overlay -->
+    <div id="pjax-overlay" class="pjax-overlay" style="display:none">
+      <div class="pjax-panel">
+        <div class="pjax-spinner"></div>
+        <div id="pjax-progress-text" class="pjax-progress-text">加载中 0%</div>
+        <button id="pjax-cancel-btn" class="pjax-cancel-btn">取消</button>
+      </div>
+    </div>
+
     <script is:inline>
       (function() {
         if (!window.history.pushState) return;
 
-        // Delegated friend-group-toggle click (survives PJAX, no re-binding needed)
+        var _paceAbort = null;
+        var _paceTimer = null;
+        var _paceProgress = 0;
+        var overlay = document.getElementById("pjax-overlay");
+        var progressText = document.getElementById("pjax-progress-text");
+        var cancelBtn = document.getElementById("pjax-cancel-btn");
+
+        function showOverlay() {
+          overlay.style.display = "";
+          overlay.style.opacity = "0";
+          void overlay.offsetWidth;
+          overlay.style.opacity = "1";
+        }
+
+        function hideOverlay() {
+          overlay.style.opacity = "0";
+          setTimeout(function() { overlay.style.display = "none"; }, 200);
+        }
+
+        function setProgress(pct) {
+          var v = Math.min(100, Math.max(0, Math.round(pct)));
+          progressText.textContent = "加载中 " + v + "%";
+        }
+
+        function startSimulate() {
+          _paceProgress = 0;
+          setProgress(0);
+          clearInterval(_paceTimer);
+          _paceTimer = setInterval(function() {
+            if (_paceProgress < 60) {
+              _paceProgress += 1.2;
+            } else if (_paceProgress < 90) {
+              _paceProgress += 0.2;
+            }
+            setProgress(_paceProgress);
+          }, 50);
+        }
+
+        function stopSimulate(done) {
+          clearInterval(_paceTimer);
+          _paceTimer = null;
+          if (done) {
+            setProgress(100);
+          }
+        }
+
+        function paceReset() {
+          stopSimulate(false);
+          hideOverlay();
+          if (_paceAbort) { _paceAbort.abort(); _paceAbort = null; }
+        }
+
+        // Cancel button: hide overlay only, fetch continues
+        cancelBtn.addEventListener("click", function() {
+          stopSimulate(false);
+          hideOverlay();
+        });
+
+        // Delegated friend-group-toggle click
         document.querySelector("main").addEventListener("click", function(e) {
           var btn = e.target.closest(".friend-group-toggle");
           if (!btn) return;
@@ -274,8 +355,16 @@ const featConfig = JSON.stringify({
         });
 
         function pjax(url) {
-          document.body.classList.add("pjax-loading");
-          fetch(url).then(function(r) {
+          if (url === location.pathname + location.search) return;
+          // Cancel any in-flight request
+          if (_paceAbort) _paceAbort.abort();
+          var controller = new AbortController();
+          _paceAbort = controller;
+
+          showOverlay();
+          startSimulate();
+
+          fetch(url, { signal: controller.signal }).then(function(r) {
             if (!r.ok) throw new Error("fetch failed");
             return r.text();
           }).then(function(html) {
@@ -304,10 +393,16 @@ const featConfig = JSON.stringify({
             history.pushState({}, "", url);
             window.scrollTo(0, 0);
             _reinitPage();
-          }).catch(function() {
+
+            // Done: show 100%, then hide
+            stopSimulate(true);
+            setTimeout(hideOverlay, 300);
+          }).catch(function(e) {
+            if (e.name === "AbortError") {
+              // User cancelled, do nothing
+              return;
+            }
             window.location.href = url;
-          }).finally(function() {
-            document.body.classList.remove("pjax-loading");
           });
         }
 

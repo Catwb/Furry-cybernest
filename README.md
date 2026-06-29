@@ -10,19 +10,24 @@
 - **赛博视觉** — 霓虹光效、网格背景、可配置主题色
 
 ### 内容
-- **博客** — Content Collections 驱动，支持封面图、分页、归档（年/月时间线）
+- **博客** — Content Collections 驱动，支持封面图、分页、归档（年/月时间线）。文章卡片日期左置（大数字 + 月/年），含字数统计和阅读时间
+- **文章详情** — 正文排版优化（1.0625rem 字号、1.95 行高、大标题），底部作者/发布/许可信息 + 上下篇导航
 - **分类** — 多级分类（如 `["小说", "赛博世界"]`），分类树展示
 - **小说** — 双集合（novels + chapters），章节目录、上下章导航、连载/完结状态
 - **画廊** — 可配置列数、分组、图片信息、灯箱展示
-- **友链** — 分组展示，可折叠，每链接可设独立色/头像
-- **评论** — Twikoo / Artalk 二选一，CDN 可覆盖
+- **友链** — 分组展示，可折叠，每链接可设独立色/头像；分组折叠通过事件委托实现，PJAX 后无需重绑定
+- **搜索** — build 时生成 JSON 索引，客户端原生 `includes` 匹配，懒加载加载
+- **评论** — Twikoo / Artalk 二选一，CDN 可覆盖；Twikoo 支持手动 dark mode 同步（`color-scheme` 属性 + 自定义 CSS），每次 PJAX 导航后重新加载 SDK
 
 ### 增强功能
-- **PJAX 无刷新导航** — 拦截内部链接，fetch + 替换 `<main>` 内容，保留头部/导航/背景，fallback 到全页刷新
+- **PJAX 无刷新导航** — 拦截内部链接，fetch + 替换 `<main>` 内容，保留头部/导航/背景；自动重执行 inline 脚本（Twikoo 等）；fallback 到全页刷新
+- **加载动画覆盖层** — 居中毛玻璃卡片，旋转 spinner + 模拟进度 + 可手动取消（仅隐藏动画，fetch 继续执行）
+- **导航栏动效** — 悬浮下划线动画（primary→secondary 渐变）、当前页面高亮、滚动阴影
+- **页面过渡动画** — PJAX 切换时 `<main>` 内容淡入（`.pjax-enter` 0.35s）
 - **代码块美化** — 语言标签、行号、一键复制、超长自动折叠（`>20行`），支持配置开关
 - **灯箱** — 点击文章正文图片 / 画廊图片可全屏放大查看，键盘 `Esc` 关闭
 - **图片懒加载** — 原生 `loading="lazy"` 减少带宽浪费
-- **滚动动画** — IntersectionObserver 驱动的入场动画
+- **滚动动画** — IntersectionObserver 驱动的入场动画（`data-animate` 属性）
 
 ### 页面路由
 
@@ -30,16 +35,17 @@
 |------|------|
 | `/` | 首页（Hero + 博客列表 + 分页 + 侧边栏） |
 | `/page/:page` | 首页分页（第 2、3、4… 页） |
-| `/posts/[...slug]` | 文章详情（支持 `abbrlink` 自定义路径） |
+| `/posts/[...slug]` | 文章详情（支持 `abbrlink` 自定义路径；底部含作者/发布/许可信息 + 上下篇导航） |
 | `/blog/categories` | 分类总览（树形展示） |
 | `/blog/categories/:category+` | 分类下的文章列表（支持多级） |
 | `/novels` | 小说列表 |
 | `/novels/:slug` | 小说详情 + 章节目录 |
 | `/novels/:slug/:chapter` | 章节阅读 |
-| `/archive` | 文章归档 |
+| `/archive` | 文章归档（年/月时间线） |
 | `/about` | 关于 |
-| `/friends` | 友链 |
-| `/gallery` | 画廊 |
+| `/friends` | 友链（分组折叠 + 每链接独立色调） |
+| `/gallery` | 画廊（分组展示 + 灯箱） |
+| `/search.json` | 搜索索引 JSON（build 时生成） |
 | `/rss.xml` | RSS 2.0 |
 | `/atom.xml` | Atom 1.0 |
 
@@ -79,14 +85,15 @@ pnpm preview   # 预览构建结果
 | `blog` | 每页文章数、永久链接格式 |
 | `novels` | 小说默认设置 |
 | `comments` | 评论系统（twikoo/artalk）|
-| `friendLinks` | 友链列表（支持分组） |
+| `friendLinks` | 友链列表（支持分组、每链接独立色调、分组折叠） |
 | `codeBlock` | 代码块：语言标签/行号/复制/折叠阈值/主题 |
 | `lightbox` | 灯箱总开关 + 正文/画廊独立开关 |
 | `lazyload` | 图片懒加载开关 |
 | `gallery` | 画廊列数、灯箱、分组展示 |
-| `footer` | 页脚 Markdown 内容 |
+| `footer` | 页脚 Markdown 内容（居中圆角卡片样式） |
 | `rss` | RSS feed 配置 |
-| `cdnOverrides` | CDN 地址覆盖 |
+| `cdnOverrides` | CDN 地址覆盖（字体/Twikoo 等） |
+| `search` | 搜索开关与提示文字 |
 
 ### 首页配置
 
@@ -106,7 +113,7 @@ homepage: {
 }
 ```
 
-背景图设为全站固定背景（`position: fixed`），所有页面可见。暗色模式下自动降低亮度（`brightness(0.35) saturate(0.6)`）。内容区域使用卡片底色（`--color-card`）覆盖，保证文字可读性。
+背景图设为全站固定背景（`position: fixed`），所有页面可见。暗色模式下自动降低亮度（`brightness(0.35) saturate(0.6)`）。`<body>` 背景透明，`<html>` 提供回退底色，确保固定背景图正确堆叠。内容区域使用卡片底色（`--color-card`）覆盖，保证文字可读性。
 
 ### 代码块配置
 
@@ -206,14 +213,15 @@ src/
   content.config.ts           # Content Collections 定义
   config/schema.ts            # Zod 校验配置
   layouts/BaseLayout.astro    # 全局壳（导航、主题、PJAX、侧栏、页脚）
-  components/
-    NavMenu.astro             # 递归多级导航
-    Sidebar.astro             # 首页侧边栏（作者卡片、最新文章、分类、归档）
-    comments/                 # Twikoo（含 CSS 自定义 + darkMode 同步）
-  pages/                      # 路由页面
-  content/                    # 内容源文件
-  styles/globals.css          # 全局样式 + Tailwind v4 主题
-  remark-plugins/             # Markdown 扩展插件（Stellar 风格标签）
-public/scripts/features.js    # 代码块增强、灯箱（支持 PJAX 后重初始化）
+   components/
+     NavMenu.astro             # 递归多级导航（悬浮下划线动效 + 滚动阴影 + 当前高亮）
+     Sidebar.astro             # 首页侧边栏（作者卡片、最新文章、分类、归档）
+     SearchBox.astro           # 搜索弹窗（懒加载 JSON 索引，Esc 关闭）
+     comments/                 # Twikoo（含 CSS 自定义 + darkMode 同步 + 新鲜度强制刷新）
+   pages/                      # 路由页面
+   content/                    # 内容源文件
+   styles/globals.css          # 全局样式 + Tailwind v4 主题 + pjax/keyframes
+   remark-plugins/             # Markdown 扩展插件（Stellar 风格标签）
+public/scripts/features.js    # 代码块增强、灯箱、导航高亮、滚动阴影（支持 PJAX 后重初始化）
 plugins/virtual-config.ts     # Vite 插件暴露配置到虚拟模块
 ```

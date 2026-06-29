@@ -48,7 +48,7 @@ const showSidebar = config.homepage.sidebar.author || config.homepage.sidebar.ca
                 {post.data.cover && (
                   <div class="w-40 shrink-0 overflow-hidden hidden sm:block">
                     <img src={post.data.cover} alt={post.data.title}
-                         class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" />
+                         class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" loading="lazy" />
                   </div>
                 )}
                 <div class={`flex flex-col flex-1 min-w-0 ${post.data.cover ? 'px-6 py-5' : ''}`}>
