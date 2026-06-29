@@ -1,5 +1,6 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
+import PageCard from "../../components/PageCard.astro";
 import { getCollection } from "astro:content";
 
 export async function getStaticPaths() {
@@ -20,9 +21,8 @@ const wordCount = chapters.reduce((sum, c) => sum + c.body.length, 0);
 ---
 
 <BaseLayout title={novel.data.title}>
-  <div class="max-w-3xl mx-auto px-6 py-8">
-    <!-- Novel header -->
-    <div data-animate class="rounded-xl bg-[var(--color-card)] p-8 neon-border mb-8 text-center">
+  <PageCard noHeader maxWidth="max-w-4xl">
+    <div data-animate class="text-center -mx-6 -mt-6 lg:-mx-8 lg:-mt-8 mb-6 p-8 border-b border-[var(--color-border)]">
       <div class="w-24 h-24 mx-auto rounded-full neon-border mb-4
                   bg-gradient-to-br from-[var(--color-primary)]/20 to-[var(--color-accent)]/10
                   flex items-center justify-center text-2xl">
@@ -50,14 +50,13 @@ const wordCount = chapters.reduce((sum, c) => sum + c.body.length, 0);
       </p>
     </div>
 
-    <!-- Chapter list -->
     <div class="space-y-2">
       {
         chapters.map((ch, i) => (
            <a
             href={`/novels/${slug}/${ch.data.chapter}`}
             class="flex items-center gap-4 px-5 py-4 rounded-xl
-                   bg-[var(--color-card)] neon-border
+                   neon-border
                    hover:neon-glow-primary
                    transition-all duration-300 no-underline group"
           >
@@ -90,10 +89,10 @@ const wordCount = chapters.reduce((sum, c) => sum + c.body.length, 0);
 
     {
       chapters.length === 0 && (
-        <div class="text-center py-20 text-sm text-[var(--color-text)]/30">
+        <div class="text-center py-10 text-sm text-[var(--color-text)]/30">
           还没有章节发布
         </div>
       )
     }
-  </div>
+  </PageCard>
 </BaseLayout>

@@ -33,20 +33,20 @@ const showSidebar = config.homepage.sidebar.author || config.homepage.sidebar.ca
 ---
 
 <BaseLayout title={`第 ${pageNum} 页`}>
-  <div class="max-w-6xl mx-auto px-6 py-8">
+    <div class="max-w-6xl mx-auto px-6 py-8">
     <div class={`flex flex-col ${showSidebar ? 'md:flex-row' : ''} gap-8`}>
       <div class={showSidebar ? 'md:w-3/4' : 'w-full'}>
-        <div class="flex flex-col gap-5">
+        <div class="flex flex-col gap-6">
           {
             posts.map((post, i) => (
               <a href={`/posts/${postUrl(post)}`}
                  data-animate style={`transition-delay:${i * 0.04}s`}
-                 class={`group flex items-stretch rounded-xl neon-border overflow-hidden no-underline
-                        bg-[var(--color-card)] hover:neon-glow-primary
-                        transition-lift hover:-translate-y-0.5
-                        ${post.data.cover ? 'flex-row' : 'flex-col px-8 py-6'}`}>
+                 class={`group flex items-stretch rounded-2xl neon-border overflow-hidden no-underline
+                         bg-[var(--color-card)] hover:neon-glow-primary
+                         transition-lift hover:-translate-y-0.5
+                         ${post.data.cover ? 'flex-row' : 'flex-col px-8 py-6'}`}>
                 {post.data.cover && (
-                  <div class="w-40 shrink-0 overflow-hidden hidden sm:block">
+                  <div class="w-52 shrink-0 overflow-hidden hidden sm:block">
                     <img src={post.data.cover} alt={post.data.title}
                          class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" loading="lazy" />
                   </div>
@@ -57,15 +57,15 @@ const showSidebar = config.homepage.sidebar.author || config.homepage.sidebar.ca
                     {post.data.title}
                   </h2>
                   {post.data.description && (
-                    <p class="text-sm text-[var(--color-text)]/45 line-clamp-2 mb-3">
+                    <p class="text-sm text-[var(--color-text)]/45 line-clamp-2 mb-4 leading-relaxed">
                       {post.data.description}
                     </p>
                   )}
-                  <div class="flex items-center gap-3 text-xs text-[var(--color-text)]/30 mt-auto">
+                  <div class="flex items-center gap-3 text-sm text-[var(--color-text)]/30 mt-auto">
                     {post.data.categories.length > 0 && (
-                      <span>{post.data.categories.join("/")}</span>
+                      <span class="text-xs px-2 py-0.5 rounded-full neon-border text-[var(--color-primary)]/70 bg-[var(--color-primary)]/5">{post.data.categories.join("/")}</span>
                     )}
-                    <time>{post.data.pubDate.toLocaleDateString("zh-CN")}</time>
+                    <time class="text-xs">{post.data.pubDate.toLocaleDateString("zh-CN")}</time>
                   </div>
                 </div>
               </a>

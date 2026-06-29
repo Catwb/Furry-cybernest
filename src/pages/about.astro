@@ -1,17 +1,13 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
+import PageCard from "../components/PageCard.astro";
 import config from "virtual:site-config";
 ---
 
 <BaseLayout title="关于">
-  <div class="max-w-3xl mx-auto px-6 py-8">
-    <div data-animate class="rounded-xl bg-[var(--color-card)] p-6 mb-8 neon-border">
-      <h1 class="font-heading text-3xl neon-text-primary page-title">关于</h1>
-      <p class="text-sm text-[var(--color-text)]/50">关于这个赛博世界</p>
-    </div>
-
+  <PageCard title="关于" subtitle="关于这个赛博世界" maxWidth="max-w-4xl">
     <div class="space-y-8">
-      <section data-animate class="neon-border rounded-xl p-6 bg-[var(--color-card)]">
+      <section data-animate>
         <h2 class="font-heading text-xl neon-text-secondary mb-4">世界观</h2>
         <p class="text-sm text-[var(--color-text)]/70 leading-relaxed">
           Furry CyberNest 是一个赛博朋克风格的兽设故事站。
@@ -19,7 +15,7 @@ import config from "virtual:site-config";
         </p>
       </section>
 
-      <section data-animate class="neon-border rounded-xl p-6 bg-[var(--color-card)]">
+      <section data-animate>
         <h2 class="font-heading text-xl neon-text-secondary mb-4">作者</h2>
         <div class="flex items-center gap-4 mb-4">
           <div class="w-16 h-16 rounded-full neon-glow-accent
@@ -34,7 +30,7 @@ import config from "virtual:site-config";
         </div>
       </section>
 
-      <section data-animate class="neon-border rounded-xl p-6 bg-[var(--color-card)]">
+      <section data-animate>
         <h2 class="font-heading text-xl neon-text-secondary mb-4">技术栈</h2>
         <div class="flex flex-wrap gap-2">
           {["Astro", "Tailwind CSS", "TypeScript", "LXGW WenKai"].map((tech) => (
@@ -46,5 +42,5 @@ import config from "virtual:site-config";
         </div>
       </section>
     </div>
-  </div>
+  </PageCard>
 </BaseLayout>

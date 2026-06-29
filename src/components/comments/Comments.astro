@@ -3,38 +3,19 @@ import config from "virtual:site-config";
 import Twikoo from "./Twikoo.astro";
 import Artalk from "./Artalk.astro";
 
-export interface Props {
-  variant?: "card" | "inline";
-}
-
 const { comments } = config;
-const { variant = "card" } = Astro.props;
 ---
 
 {
   comments.enabled && (
-    variant === "card" ? (
-      <div class="max-w-3xl mx-auto px-6">
-        <section class="neon-border rounded-2xl p-6 lg:p-8 bg-[var(--color-card)]">
-          <div class="flex items-center gap-3 mb-6 page-title">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
-            </svg>
-            <h2 class="font-heading text-xl">评论</h2>
-          </div>
-          {comments.provider === "twikoo" ? <Twikoo /> : <Artalk />}
-        </section>
+    <>
+      <div class="flex items-center gap-3 mb-6 page-title">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+        </svg>
+        <h2 class="font-heading text-xl">评论</h2>
       </div>
-    ) : (
-      <>
-        <div class="flex items-center gap-3 mb-6 page-title">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
-          </svg>
-          <h2 class="font-heading text-xl">评论</h2>
-        </div>
-        {comments.provider === "twikoo" ? <Twikoo /> : <Artalk />}
-      </>
-    )
+      {comments.provider === "twikoo" ? <Twikoo /> : <Artalk />}
+    </>
   )
 }

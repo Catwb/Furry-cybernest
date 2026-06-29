@@ -1,0 +1,44 @@
+---
+import Comments from "./comments/Comments.astro";
+import config from "virtual:site-config";
+
+export interface Props {
+  title?: string;
+  subtitle?: string;
+  maxWidth?: string;
+  showComments?: boolean;
+  noHeader?: boolean;
+}
+
+const { comments: commentsCfg } = config;
+const w = Astro.props.maxWidth || "max-w-6xl";
+---
+
+<div class={w + " mx-auto px-6 py-8"}>
+  <div class="bg-[var(--color-card)] rounded-2xl neon-border overflow-hidden">
+    {
+      !Astro.props.noHeader && (
+        <div class="border-b border-[var(--color-border)] p-6 lg:p-8">
+          <slot name="header">
+            {Astro.props.title && (
+              <h1 class="font-heading text-3xl neon-text-primary page-title">{Astro.props.title}</h1>
+            )}
+            {Astro.props.subtitle && (
+              <p class="text-sm text-[var(--color-text)]/50 mt-1">{Astro.props.subtitle}</p>
+            )}
+          </slot>
+        </div>
+      )
+    }
+    <div class="p-6 lg:p-8">
+      <slot />
+    </div>
+    {
+      Astro.props.showComments && commentsCfg.enabled && (
+        <div class="border-t border-[var(--color-border)] p-6 lg:p-8">
+          <Comments />
+        </div>
+      )
+    }
+  </div>
+</div>

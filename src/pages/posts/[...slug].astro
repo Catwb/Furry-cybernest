@@ -1,7 +1,7 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
+import PageCard from "../../components/PageCard.astro";
 import { getCollection, getEntry } from "astro:content";
-import Comments from "../../components/comments/Comments.astro";
 import config from "virtual:site-config";
 
 export async function getStaticPaths() {
@@ -27,8 +27,8 @@ const nextPost = curIdx < allPosts.length - 1 ? allPosts[curIdx + 1] : null;
 ---
 
 <BaseLayout title={post.data.title}>
-  <article class="max-w-3xl mx-auto px-6 pt-8 pb-0 animate-fade-in bg-[var(--color-card)] rounded-t-2xl">
-    <header class="mb-10">
+  <PageCard noHeader showComments maxWidth="max-w-4xl">
+    <div class="-mx-6 -mt-6 lg:-mx-8 lg:-mt-8 mb-8 p-6 lg:p-8 border-b border-[var(--color-border)]">
       {
         post.data.cover && (
           <div class="w-full aspect-video rounded-xl overflow-hidden mb-6 neon-border">
@@ -42,7 +42,6 @@ const nextPost = curIdx < allPosts.length - 1 ? allPosts[curIdx + 1] : null;
         {post.data.title}
       </h1>
 
-      <!-- Categories -->
       {
         post.data.categories.length > 0 && (
           <nav class="flex flex-wrap items-center gap-2 text-xs mb-4">
@@ -61,7 +60,6 @@ const nextPost = curIdx < allPosts.length - 1 ? allPosts[curIdx + 1] : null;
         )
       }
 
-      <!-- Meta row: date, reading time, word count -->
       <div class="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-[var(--color-text)]/40">
         <time>{post.data.pubDate.toLocaleDateString("zh-CN")}</time>
         {config.blog.showUpdatedDate && post.data.updatedDate && (
@@ -75,13 +73,12 @@ const nextPost = curIdx < allPosts.length - 1 ? allPosts[curIdx + 1] : null;
         <span class="w-1 h-1 rounded-full bg-[var(--color-text)]/20"></span>
         <span>预计阅读 {readingTime} 分钟</span>
       </div>
-    </header>
+    </div>
 
     <div class="prose-neon">
       <Content />
     </div>
 
-    <!-- Meta Footer -->
     <footer data-animate class="mt-16 pt-8 border-t border-[var(--color-border)]">
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs text-[var(--color-text)]/50 mb-8">
         <div>
@@ -108,7 +105,6 @@ const nextPost = curIdx < allPosts.length - 1 ? allPosts[curIdx + 1] : null;
         </div>
       </div>
 
-      <!-- Categories -->
       {
         post.data.categories.length > 0 && (
           <div class="flex items-center gap-2 text-sm text-[var(--color-text)]/60 mb-6">
@@ -132,7 +128,6 @@ const nextPost = curIdx < allPosts.length - 1 ? allPosts[curIdx + 1] : null;
         )
       }
 
-      <!-- Prev / Next -->
       <nav class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-6 border-t border-[var(--color-border)]">
         {nextPost ? (
           <a href={`/posts/${nextPost.data.abbrlink || nextPost.slug}`}
@@ -154,9 +149,5 @@ const nextPost = curIdx < allPosts.length - 1 ? allPosts[curIdx + 1] : null;
         ) : <div></div>}
       </nav>
     </footer>
-  </article>
-
-  <section class="max-w-3xl mx-auto px-6 bg-[var(--color-card)] rounded-b-2xl p-6 lg:p-8">
-    <Comments variant="inline" />
-  </section>
+  </PageCard>
 </BaseLayout>

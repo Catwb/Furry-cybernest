@@ -62,7 +62,7 @@ const showSidebar = config.homepage.sidebar.author || config.homepage.sidebar.ca
 
     <div class={`flex flex-col ${showSidebar ? 'md:flex-row' : ''} gap-8`}>
       <div class={showSidebar ? 'md:w-3/4' : 'w-full'}>
-        <div class="flex flex-col gap-5">
+        <div class="flex flex-col gap-6">
           {
             posts.map((post, i) => {
               const d = post.data.pubDate;
@@ -71,40 +71,39 @@ const showSidebar = config.homepage.sidebar.author || config.homepage.sidebar.ca
               return (
               <a href={`/posts/${postUrl(post)}`}
                  data-animate style={`transition-delay:${i * 0.04}s`}
-                 class="group flex flex-col sm:flex-row items-stretch rounded-xl neon-border overflow-hidden no-underline
+                 class="group flex flex-col sm:flex-row items-stretch rounded-2xl neon-border overflow-hidden no-underline
                         bg-[var(--color-card)] hover:neon-glow-primary
                         transition-lift hover:-translate-y-0.5">
-                <!-- Date column -->
-                <div class="flex sm:flex-col items-center sm:justify-center gap-1 sm:gap-0
-                            px-4 sm:px-3 py-2 sm:py-4 sm:min-w-[4.5rem] shrink-0
+                <div class="flex sm:flex-col items-center sm:justify-center gap-1 sm:gap-1
+                            px-5 sm:px-4 py-3 sm:py-6 sm:min-w-[5.5rem] shrink-0
                             border-b sm:border-b-0 sm:border-r border-[var(--color-border)]">
-                  <span class="text-lg sm:text-2xl font-heading leading-none text-[var(--color-primary)]">
+                  <span class="text-2xl sm:text-3xl font-heading leading-none text-[var(--color-primary)]">
                     {d.getDate()}
                   </span>
-                  <span class="text-[10px] text-[var(--color-text)]/40 sm:mt-1.5 whitespace-nowrap">
+                  <span class="text-xs text-[var(--color-text)]/40 sm:mt-1 whitespace-nowrap">
                     {month}{year}
                   </span>
                 </div>
                 {post.data.cover && (
-                  <div class="sm:w-44 shrink-0 overflow-hidden aspect-video sm:aspect-auto">
+                  <div class="sm:w-52 shrink-0 overflow-hidden aspect-video sm:aspect-auto">
                     <img src={post.data.cover} alt={post.data.title}
                          class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" loading="lazy" />
                   </div>
                 )}
-                <div class="flex flex-col flex-1 min-w-0 px-5 py-4">
-                  <div class="flex items-center gap-2 mb-2 flex-wrap">
+                <div class="flex flex-col flex-1 min-w-0 px-6 py-5">
+                  <div class="flex items-center gap-2 mb-3 flex-wrap">
                     {post.data.categories.length > 0 && post.data.categories.map((cat) => (
-                      <span class="text-[10px] px-2 py-0.5 rounded-full neon-border text-[var(--color-primary)]/70 bg-[var(--color-primary)]/5">
+                      <span class="text-xs px-3 py-0.5 rounded-full neon-border text-[var(--color-primary)]/70 bg-[var(--color-primary)]/5">
                         {cat}
                       </span>
                     ))}
                   </div>
-                  <h2 class="font-heading text-base text-[var(--color-text)] group-hover:text-[var(--color-secondary)]
-                             transition-colors duration-200 mb-1.5 line-clamp-1">
+                  <h2 class="font-heading text-lg text-[var(--color-text)] group-hover:text-[var(--color-secondary)]
+                             transition-colors duration-200 mb-2 line-clamp-1">
                     {post.data.title}
                   </h2>
                   {post.data.description && (
-                    <p class="text-sm text-[var(--color-text)]/45 line-clamp-2 mb-3">
+                    <p class="text-sm text-[var(--color-text)]/45 line-clamp-2 mb-4 leading-relaxed">
                       {post.data.description}
                     </p>
                   )}

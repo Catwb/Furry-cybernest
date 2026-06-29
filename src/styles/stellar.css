@@ -382,6 +382,7 @@
 .tag-plugin.checkbox input[type="checkbox"],
 .tag-plugin.checkbox input[type="radio"] {
   accent-color: var(--color-primary);
+  pointer-events: none;
 }
 
 /* ── Emoji ── */

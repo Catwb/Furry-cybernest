@@ -1,5 +1,6 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
+import PageCard from "../components/PageCard.astro";
 import { getCollection } from "astro:content";
 
 function postUrl(post: { data: { abbrlink?: string }; slug: string }) {
@@ -35,30 +36,21 @@ for (const post of posts) {
 ---
 
 <BaseLayout title="归档">
-  <div class="max-w-3xl mx-auto px-6 py-8">
-    <div data-animate class="rounded-xl bg-[var(--color-card)] p-6 mb-8 neon-border">
-      <h1 class="font-heading text-3xl neon-text-primary page-title">归档</h1>
-      <p class="text-sm text-[var(--color-text)]/50">
-        共 {posts.length} 篇故事
-      </p>
-    </div>
-
+  <PageCard title="归档" subtitle={"共 " + posts.length + " 篇故事"}>
     {
       byYear.length === 0 && (
-        <div class="text-center py-20 text-sm text-[var(--color-text)]/30">
+        <div class="text-center py-10 text-sm text-[var(--color-text)]/30">
           还没有故事发布，很快就来
         </div>
       )
     }
 
     <div class="relative">
-      <!-- timeline line -->
       <div class="absolute left-0 top-0 bottom-0 w-px bg-[var(--color-primary)]/20" />
 
       {
         byYear.map((yg) => (
-          <div class="ml-6 mb-10 relative bg-[var(--color-card)] rounded-xl neon-border p-5">
-            <!-- year dot -->
+          <div class="ml-6 mb-10 relative rounded-xl p-5">
             <div class="absolute -left-[29px] top-1 w-3 h-3 rounded-full
                         bg-[var(--color-primary)] neon-glow-primary" />
 
@@ -102,5 +94,5 @@ for (const post of posts) {
         ))
       }
     </div>
-  </div>
+  </PageCard>
 </BaseLayout>

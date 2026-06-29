@@ -1,5 +1,6 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
+import PageCard from "../../components/PageCard.astro";
 import { getCollection } from "astro:content";
 
 const novels = (await getCollection("novels"))
@@ -7,11 +8,14 @@ const novels = (await getCollection("novels"))
 ---
 
 <BaseLayout title="小说">
-  <div class="max-w-5xl mx-auto px-6 py-8">
-    <div data-animate class="rounded-xl bg-[var(--color-card)] p-6 mb-8 neon-border">
-      <h1 class="font-heading text-3xl neon-text-primary page-title">小说</h1>
-      <p class="text-sm text-[var(--color-text)]/50">星海之间的故事</p>
-    </div>
+  <PageCard title="小说" subtitle="星海之间的故事" maxWidth="max-w-5xl">
+    {
+      novels.length === 0 && (
+        <div class="text-center py-10 text-sm text-[var(--color-text)]/30">
+          还没有小说发布，很快就来
+        </div>
+      )
+    }
 
     <div data-animate class="grid grid-cols-1 md:grid-cols-2 gap-6">
       {
@@ -20,7 +24,7 @@ const novels = (await getCollection("novels"))
           return (
             <a href={`/novels/${novel.slug}`}
                class="group relative rounded-xl neon-border p-6
-                       bg-[var(--color-card)] hover:neon-glow-primary
+                       hover:neon-glow-primary
                        transition-lift hover:-translate-y-0.5 no-underline">
               <div class="w-full aspect-video rounded-lg mb-4
                           bg-gradient-to-br from-[var(--color-primary)]/15 to-[var(--color-accent)]/10
@@ -54,13 +58,5 @@ const novels = (await getCollection("novels"))
         })
       }
     </div>
-
-    {
-      novels.length === 0 && (
-        <div class="text-center py-20 text-sm text-[var(--color-text)]/30">
-          还没有小说发布，很快就来
-        </div>
-      )
-    }
-  </div>
+  </PageCard>
 </BaseLayout>

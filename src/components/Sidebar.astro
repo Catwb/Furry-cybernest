@@ -64,35 +64,35 @@ const iconNames: Record<string, string> = {
 <aside class="space-y-6">
   <!-- Author Card -->
   {config.homepage.sidebar.author && (
-    <div class="rounded-xl neon-border p-5 bg-[var(--color-card)] text-center">
-      <div class="w-16 h-16 rounded-full mx-auto mb-3
+    <div class="rounded-xl neon-border p-6 bg-[var(--color-card)] text-center">
+      <div class="w-20 h-20 rounded-full mx-auto mb-4
                   bg-gradient-to-br from-[var(--color-primary)]/20 to-[var(--color-accent)]/10
-                  flex items-center justify-center text-[var(--color-primary)] text-xl font-bold">
+                  flex items-center justify-center text-[var(--color-primary)] text-2xl font-bold">
         {config.site.author.charAt(0)}
       </div>
-      <p class="font-heading text-sm text-[var(--color-text)]">{config.site.author}</p>
-      <p class="text-xs text-[var(--color-text)]/40 mt-1 mb-4">{config.site.description}</p>
-      <div class="flex items-center justify-center gap-4 mb-4 text-xs">
+      <p class="font-heading text-base text-[var(--color-text)]">{config.site.author}</p>
+      <p class="text-sm text-[var(--color-text)]/40 mt-1 mb-5">{config.site.description}</p>
+      <div class="flex items-center justify-center gap-6 mb-5 text-sm">
         <div>
-          <p class="font-heading text-sm text-[var(--color-primary)]">{allPosts.length}</p>
-          <p class="text-[var(--color-text)]/30 text-[10px]">文章</p>
+          <p class="font-heading text-lg text-[var(--color-primary)]">{allPosts.length}</p>
+          <p class="text-[var(--color-text)]/30 text-xs">文章</p>
         </div>
-        <div class="w-px h-8 bg-[var(--color-border)]" />
+        <div class="w-px h-10 bg-[var(--color-border)]" />
         <div>
-          <p class="font-heading text-sm text-[var(--color-primary)]">{root.size}</p>
-          <p class="text-[var(--color-text)]/30 text-[10px]">分类</p>
+          <p class="font-heading text-lg text-[var(--color-primary)]">{root.size}</p>
+          <p class="text-[var(--color-text)]/30 text-xs">分类</p>
         </div>
-        <div class="w-px h-8 bg-[var(--color-border)]" />
+        <div class="w-px h-10 bg-[var(--color-border)]" />
         <div>
-          <p class="font-heading text-sm text-[var(--color-primary)]">{sortedYears.length}</p>
-          <p class="text-[var(--color-text)]/30 text-[10px]">年份</p>
+          <p class="font-heading text-lg text-[var(--color-primary)]">{sortedYears.length}</p>
+          <p class="text-[var(--color-text)]/30 text-xs">年份</p>
         </div>
       </div>
       {config.social.length > 0 && (
-        <div class="flex items-center justify-center gap-2">
+        <div class="flex items-center justify-center gap-3">
           {config.social.map((s) => (
             <a href={s.url} target="_blank" rel="noopener"
-               class="w-7 h-7 rounded-full bg-[var(--color-primary)]/10 flex items-center justify-center
+               class="w-9 h-9 rounded-full bg-[var(--color-primary)]/10 flex items-center justify-center
                       text-[var(--color-primary)]/60 hover:bg-[var(--color-primary)] hover:text-white
                       transition-all duration-300"
                title={iconNames[s.icon] || s.name}>
@@ -106,17 +106,17 @@ const iconNames: Record<string, string> = {
 
   <!-- Recent Posts -->
   {config.homepage.sidebar.recentPosts && sortedPosts.length > 0 && (
-    <div class="rounded-xl neon-border p-5 bg-[var(--color-card)]">
-      <p class="font-heading text-sm text-[var(--color-text)] mb-3">最新文章</p>
-      <div class="space-y-3">
+    <div class="rounded-xl neon-border p-6 bg-[var(--color-card)]">
+      <p class="font-heading text-base text-[var(--color-text)] mb-4">最新文章</p>
+      <div class="space-y-4">
         {sortedPosts.slice(0, 5).map((p) => (
           <a href={`/posts/${p.data.abbrlink || p.slug}`}
              class="block no-underline group">
-            <p class="text-xs text-[var(--color-text)]/80 group-hover:text-[var(--color-secondary)]
+            <p class="text-sm text-[var(--color-text)]/80 group-hover:text-[var(--color-secondary)]
                       transition-colors duration-200 line-clamp-1">
               {p.data.title}
             </p>
-            <time class="text-[10px] text-[var(--color-text)]/25 mt-0.5 block">
+            <time class="text-xs text-[var(--color-text)]/25 mt-1 block">
               {p.data.pubDate.toLocaleDateString("zh-CN")}
             </time>
           </a>
@@ -127,28 +127,28 @@ const iconNames: Record<string, string> = {
 
   <!-- Categories -->
   {config.homepage.sidebar.categories && root.size > 0 && (
-    <div class="rounded-xl neon-border p-5 bg-[var(--color-card)]">
-      <div class="flex items-center justify-between mb-3">
-        <p class="font-heading text-sm text-[var(--color-text)]">分类</p>
+    <div class="rounded-xl neon-border p-6 bg-[var(--color-card)]">
+      <div class="flex items-center justify-between mb-4">
+        <p class="font-heading text-base text-[var(--color-text)]">分类</p>
         <a href="/blog/categories"
-           class="text-[10px] text-[var(--color-primary)] hover:text-[var(--color-secondary)]
+           class="text-xs text-[var(--color-primary)] hover:text-[var(--color-secondary)]
                   transition-colors no-underline">更多</a>
       </div>
-      <div class="space-y-1.5">
+      <div class="space-y-2">
         {sorted(root).slice(0, 8).map((node) => (
           <>
             <a href={`/blog/categories/${node.full}`}
-               class="flex items-center justify-between text-xs no-underline
+               class="flex items-center justify-between text-sm no-underline
                       text-[var(--color-text)]/60 hover:text-[var(--color-secondary)] transition-colors group">
               <span class="group-hover:text-[var(--color-secondary)] transition-colors">{node.name}</span>
-              <span class="text-[var(--color-text)]/25 text-[10px]">{node.count}</span>
+              <span class="text-[var(--color-text)]/25 text-xs">{node.count}</span>
             </a>
             {sorted(node.children).slice(0, 3).map((child) => (
               <a href={`/blog/categories/${child.full}`}
-                 class="flex items-center justify-between text-xs no-underline pl-3
+                 class="flex items-center justify-between text-sm no-underline pl-4
                         text-[var(--color-text)]/40 hover:text-[var(--color-secondary)] transition-colors group">
                 <span class="group-hover:text-[var(--color-secondary)] transition-colors">/ {child.name}</span>
-                <span class="text-[var(--color-text)]/25 text-[10px]">{child.count}</span>
+                <span class="text-[var(--color-text)]/25 text-xs">{child.count}</span>
               </a>
             ))}
           </>
@@ -159,21 +159,21 @@ const iconNames: Record<string, string> = {
 
   <!-- Archives -->
   {config.homepage.sidebar.archives && sortedYears.length > 0 && (
-    <div class="rounded-xl neon-border p-5 bg-[var(--color-card)]">
-      <div class="flex items-center justify-between mb-3">
-        <p class="font-heading text-sm text-[var(--color-text)]">归档</p>
+    <div class="rounded-xl neon-border p-6 bg-[var(--color-card)]">
+      <div class="flex items-center justify-between mb-4">
+        <p class="font-heading text-base text-[var(--color-text)]">归档</p>
         <a href="/archive"
-           class="text-[10px] text-[var(--color-primary)] hover:text-[var(--color-secondary)]
+           class="text-xs text-[var(--color-primary)] hover:text-[var(--color-secondary)]
                   transition-colors no-underline">更多</a>
       </div>
-      <div class="space-y-1.5">
+      <div class="space-y-2">
         {sortedYears.slice(0, 6).map(([year, months]) => (
           <div>
-            <p class="text-xs text-[var(--color-text)]/40 mb-1">{year}</p>
-            <div class="space-y-1 pl-2">
+            <p class="text-sm text-[var(--color-text)]/40 mb-1.5">{year}</p>
+            <div class="space-y-1.5 pl-3">
               {[...months.entries()].sort((a, b) => b[0] - a[0]).slice(0, 3).map(([month, count]) => (
                 <a href={`/archive#${year}-${String(month).padStart(2, "0")}`}
-                   class="flex items-center justify-between text-[10px] no-underline
+                   class="flex items-center justify-between text-xs no-underline
                           text-[var(--color-text)]/40 hover:text-[var(--color-secondary)] transition-colors">
                   <span>{month} 月</span>
                   <span class="text-[var(--color-text)]/20">{count} 篇</span>
@@ -188,9 +188,9 @@ const iconNames: Record<string, string> = {
 
   <!-- Site Info -->
   {config.homepage.sidebar.siteInfo && (
-    <div class="rounded-xl neon-border p-5 bg-[var(--color-card)]">
-      <p class="font-heading text-sm text-[var(--color-text)] mb-3">站点信息</p>
-      <div class="space-y-1.5 text-xs">
+    <div class="rounded-xl neon-border p-6 bg-[var(--color-card)]">
+      <p class="font-heading text-base text-[var(--color-text)] mb-4">站点信息</p>
+      <div class="space-y-2 text-sm">
         <div class="flex items-center justify-between text-[var(--color-text)]/50">
           <span>文章总数</span>
           <span class="text-[var(--color-text)]/70">{allPosts.length}</span>
@@ -207,7 +207,7 @@ const iconNames: Record<string, string> = {
             <span class="text-[var(--color-text)]/70">{sortedPosts[0].data.pubDate.toLocaleDateString("zh-CN")}</span>
           </div>
         )}
-        <div class="pt-2 mt-2 border-t border-[var(--color-border)]">
+        <div class="pt-3 mt-3 border-t border-[var(--color-border)]">
           <div class="flex items-center justify-between text-[var(--color-text)]/50">
             <span>运行天数</span>
             <span class="text-[var(--color-text)]/70">

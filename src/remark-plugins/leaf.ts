@@ -162,7 +162,7 @@ export const remarkStellarLeaf: Plugin = () => {
           const labelText = text || attrVal(attrs, "text", "");
           node.type = "html";
           node.value = toHtml("div", { class: `tag-plugin colorful checkbox${symbol ? ` ${symbol}` : ""}`, "data-color": color },
-            voidHtml("input", { type: node.name, ...(checked ? { checked: true } : {}) }) +
+            voidHtml("input", { type: node.name, disabled: true, ...(checked ? { checked: true } : {}) }) +
             toHtml("span", {}, labelText));
           node.children = undefined;
           node.data = undefined;

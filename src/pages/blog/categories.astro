@@ -1,5 +1,6 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
+import PageCard from "../../components/PageCard.astro";
 import { getCollection } from "astro:content";
 
 const posts = (await getCollection("blog")).filter((p) => !p.data.draft);
@@ -47,54 +48,47 @@ function flatten(nodes: Map<string, CatNode>): { cat: CatNode; depth: number }[]
 ---
 
 <BaseLayout title="分类">
-  <div class="max-w-4xl mx-auto px-6 py-8">
-    <div data-animate class="rounded-xl bg-[var(--color-card)] p-6 neon-border">
-      <h1 class="font-heading text-3xl neon-text-primary page-title">分类</h1>
-      <p class="text-sm text-[var(--color-text)]/50">
-        共 {flatten(root).filter((x) => x.depth === 0).length} 个顶级分类
-      </p>
-
-      {flatten(root).length === 0 && (
-        <div class="text-center py-10 text-sm text-[var(--color-text)]/30">
-          还没有分类
-        </div>
-      )}
-
-      <div class="space-y-2 mt-6">
-        {flatten(root).map(({ cat, depth }, i) => (
-          <a
-            href={`/blog/categories/${cat.full}`}
-            data-animate
-            style={`transition-delay:${i * 0.04}s`}
-            class={`flex items-center justify-between rounded-xl neon-border no-underline
-                    bg-[var(--color-card)] hover:neon-glow-primary
-                    transition-lift hover:-translate-y-0.5 group
-                    ${depth === 0 ? 'p-5' : 'p-4 ml-6 border-l-2 border-[var(--color-primary)]/20'}`}
-          >
-            <div class="flex items-center gap-3">
-              {depth > 0 && (
-                <span class="text-[var(--color-primary)]/40 text-xs font-mono">/</span>
-              )}
-              <div>
-                <p class={`${depth === 0 ? 'text-sm' : 'text-xs'} text-[var(--color-text)]/80
-                           group-hover:text-[var(--color-secondary)]
-                           transition-colors duration-200`}>
-                  {cat.name}
-                </p>
-                <p class="text-xs text-[var(--color-text)]/30 mt-0.5">
-                  {cat.posts.length} 篇文章
-                  {cat.children.size > 0 && ` · ${cat.children.size} 个子分类`}
-                </p>
-              </div>
-            </div>
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                 stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                 class="text-[var(--color-text)]/20 group-hover:text-[var(--color-secondary)] transition-colors">
-              <polyline points="9 18 15 12 9 6" />
-            </svg>
-          </a>
-        ))}
+  <PageCard title="分类" subtitle={"共 " + flatten(root).filter((x) => x.depth === 0).length + " 个顶级分类"}>
+    {flatten(root).length === 0 && (
+      <div class="text-center py-10 text-sm text-[var(--color-text)]/30">
+        还没有分类
       </div>
+    )}
+
+    <div class="space-y-2">
+      {flatten(root).map(({ cat, depth }, i) => (
+        <a
+          href={`/blog/categories/${cat.full}`}
+          data-animate
+          style={`transition-delay:${i * 0.04}s`}
+          class={`flex items-center justify-between rounded-xl neon-border no-underline
+                  hover:neon-glow-primary
+                  transition-lift hover:-translate-y-0.5 group
+                  ${depth === 0 ? 'p-5' : 'p-4 ml-6 border-l-2 border-[var(--color-primary)]/20'}`}
+        >
+          <div class="flex items-center gap-3">
+            {depth > 0 && (
+              <span class="text-[var(--color-primary)]/40 text-xs font-mono">/</span>
+            )}
+            <div>
+              <p class={`${depth === 0 ? 'text-sm' : 'text-xs'} text-[var(--color-text)]/80
+                         group-hover:text-[var(--color-secondary)]
+                         transition-colors duration-200`}>
+                {cat.name}
+              </p>
+              <p class="text-xs text-[var(--color-text)]/30 mt-0.5">
+                {cat.posts.length} 篇文章
+                {cat.children.size > 0 && ` · ${cat.children.size} 个子分类`}
+              </p>
+            </div>
+          </div>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+               stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+               class="text-[var(--color-text)]/20 group-hover:text-[var(--color-secondary)] transition-colors">
+            <polyline points="9 18 15 12 9 6" />
+          </svg>
+        </a>
+      ))}
     </div>
-  </div>
+  </PageCard>
 </BaseLayout>
